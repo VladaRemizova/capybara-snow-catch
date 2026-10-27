@@ -53,7 +53,7 @@ try {
   assert.equal(await page.locator('#rewards').textContent(), '3/3');
   assert.equal(await page.locator('#total-rewards').textContent(), '3');
   assert.ok((await page.locator('#modal-title').textContent()).includes(String(finalCoins)));
-  await page.screenshot({ path: '/workspace/sites/capybara-winter-demo/preview-result.png' });
+  await page.screenshot({ path: '/workspace/sites/capybara-winter-demo/preview-result.png', animations: 'disabled' });
   await page.getByRole('button', { name: 'Мои награды (3)', exact: true }).click();
   assert.equal(await page.locator('.reward-card.earned').count(), 3);
   await page.getByRole('button', { name: 'Понятно', exact: true }).click();
@@ -71,6 +71,7 @@ try {
   for (const [width, height] of [[320, 568], [390, 844], [430, 932], [1440, 900]]) {
     const viewport = await browser.newPage({ viewport: { width, height } });
     viewport.on('pageerror', error => errors.push(error.message));
+    await viewport.clock.install();
     await viewport.goto('http://127.0.0.1:8080', { waitUntil: 'networkidle' });
     const layout = await viewport.evaluate(() => {
       const modal = document.getElementById('modal').getBoundingClientRect();
@@ -78,8 +79,15 @@ try {
     });
     assert.ok(layout.width <= width, `horizontal overflow at ${width}`);
     assert.ok(layout.modalTop >= 0 && layout.modalBottom <= layout.height, `modal overflow at ${width}x${height}`);
-    viewportChecks.push({ width, height, ...layout });
-    if (width === 390) await viewport.screenshot({ path: '/workspace/sites/capybara-winter-demo/preview-mobile-tall.png' });
+    await viewport.locator('#start-button').click();
+    await viewport.clock.fastForward(61000);
+    const resultLayout = await viewport.locator('#modal').evaluate(node => {
+      const r = node.getBoundingClientRect(), art = node.querySelector('.modal-art').getBoundingClientRect();
+      return { top: r.top, bottom: r.bottom, artTop: art.top };
+    });
+    assert.ok(resultLayout.top >= 0 && resultLayout.bottom <= height && resultLayout.artTop >= 0, `result popup overflow at ${width}x${height}`);
+    viewportChecks.push({ width, height, ...layout, result: resultLayout });
+    if (width === 390) await viewport.screenshot({ path: '/workspace/sites/capybara-winter-demo/preview-holiday-result.png', animations: 'disabled' });
     await viewport.close();
   }
   assert.deepEqual(errors, []);

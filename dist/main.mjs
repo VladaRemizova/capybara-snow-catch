@@ -85,7 +85,65 @@ function beep(reward = false) {
     }
   } catch { /* Sound is optional; gameplay remains available. */ }
 }
+
+const holidayMarks = {
+  star: '<svg viewBox="0 0 24 24"><path d="m12 1 2.8 7.8L23 12l-8.2 3.2L12 23l-2.8-7.8L1 12l8.2-3.2Z" fill="currentColor"/><path d="m12 5 1.6 5.4L19 12l-5.4 1.6L12 19l-1.6-5.4L5 12l5.4-1.6Z" fill="#fff" opacity=".65"/></svg>',
+  snow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M3.34 7l17.32 10M3.34 17l17.32-10M8.8 4.4 12 7l3.2-2.6M8.8 19.6 12 17l3.2 2.6M3.8 10.8l3.85-1.47-.65-4.05m13.2 7.92-3.85 1.47.65 4.05M7 18.72l.65-4.05-3.85-1.47m13.2-7.92-.65 4.05 3.85 1.47"/></svg>',
+  ribbon: '<svg viewBox="0 0 12 24"><path d="M2 1h8v8L5 15v8H0v-9l5-6Z" fill="currentColor"/><path d="M3 2h3v7l-3 4Z" fill="#fff" opacity=".5"/></svg>',
+};
+const holidayColors = ['#ffd66d', '#ffffff', '#f94a68', '#8cddc9', '#ffe7a4'];
+function effectNode(className, x, y) {
+  const node = document.createElement('span');
+  node.className = className;
+  node.style.left = `${x}px`; node.style.top = `${y}px`;
+  $('effects').append(node);
+  return node;
+}
+function holidayBurst(x, y, grand = false) {
+  if (reducedMotion) return;
+  const bloom = effectNode(`catch-bloom${grand ? ' grand' : ''}`, x, y);
+  temporary(bloom, [
+    { transform: 'translate(-50%,-50%) scale(.25)', opacity: 0 },
+    { transform: 'translate(-50%,-50%) scale(1)', opacity: .9, offset: .17 },
+    { transform: 'translate(-50%,-58%) scale(1.5)', opacity: 0 },
+  ], { duration: grand ? 900 : 650, easing: 'ease-out' });
+  const ring = effectNode('catch-ring', x, y + 3);
+  temporary(ring, [
+    { transform: 'translate(-50%,-50%) scale(.3)', opacity: 0 },
+    { transform: 'translate(-50%,-50%) scale(.85)', opacity: 1, offset: .14 },
+    { transform: `translate(-50%,-50%) scale(${grand ? 1.9 : 1.45})`, opacity: 0 },
+  ], { duration: grand ? 800 : 580, easing: 'cubic-bezier(.12,.6,.3,1)' });
+
+  const count = grand ? 32 : 19;
+  for (let n = 0; n < count; n++) {
+    const kind = n % 5 === 0 ? 'snow' : n % 3 === 0 ? 'ribbon' : 'star';
+    const particle = effectNode(`holiday-particle ${kind}`, x, y);
+    const size = kind === 'snow' ? 19 + n % 4 * 2 : kind === 'ribbon' ? 9 + n % 3 * 2 : 10 + n % 4 * 3;
+    particle.innerHTML = holidayMarks[kind];
+    particle.style.width = `${size}px`; particle.style.height = `${size}px`;
+    particle.style.color = kind === 'snow' ? '#f1fcff' : holidayColors[n % holidayColors.length];
+    const angle = -Math.PI + .18 + n / (count - 1) * (Math.PI - .36);
+    const distance = (grand ? 100 : 66) + n % 5 * 12;
+    const dx = Math.cos(angle) * distance;
+    const dy = Math.sin(angle) * distance - 15;
+    const spin = (n % 2 ? 1 : -1) * (70 + n * 17);
+    temporary(particle, [
+      { transform: 'translate(-50%,-50%) scale(.15) rotate(0deg)', opacity: 0 },
+      { transform: `translate(calc(-50% + ${dx * .65}px),calc(-50% + ${dy * .8}px)) scale(1.1) rotate(${spin * .5}deg)`, opacity: 1, offset: .3 },
+      { transform: `translate(calc(-50% + ${dx}px),calc(-50% + ${dy + 42}px)) scale(.55) rotate(${spin}deg)`, opacity: 0 },
+    ], { duration: (grand ? 1150 : 850) + n % 5 * 55, delay: n % 4 * 12, easing: 'cubic-bezier(.16,.5,.35,1)', fill: 'both' });
+  }
+  for (let n = 0; n < (grand ? 10 : 6); n++) {
+    const glint = effectNode('holiday-glint', x + (n % 2 ? -1 : 1) * (18 + n * 8), y - 7 - n % 3 * 14);
+    temporary(glint, [
+      { transform: 'scale(0)', opacity: 0 },
+      { transform: 'translateY(-18px) scale(1)', opacity: 1, offset: .25 },
+      { transform: 'translateY(-70px) scale(0)', opacity: 0 },
+    ], { duration: 650 + n * 35, delay: 70 + n * 20, fill: 'both' });
+  }
+}
 function catchEffect(object) {
+  const x = game.characterX, y = game.catchY;
   const image = document.createElement('img');
   const [w, h] = ITEM_SIZES[object.kind];
   image.src = `assets/${object.kind}.png`; image.className = 'falling-item caught-item';
@@ -94,28 +152,43 @@ function catchEffect(object) {
   image.style.zIndex = '22'; scene.append(image);
   temporary(image, [
     { transform: `translate(${object.x - w / 2}px,${object.y - h / 2}px) scale(1)`, opacity: 1 },
-    { transform: `translate(${game.characterX - w / 2}px,${game.catchY + 20 - h / 2}px) scale(.15)`, opacity: 0 },
-  ], { duration: reducedMotion ? 60 : 240, easing: 'cubic-bezier(.35,0,.7,1)', fill: 'forwards' });
+    { transform: `translate(${x - w / 2}px,${object.y - h / 2 - 12}px) scale(1.13) rotate(-7deg)`, opacity: 1, offset: .2 },
+    { transform: `translate(${x - w / 2}px,${y + 28 - h / 2}px) scale(.06) rotate(14deg)`, opacity: 0 },
+  ], { duration: reducedMotion ? 60 : 340, easing: 'cubic-bezier(.22,.1,.45,1)', fill: 'forwards' });
   for (const id of ['character', 'character-front']) {
-    if (!reducedMotion) animate($(id), [{ scale: '1 1' }, { scale: '1.035 .965', offset: .3 }, { scale: '.985 1.025', offset: .65 }, { scale: '1 1' }], { duration: 270 });
+    if (!reducedMotion) animate($(id), [
+      { scale: '1 1', translate: '0 0', rotate: '0deg' },
+      { scale: '1.085 .92', translate: '0 4px', rotate: '-1.5deg', offset: .18 },
+      { scale: '.96 1.065', translate: '0 -9px', rotate: '1.5deg', offset: .46 },
+      { scale: '1.025 .98', translate: '0 1px', rotate: '-.5deg', offset: .74 },
+      { scale: '1 1', translate: '0 0', rotate: '0deg' },
+    ], { duration: 480, easing: 'ease-out' });
   }
-  const label = document.createElement('span'); label.className = 'plus-one'; label.textContent = '+1';
-  label.style.left = `${game.characterX + 26}px`; label.style.top = `${game.catchY - 19}px`; $('effects').append(label);
-  temporary(label, [{ transform: 'translateY(0) scale(.75)', opacity: 1 }, { transform: 'translateY(-42px) scale(1.1)', opacity: 0 }], { duration: reducedMotion ? 160 : 650, easing: 'ease-out' });
+  holidayBurst(x, y - 5);
+  const labelX = Math.max(45, Math.min(330, x + (x < 210 ? 57 : -57)));
+  const label = effectNode('catch-score', labelX, y - 54);
+  label.innerHTML = '<img src="assets/coin.png" alt=""><strong>+1</strong>';
+  temporary(label, reducedMotion ? [{ opacity: 1 }, { opacity: 0 }] : [
+    { transform: 'translate(-50%,0) scale(.35) rotate(-12deg)', opacity: 0 },
+    { transform: 'translate(-50%,-14px) scale(1.18) rotate(5deg)', opacity: 1, offset: .16 },
+    { transform: 'translate(-50%,-19px) scale(1) rotate(-3deg)', opacity: 1, offset: .5 },
+    { transform: 'translate(-50%,-53px) scale(.85) rotate(-3deg)', opacity: 0 },
+  ], { duration: reducedMotion ? 350 : 1000, easing: 'cubic-bezier(.2,.55,.35,1)', fill: 'both' });
   if (!reducedMotion) {
-    for (let n = 0; n < 7; n++) {
-      const spark = document.createElement('i'); spark.className = 'spark';
-      spark.style.left = `${game.characterX}px`; spark.style.top = `${game.catchY}px`; $('effects').append(spark);
-      const angle = Math.PI + n / 6 * Math.PI;
-      temporary(spark, [{ transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: `translate(${Math.cos(angle) * 48}px,${Math.sin(angle) * 45 - 10}px) scale(.2)`, opacity: 0 }], { duration: 420 + n * 25, easing: 'ease-out' });
-    }
     const coin = document.createElement('img'); coin.src = 'assets/coin.png'; coin.className = 'flying-coin';
     $('effects').append(coin);
+    const arcX = x + (x > 185 ? -42 : 42);
     temporary(coin, [
-      { transform: `translate(${game.characterX - 12}px,${game.catchY - 12}px) scale(.8)`, opacity: 0 },
-      { transform: `translate(${game.characterX - 20}px,${game.catchY - 65}px) scale(1.1)`, opacity: 1, offset: .2 },
-      { transform: 'translate(148px,91px) scale(.6)', opacity: 0 },
-    ], { duration: 650, easing: 'cubic-bezier(.2,.6,.4,1)', fill: 'forwards' });
+      { transform: `translate(${x - 14}px,${y - 13}px) scale(.6)`, opacity: 0 },
+      { transform: `translate(${arcX - 14}px,${y - 108}px) scale(1.2)`, opacity: 1, offset: .24 },
+      { transform: `translate(${(arcX + 148) / 2}px,${(y - 108 + 91) / 2}px) scale(1)`, opacity: 1, offset: .58 },
+      { transform: 'translate(148px,91px) scale(.65)', opacity: 0 },
+    ], { duration: 880, easing: 'cubic-bezier(.22,.6,.35,1)', fill: 'forwards' });
+    animate($('coin-stat'), [
+      { boxShadow: 'inset -6px -6px #d3deeb, 0 0 0 0 #ffdd8999' },
+      { boxShadow: 'inset -6px -6px #d3deeb, 0 0 0 5px #ffdd8980, 0 0 24px #ffda6b99', offset: .3 },
+      { boxShadow: 'inset -6px -6px #d3deeb, 0 0 0 10px #ffdd8900' },
+    ], { duration: 550 });
   }
   pop($('coin-stat')); beep();
 }
@@ -127,6 +200,7 @@ function processEvents(events) {
   for (const event of events) {
     if (event.type === 'catch') catchEffect(event.object);
     if (event.type === 'reward') {
+      holidayBurst(game.characterX, game.catchY - 22, true);
       toast(`Награда ${event.rewards} из 3 получена!`);
       $('announcer').textContent = `Получена награда ${event.rewards} из трёх`;
       pop($('reward-stat')); pop($('total-rewards')); beep(true);
@@ -185,6 +259,10 @@ function showModal(mode, content) {
   lastFocus = document.activeElement; modalMode = mode;
   $('modal-content').innerHTML = content; $('modal-layer').hidden = false;
   $('modal').classList.toggle('intro-modal', mode === 'intro');
+  $('modal').classList.toggle('holiday-result', mode === 'result');
+  const art = $('modal').querySelector('.modal-art');
+  art.src = mode === 'result' ? 'assets/holiday-result.png' : 'assets/result-art.png';
+  art.alt = mode === 'result' ? 'Новогодняя капибара в праздничной шапке с мешком подарков' : 'Капибара с красным мешком';
   requestAnimationFrame(() => $('modal-content').querySelector('button')?.focus({ preventScroll: true }));
 }
 function hideModal() {
@@ -210,6 +288,7 @@ const plural = (n, one, few, many) => n % 10 === 1 && n % 100 !== 11 ? one : n %
 function showResult() {
   const p = game.progress;
   showModal('result', `
+    <p class="result-eyebrow">Праздничный улов</p>
     <h1 id="modal-title">Поймано ${game.coins} ${plural(game.coins, 'монета', 'монеты', 'монет')}!</h1>
     <div class="result-stats">
       <div class="result-stat"><img src="assets/timer.png" alt=""><div><small>Время игры</small><strong>01:00</strong></div></div>
@@ -273,7 +352,7 @@ document.addEventListener('keydown', event => {
 });
 // Load every product before the timer begins; the initial button remains disabled while loading.
 const startButton = $('start-button'); startButton.disabled = true; startButton.textContent = 'Загружаем игру…';
-Promise.all([...ITEM_TYPES, 'capybara', 'foreground', 'background', 'result-art'].map(name => new Promise(resolve => {
+Promise.all([...ITEM_TYPES, 'capybara', 'foreground', 'background', 'result-art', 'holiday-result'].map(name => new Promise(resolve => {
   const image = new Image(); image.onload = () => resolve(true); image.onerror = () => resolve(false); image.src = `assets/${name}.png`;
 }))).then(results => {
   startButton.disabled = false;
