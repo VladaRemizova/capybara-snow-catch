@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0871d7">
+  <meta name="description" content="Поймай удачу: помогите капибаре собрать предметы за 60 секунд и заработать три награды.">
+  <title>Поймай удачу</title>
+  <link rel="icon" href="assets/reward.png" type="image/png">
+  <link rel="preload" href="assets/background.png" as="image">
+  <link rel="preload" href="assets/capybara.png" as="image">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="phone" id="phone" aria-label="Игра «Поймай удачу»">
+    <div class="scene" id="scene">
+      <img class="background" src="assets/background.png" alt="" draggable="false">
+      <div class="sky-shade"></div>
+      <header class="header">
+        <img class="brand" src="assets/brand.png" alt="Лукойл. Поймай удачу" draggable="false">
+        <button class="rewards-total" id="rewards-button" aria-label="Посмотреть награды">Награды <span id="total-rewards">0</span></button>
+        <button class="image-button reset" id="reset-button" aria-label="Начать заново"><img src="assets/reset.png" alt=""></button>
+        <button class="image-button close" id="close-button" aria-label="Вернуться к началу"><img src="assets/close.png" alt=""></button>
+      </header>
+
+      <section class="stats" aria-label="Результат игры">
+        <div class="stat time-stat">
+          <img class="stat-icon" src="assets/timer.png" alt="">
+          <div class="stat-copy"><span class="stat-label">Осталось</span><strong id="timer" role="timer" aria-label="Осталось 60 секунд">01:00</strong></div>
+          <img class="snow snow-left" src="assets/snow-left.png" alt="">
+        </div>
+        <div class="stat coin-stat" id="coin-stat">
+          <img class="coin-icon" src="assets/coin.png" alt="">
+          <div class="stat-copy"><span class="stat-label">монеты</span><strong id="coins">0</strong></div>
+          <img class="snow snow-middle" src="assets/snow-middle.png" alt="">
+        </div>
+        <div class="stat reward-stat" id="reward-stat">
+          <img class="reward-icon" src="assets/reward.png" alt="">
+          <div class="stat-copy"><span class="stat-label">награда</span><strong id="rewards">0/3</strong></div>
+          <div class="progress" id="progress" role="progressbar" aria-label="Монеты до первой награды" aria-valuemin="0" aria-valuemax="20" aria-valuenow="0"><div id="progress-fill"></div></div>
+          <img class="snow snow-right" src="assets/snow-right.png" alt="">
+        </div>
+      </section>
+
+      <div class="falling-field" id="falling-field" aria-hidden="true"></div>
+      <div class="character" id="character" aria-hidden="true">
+        <img class="capy-image" src="assets/capybara.png" alt="" draggable="false">
+      </div>
+      <div class="character character-front" id="character-front" aria-hidden="true"><img class="capy-image" src="assets/capybara.png" alt="" draggable="false"></div>
+      <img class="foreground" src="assets/foreground.png" alt="" draggable="false">
+      <div class="effects" id="effects" aria-hidden="true"></div>
+      <div class="tutorial" id="tutorial" hidden><span>Зажмите капибару<br>и ведите влево-вправо</span><svg viewBox="0 0 70 24" aria-hidden="true"><path d="M7 12h56M15 4l-8 8 8 8M55 4l8 8-8 8"/></svg></div>
+      <div class="toast" id="toast" role="status" hidden></div>
+      <aside class="side-buttons" aria-label="Настройки игры">
+        <button class="image-button" id="help-button" aria-label="Правила игры"><img src="assets/help.png" alt=""></button>
+        <button class="image-button sound-button" id="sound-button" aria-label="Включить звук" aria-pressed="false"><img src="assets/sound.png" alt=""><span class="mute-mark"></span></button>
+      </aside>
+
+      <div class="modal-layer" id="modal-layer">
+        <section class="modal intro-modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+          <img class="modal-art" src="assets/result-art.png" alt="Капибара с красным мешком">
+          <div id="modal-content">
+            <h1 id="modal-title">Поймай удачу!</h1>
+            <p class="intro-text">Помогите капибаре собрать<br>как можно больше предметов.</p>
+            <div class="intro-facts"><span><img src="assets/timer.png" alt="">60 секунд</span><span><img src="assets/coin.png" alt="">Предмет = 1 монета</span></div>
+            <p class="touch-instruction">Зажмите капибару и двигайте пальцем.<br>Отпустили? Коснитесь её снова.</p>
+            <p class="intro-rewards">20 / 30 / 40 монет — 1 / 2 / 3 награды</p>
+            <button class="primary" id="start-button">Начать игру</button>
+          </div>
+        </section>
+      </div>
+      <div class="sr-only" id="announcer" role="status" aria-live="polite"></div>
+    </div>
+  </main>
+  <noscript>Для игры включите JavaScript в браузере.</noscript>
+  <script type="module" src="main.mjs"></script>
+</body>
+</html>

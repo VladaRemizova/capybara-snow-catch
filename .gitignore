@@ -1,0 +1,4 @@
+preview-*.png
+qa-*.json
+*.tar.gz
+node_modules/
