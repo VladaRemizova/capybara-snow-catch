@@ -1,5 +1,7 @@
 export const ROUND_SECONDS = 60;
 export const TUTORIAL_SECONDS = 10;
+// A short input gap distinguishes a held, stationary finger from continuous dragging.
+export const MOTION_SETTLE_SECONDS = 0.09;
 export const LANES = [78.5, 187.5, 296.5];
 export const ITEM_TYPES = ['oil', 'coffee-lid', 'sandwich', 'coffee', 'hotdog'];
 export const ITEM_SIZES = {
@@ -25,12 +27,19 @@ export class CatchGame {
     this.characterX = 187.5; this.objects = []; this.pointerId = null;
     this.grabOffset = 0; this.serial = 0; this.nextSpawn = 0.4;
     this.spawnCount = 0; this.tutorialComplete = false;
+    this.motionDirection = 'open'; this.lastMovedAt = -Infinity;
   }
   start() { this.reset(); this.status = 'running'; }
   get characterY() { return this.height - 228; }
   get catchY() { return this.characterY + 109; }
   get remaining() { return Math.max(0, Math.ceil(ROUND_SECONDS - this.elapsed)); }
   get progress() { return rewardProgress(this.coins); }
+  canCatchAt(time) {
+    return this.pointerId === null || this.motionDirection === 'open' ||
+      time >= this.lastMovedAt + MOTION_SETTLE_SECONDS;
+  }
+  get bagOpen() { return this.canCatchAt(this.elapsed); }
+  get pose() { return this.bagOpen ? 'open' : this.motionDirection; }
   get stage() { return Math.min(5, Math.floor(this.elapsed / 10)); }
   get speed() {
     return (this.catchY - 105) * [0.165, 0.28, 0.34, 0.40, 0.46, 0.51][this.stage];
@@ -57,11 +66,24 @@ export class CatchGame {
   }
   drag(pointerId, x) {
     if (this.status !== 'running' || this.pointerId !== pointerId) return false;
-    this.characterX = clamp(x - this.grabOffset, 66, 309);
+    const nextX = clamp(x - this.grabOffset, 66, 309);
+    const delta = nextX - this.characterX;
+    if (Math.abs(delta) >= 0.35) {
+      this.characterX = nextX;
+      this.motionDirection = delta < 0 ? 'left' : 'right';
+      this.lastMovedAt = this.elapsed;
+    } else if (delta === 0) {
+      this.motionDirection = 'open';
+      this.lastMovedAt = -Infinity;
+    }
     return true;
   }
   release(pointerId = this.pointerId) {
-    if (pointerId === this.pointerId) this.pointerId = null;
+    if (pointerId === this.pointerId) {
+      this.pointerId = null;
+      this.motionDirection = 'open';
+      this.lastMovedAt = -Infinity;
+    }
   }
   pause() { if (this.status === 'running') { this.status = 'paused'; this.release(); } }
   resume() { if (this.status === 'paused') this.status = 'running'; }
@@ -76,6 +98,7 @@ export class CatchGame {
   advanceTo(elapsed) {
     if (this.status !== 'running') return [];
     const next = clamp(elapsed, this.elapsed, ROUND_SECONDS);
+    const previousTime = this.elapsed;
     const delta = next - this.elapsed;
     const events = [];
     this.elapsed = next;
@@ -100,7 +123,8 @@ export class CatchGame {
       const previousBottom = object.y + bottomOffset;
       object.y += this.speed * delta;
       const crossesMouth = previousBottom <= this.catchY && object.y + bottomOffset >= this.catchY;
-      if (crossesMouth && Math.abs(object.x - this.characterX) <= 45) {
+      const crossingTime = previousTime + Math.max(0, this.catchY - previousBottom) / this.speed;
+      if (crossesMouth && this.canCatchAt(crossingTime) && Math.abs(object.x - this.characterX) <= 45) {
         const before = this.progress.rewards;
         this.coins++;
         events.push({ type: 'catch', object: { ...object }, coins: this.coins });

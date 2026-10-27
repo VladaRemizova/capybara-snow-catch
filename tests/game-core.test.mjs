@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { CatchGame, LANES, rewardProgress } from '../dist/game-core.mjs';
+import { CatchGame, LANES, MOTION_SETTLE_SECONDS, rewardProgress } from '../dist/game-core.mjs';
 
 function tick(game, until, onFrame = () => {}) {
   const events = [];
@@ -123,4 +123,61 @@ test('rules pause releases the finger and restart resets the entire round', () =
   assert.equal(game.remaining, 60); assert.equal(game.coins, 0);
   assert.equal(game.progress.rewards, 0); assert.equal(game.objects.length, 0);
   assert.equal(game.characterX, 187.5); assert.equal(game.pointerId, null);
+});
+
+test('poses follow movement and a stationary held finger opens the sack', () => {
+  const game = new CatchGame(); game.start();
+  assert.equal(game.pose, 'open');
+  game.beginDrag(1, game.characterX, game.characterY + 70);
+  assert.equal(game.pose, 'open');
+  game.drag(1, 170);
+  assert.equal(game.pose, 'left'); assert.equal(game.bagOpen, false);
+  game.advanceTo(.04); game.drag(1, 175);
+  assert.equal(game.pose, 'right');
+  game.advanceTo(.04 + MOTION_SETTLE_SECONDS - .001);
+  assert.equal(game.pose, 'right');
+  game.advanceTo(.04 + MOTION_SETTLE_SECONDS + .001);
+  assert.equal(game.pose, 'open'); assert.equal(game.pointerId, 1);
+  game.drag(1, 150); assert.equal(game.pose, 'left');
+  game.release(2); assert.equal(game.pose, 'left');
+  game.release(1); assert.equal(game.pose, 'open');
+});
+
+test('stationary jitter does not close the sack and a stopped edge opens it', () => {
+  const game = new CatchGame(); game.start();
+  game.beginDrag(1, game.characterX, game.characterY + 70);
+  game.drag(1, 187.6);
+  assert.equal(game.characterX, 187.5); assert.equal(game.pose, 'open');
+  game.drag(1, 1000); assert.equal(game.pose, 'right');
+  game.drag(1, 1100); assert.equal(game.characterX, 309); assert.equal(game.pose, 'open');
+  game.drag(1, 200); assert.equal(game.pose, 'left');
+  game.drag(1, 200); assert.equal(game.pose, 'open');
+});
+
+test('a closed sack misses an item and opening later cannot collect it retroactively', () => {
+  const game = new CatchGame(); game.start();
+  game.nextSpawn = 100;
+  game.beginDrag(1, game.characterX, game.characterY + 70);
+  game.drag(1, 180);
+  game.objects = [{ id: 1, kind: 'hotdog', x: 180, y: game.catchY - 59.5 * .33 - 1 }];
+  assert.equal(game.advanceTo(.03).filter(e => e.type === 'catch').length, 0);
+  assert.equal(game.coins, 0);
+  game.release();
+  assert.equal(game.advanceTo(.06).filter(e => e.type === 'catch').length, 0);
+  assert.equal(game.coins, 0);
+  game.objects.push({ id: 2, kind: 'hotdog', x: 180, y: game.catchY - 59.5 * .33 - 1 });
+  assert.equal(game.advanceTo(.09).filter(e => e.type === 'catch').length, 1);
+  assert.equal(game.coins, 1);
+});
+
+test('the sack must be open at the actual crossing time between frames', () => {
+  const game = new CatchGame(); game.start(); game.nextSpawn = 100;
+  game.beginDrag(1, game.characterX, game.characterY + 70); game.drag(1, 180);
+  game.advanceTo(.07);
+  // This object crosses at .08, while the sack is closed; the step ends at .10 with it open.
+  game.objects = [{ id: 1, kind: 'hotdog', x: 180, y: game.catchY - 59.5 * .33 - game.speed * .01 }];
+  assert.equal(game.advanceTo(.1).filter(e => e.type === 'catch').length, 0);
+  assert.equal(game.bagOpen, true); assert.equal(game.pointerId, 1);
+  game.objects = [{ id: 2, kind: 'hotdog', x: 180, y: game.catchY - 59.5 * .33 - 1 }];
+  assert.equal(game.advanceTo(.13).filter(e => e.type === 'catch').length, 1);
 });

@@ -45,15 +45,17 @@ scene.addEventListener('pointermove', event => {
   scene.classList.toggle('ready-to-grab', game.status === 'running' && game.containsCharacter(x, y));
 });
 function release(event) {
+  syncClock();
   game.release(event?.pointerId);
   scene.classList.toggle('dragging', game.pointerId !== null);
+  renderCharacter();
 }
 scene.addEventListener('pointerup', release);
 scene.addEventListener('pointercancel', release);
 scene.addEventListener('lostpointercapture', release);
-window.addEventListener('blur', () => { game.release(); scene.classList.remove('dragging'); });
+window.addEventListener('blur', () => release());
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden) { game.release(); scene.classList.remove('dragging'); }
+  if (document.hidden) release();
   else { syncClock(); render(); }
 });
 
@@ -219,7 +221,9 @@ function renderCharacter() {
   const transform = `translate(${game.characterX - 92.5}px,${game.characterY}px)`;
   for (const id of ['character', 'character-front']) {
     $(id).style.left = '0'; $(id).style.top = '0'; $(id).style.transform = transform;
+    $(id).dataset.pose = game.pose;
   }
+  scene.dataset.bagOpen = String(game.bagOpen);
 }
 function render() {
   renderCharacter();
@@ -314,8 +318,8 @@ function showRules() {
   showModal('rules', `
     <h2 id="modal-title">Как играть</h2>
     <ol class="rules">
-      <li><b>1</b><span>Зажмите капибару и ведите пальцем влево-вправо. Чтобы продолжить после отпускания, коснитесь самой капибары.</span></li>
-      <li><b>2</b><span>Ловите предметы в мешок. Каждый приносит одну монету. Штрафов за пропуски нет.</span></li>
+      <li><b>1</b><span>Зажмите капибару и ведите влево-вправо. Отпустили палец — коснитесь её снова.</span></li>
+      <li><b>2</b><span>Остановитесь, чтобы открыть мешок. На ходу предметы не ловятся. Один предмет — одна монета, пропуск без штрафа.</span></li>
       <li><b>3</b><span>У вас 60 секунд. Через первые 10 секунд предметов станет больше и они начнут падать быстрее.</span></li>
       <li><b>4</b><span>20, 30 и 40 монет дают одну, две и три награды. После 40 монет продолжайте собирать!</span></li>
     </ol><button class="primary" data-action="${game.status === 'paused' ? 'resume' : game.status === 'finished' ? 'result' : 'intro'}">${game.status === 'paused' ? 'Продолжить игру' : 'Понятно'}</button>`);
@@ -351,7 +355,7 @@ document.addEventListener('keydown', event => {
 });
 // Load every product before the timer begins; the initial button remains disabled while loading.
 const startButton = $('start-button'); startButton.disabled = true; startButton.textContent = 'Загружаем игру…';
-Promise.all([...ITEM_TYPES, 'capybara', 'foreground', 'background', 'result-art', 'holiday-result'].map(name => new Promise(resolve => {
+Promise.all([...ITEM_TYPES, 'capybara', 'capybara-left', 'capybara-right', 'foreground', 'background', 'result-art', 'holiday-result'].map(name => new Promise(resolve => {
   const image = new Image(); image.onload = () => resolve(true); image.onerror = () => resolve(false); image.src = `assets/${name}.png`;
 }))).then(results => {
   startButton.disabled = false;

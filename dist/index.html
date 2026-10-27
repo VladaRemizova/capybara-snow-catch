@@ -43,13 +43,15 @@
       </section>
 
       <div class="falling-field" id="falling-field" aria-hidden="true"></div>
-      <div class="character" id="character" aria-hidden="true">
-        <img class="capy-image" src="assets/capybara.png" alt="" draggable="false">
+      <div class="character" id="character" data-pose="open" aria-hidden="true">
+        <img class="capy-image" data-pose="open" src="assets/capybara.png" alt="" draggable="false">
+        <img class="capy-image" data-pose="left" src="assets/capybara-left.png" alt="" draggable="false">
+        <img class="capy-image" data-pose="right" src="assets/capybara-right.png" alt="" draggable="false">
       </div>
-      <div class="character character-front" id="character-front" aria-hidden="true"><img class="capy-image" src="assets/capybara.png" alt="" draggable="false"></div>
+      <div class="character character-front" id="character-front" data-pose="open" aria-hidden="true"><img class="capy-image" data-pose="open" src="assets/capybara.png" alt="" draggable="false"></div>
       <img class="foreground" src="assets/foreground.png" alt="" draggable="false">
       <div class="effects" id="effects" aria-hidden="true"></div>
-      <div class="tutorial" id="tutorial" hidden><span>Зажмите капибару<br>и ведите влево-вправо</span><svg viewBox="0 0 70 24" aria-hidden="true"><path d="M7 12h56M15 4l-8 8 8 8M55 4l8 8-8 8"/></svg></div>
+      <div class="tutorial" id="tutorial" hidden><span>Ведите капибару.<br>Остановитесь, чтобы поймать</span><svg viewBox="0 0 70 24" aria-hidden="true"><path d="M7 12h56M15 4l-8 8 8 8M55 4l8 8-8 8"/></svg></div>
       <div class="toast" id="toast" role="status" hidden></div>
       <aside class="side-buttons" aria-label="Настройки игры">
         <button class="image-button" id="help-button" aria-label="Правила игры"><img src="assets/help.png" alt=""></button>
@@ -63,7 +65,7 @@
             <h1 id="modal-title">Поймай удачу!</h1>
             <p class="intro-text">Помогите капибаре собрать<br>как можно больше предметов.</p>
             <div class="intro-facts"><span><img src="assets/timer.png" alt="">60 секунд</span><span><img src="assets/coin.png" alt="">Предмет = 1 монета</span></div>
-            <p class="touch-instruction">Зажмите капибару и двигайте пальцем.<br>Отпустили? Коснитесь её снова.</p>
+            <p class="touch-instruction">Ведите капибару и останавливайтесь,<br>чтобы открыть мешок и поймать предмет.<br>Отпустили? Коснитесь её снова.</p>
             <p class="intro-rewards">20 / 30 / 40 монет — 1 / 2 / 3 награды</p>
             <button class="primary" id="start-button">Начать игру</button>
           </div>
