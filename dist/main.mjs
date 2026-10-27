@@ -152,27 +152,26 @@ function catchEffect(object) {
   image.style.zIndex = '22'; scene.append(image);
   temporary(image, [
     { transform: `translate(${object.x - w / 2}px,${object.y - h / 2}px) scale(1)`, opacity: 1 },
-    { transform: `translate(${x - w / 2}px,${object.y - h / 2 - 12}px) scale(1.13) rotate(-7deg)`, opacity: 1, offset: .2 },
-    { transform: `translate(${x - w / 2}px,${y + 28 - h / 2}px) scale(.06) rotate(14deg)`, opacity: 0 },
+    { transform: `translate(${x - w / 2}px,${object.y - h / 2 - 5}px) scale(1.05) rotate(-3deg)`, opacity: 1, offset: .2 },
+    { transform: `translate(${x - w / 2}px,${y + 28 - h / 2}px) scale(.06) rotate(6deg)`, opacity: 0 },
   ], { duration: reducedMotion ? 60 : 340, easing: 'cubic-bezier(.22,.1,.45,1)', fill: 'forwards' });
   for (const id of ['character', 'character-front']) {
     if (!reducedMotion) animate($(id), [
-      { scale: '1 1', translate: '0 0', rotate: '0deg' },
-      { scale: '1.085 .92', translate: '0 4px', rotate: '-1.5deg', offset: .18 },
-      { scale: '.96 1.065', translate: '0 -9px', rotate: '1.5deg', offset: .46 },
-      { scale: '1.025 .98', translate: '0 1px', rotate: '-.5deg', offset: .74 },
-      { scale: '1 1', translate: '0 0', rotate: '0deg' },
-    ], { duration: 480, easing: 'ease-out' });
+      { scale: '1 1' },
+      { scale: '1.018 .985', offset: .3 },
+      { scale: '.995 1.007', offset: .65 },
+      { scale: '1 1' },
+    ], { duration: 340, easing: 'cubic-bezier(.25,.46,.45,.94)' });
   }
   holidayBurst(x, y - 5);
   const labelX = Math.max(45, Math.min(330, x + (x < 210 ? 57 : -57)));
   const label = effectNode('catch-score', labelX, y - 54);
   label.innerHTML = '<img src="assets/coin.png" alt=""><strong>+1</strong>';
   temporary(label, reducedMotion ? [{ opacity: 1 }, { opacity: 0 }] : [
-    { transform: 'translate(-50%,0) scale(.35) rotate(-12deg)', opacity: 0 },
-    { transform: 'translate(-50%,-14px) scale(1.18) rotate(5deg)', opacity: 1, offset: .16 },
-    { transform: 'translate(-50%,-19px) scale(1) rotate(-3deg)', opacity: 1, offset: .5 },
-    { transform: 'translate(-50%,-53px) scale(.85) rotate(-3deg)', opacity: 0 },
+    { transform: 'translate(-50%,0) scale(.78)', opacity: 0 },
+    { transform: 'translate(-50%,-10px) scale(1.04)', opacity: 1, offset: .2 },
+    { transform: 'translate(-50%,-17px) scale(1)', opacity: 1, offset: .55 },
+    { transform: 'translate(-50%,-44px) scale(.95)', opacity: 0 },
   ], { duration: reducedMotion ? 350 : 1000, easing: 'cubic-bezier(.2,.55,.35,1)', fill: 'both' });
   if (!reducedMotion) {
     const coin = document.createElement('img'); coin.src = 'assets/coin.png'; coin.className = 'flying-coin';
