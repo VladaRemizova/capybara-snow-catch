@@ -1,7 +1,9 @@
 export const ROUND_SECONDS = 60;
 export const TUTORIAL_SECONDS = 10;
 // A short input gap distinguishes a held, stationary finger from continuous dragging.
-export const MOTION_SETTLE_SECONDS = 0.09;
+export const MOTION_SETTLE_SECONDS = 0.04;
+export const POSE_DEADZONE_PIXELS = 8;
+const MOTION_REFRESH_PIXELS = 1;
 export const LANES = [78.5, 187.5, 296.5];
 export const ITEM_TYPES = ['oil', 'coffee-lid', 'sandwich', 'coffee', 'hotdog'];
 export const ITEM_SIZES = {
@@ -28,6 +30,7 @@ export class CatchGame {
     this.grabOffset = 0; this.serial = 0; this.nextSpawn = 0.4;
     this.spawnCount = 0; this.tutorialComplete = false;
     this.motionDirection = 'open'; this.lastMovedAt = -Infinity;
+    this.motionAnchorX = this.characterX; this.motionSampleX = this.characterX;
   }
   start() { this.reset(); this.status = 'running'; }
   get characterY() { return this.height - 228; }
@@ -40,6 +43,17 @@ export class CatchGame {
   }
   get bagOpen() { return this.canCatchAt(this.elapsed); }
   get pose() { return this.bagOpen ? 'open' : this.motionDirection; }
+  stopMotion() {
+    this.motionDirection = 'open'; this.lastMovedAt = -Infinity;
+    this.motionAnchorX = this.characterX; this.motionSampleX = this.characterX;
+  }
+  settleMotion() {
+    if (this.motionDirection !== 'open' && this.bagOpen) this.stopMotion();
+  }
+  movePose(direction) {
+    this.motionDirection = direction; this.lastMovedAt = this.elapsed;
+    this.motionAnchorX = this.characterX; this.motionSampleX = this.characterX;
+  }
   get stage() { return Math.min(5, Math.floor(this.elapsed / 10)); }
   get speed() {
     return (this.catchY - 105) * [0.165, 0.28, 0.34, 0.40, 0.46, 0.51][this.stage];
@@ -62,27 +76,42 @@ export class CatchGame {
     if (this.status !== 'running' || this.pointerId !== null || !this.containsCharacter(x, y)) return false;
     this.pointerId = pointerId;
     this.grabOffset = x - this.characterX;
+    this.stopMotion();
     return true;
   }
   drag(pointerId, x) {
     if (this.status !== 'running' || this.pointerId !== pointerId) return false;
+    this.settleMotion();
     const nextX = clamp(x - this.grabOffset, 66, 309);
     const delta = nextX - this.characterX;
-    if (Math.abs(delta) >= 0.35) {
-      this.characterX = nextX;
-      this.motionDirection = delta < 0 ? 'left' : 'right';
-      this.lastMovedAt = this.elapsed;
-    } else if (delta === 0) {
-      this.motionDirection = 'open';
-      this.lastMovedAt = -Infinity;
+    this.characterX = nextX;
+    if (delta === 0) {
+      this.stopMotion();
+      return true;
+    }
+    const offset = nextX - this.motionAnchorX;
+    if (this.motionDirection === 'open') {
+      // Small aiming corrections move the character without closing the sack.
+      if (Math.abs(offset) >= POSE_DEADZONE_PIXELS) this.movePose(offset < 0 ? 'left' : 'right');
+    } else {
+      const direction = this.motionDirection === 'right' ? 1 : -1;
+      if (direction * offset <= -POSE_DEADZONE_PIXELS) {
+        this.movePose(direction === 1 ? 'left' : 'right');
+      } else if (direction * offset >= 0) {
+        // Keep the direction's furthest point as the reversal threshold.
+        this.motionAnchorX = nextX;
+        if (Math.abs(nextX - this.motionSampleX) >= MOTION_REFRESH_PIXELS) {
+          this.motionSampleX = nextX;
+          this.lastMovedAt = this.elapsed;
+        }
+      }
     }
     return true;
   }
   release(pointerId = this.pointerId) {
     if (pointerId === this.pointerId) {
       this.pointerId = null;
-      this.motionDirection = 'open';
-      this.lastMovedAt = -Infinity;
+      this.stopMotion();
     }
   }
   pause() { if (this.status === 'running') { this.status = 'paused'; this.release(); } }
@@ -115,6 +144,7 @@ export class CatchGame {
     if (delta > 0.5) {
       this.objects = [];
       this.nextSpawn = next + 0.2;
+      this.settleMotion();
       return events;
     }
     const survivors = [];
@@ -132,6 +162,8 @@ export class CatchGame {
       } else if (object.y < this.height + 75) survivors.push(object);
     }
     this.objects = survivors;
+    // Settle after collision checks so a closed crossing is never awarded later.
+    this.settleMotion();
     if (next >= this.nextSpawn && (next >= TUTORIAL_SECONDS || this.objects.length === 0)) {
       events.push({ type: 'spawn', object: this.spawn() });
       this.nextSpawn = next + this.spawnInterval;

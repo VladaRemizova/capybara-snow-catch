@@ -24,15 +24,23 @@ try {
   const charX = () => page.locator('#character').evaluate(n => { const r = n.getBoundingClientRect(); return r.x + r.width / 2; });
 
   await touch('touchStart', 187.5);
+  for (const x of [190, 184, 193, 181]) {
+    await touch('touchMove', x);
+    assert.equal(await pose(), 'open', 'small aiming corrections must keep the sack open');
+    assert.equal(await charX(), x);
+  }
   await touch('touchMove', 150);
   assert.equal(await pose(), 'left'); assert.equal(await bag(), 'false');
   assert.equal(await page.locator('#character-front').evaluate(n => getComputedStyle(n).visibility), 'hidden');
   await page.screenshot({ path: '/workspace/sites/capybara-winter-demo/preview-pose-left.png', animations: 'disabled' });
   await touch('touchMove', 250);
   assert.equal(await pose(), 'right');
+  await touch('touchMove', 246);
+  assert.equal(await pose(), 'right', 'a small reversal must not flip the pose');
   await page.screenshot({ path: '/workspace/sites/capybara-winter-demo/preview-pose-right.png', animations: 'disabled' });
-  await page.clock.runFor(120);
+  await page.clock.runFor(50);
   assert.equal(await pose(), 'open'); assert.equal(await bag(), 'true');
+  assert.equal(await page.locator('#character .capy-image[data-pose="open"]').evaluate(n => getComputedStyle(n).transitionDuration), '0s');
   assert.ok(await page.locator('#scene').evaluate(n => n.classList.contains('dragging')));
   await touch('touchMove', 187.5);
   assert.equal(await pose(), 'left');
@@ -44,7 +52,7 @@ try {
   await page.clock.runFor(4700);
   await touch('touchStart', 187.5);
   for (let i = 0; i < 70; i++) {
-    await touch('touchMove', 187.5 + (i % 2 ? -4 : 4));
+    await touch('touchMove', 187.5 + (i % 2 ? -14 : 14));
     await page.clock.runFor(16);
   }
   assert.equal(await page.locator('#coins').textContent(), '0', 'the closed sack must miss the first item');
@@ -77,5 +85,5 @@ try {
   }));
   assert.ok(assets.every(a => a.loaded && a.width === 185 && a.height === 222));
   assert.deepEqual(errors, []);
-  console.log(JSON.stringify({ left: 'passed', right: 'passed', stopWhileHeld: 'passed', release: 'passed', closedSackMiss: 'passed', openSackCatch: 'passed', regrab: 'passed', assets, errors }, null, 2));
+  console.log(JSON.stringify({ left: 'passed', right: 'passed', aimingSafeZone: 'passed', reversalSafeZone: 'passed', fastOpenWhileHeld: 'passed', immediateOpenVisual: 'passed', release: 'passed', closedSackMiss: 'passed', openSackCatch: 'passed', regrab: 'passed', assets, errors }, null, 2));
 } finally { await browser.close(); }
