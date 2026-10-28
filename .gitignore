@@ -2,3 +2,8 @@ preview-*.png
 qa-*.json
 *.tar.gz
 node_modules/
+*.zip
+*.bundle
+.env
+.env.*
+!.env.example

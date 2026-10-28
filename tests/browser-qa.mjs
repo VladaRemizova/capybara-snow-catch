@@ -1,8 +1,10 @@
-// Uses the Chromium and Playwright installation supplied by the execution environment.
-import { chromium } from '/opt/codex/cua_node/lib/node_modules/playwright-core/index.mjs';
+// Run npm ci and npx playwright install chromium before browser checks.
+import { chromium } from 'playwright';
+import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 
-const browser = await chromium.launch({ headless: true, executablePath: '/usr/lib/chromium/chromium', args: ['--no-sandbox', '--disable-dev-shm-usage'] });
+const artifact = name => fileURLToPath(new URL('../' + name, import.meta.url));
+const browser = await chromium.launch({ headless: true, ...(process.env.CAPY_CHROMIUM_PATH ? { executablePath: process.env.CAPY_CHROMIUM_PATH } : {}), args: ['--no-sandbox', '--disable-dev-shm-usage'] });
 const errors = [];
 try {
   const context = await browser.newContext({ viewport: { width: 375, height: 672 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
@@ -45,7 +47,7 @@ try {
       .filter(p => p.y < 550).sort((a, b) => b.y - a.y)[0]?.x);
     if (nextX !== undefined) await touch('touchMove', nextX, 580);
     await page.clock.runFor(100);
-    if (step === 145) await page.screenshot({ path: '/workspace/sites/capybara-winter-demo/preview-game.png' });
+    if (step === 145) await page.screenshot({ path: artifact('preview-game.png') });
   }
   assert.equal(await page.locator('#timer').textContent(), '00:00');
   const finalCoins = Number(await page.locator('#coins').textContent());
@@ -53,7 +55,7 @@ try {
   assert.equal(await page.locator('#rewards').textContent(), '3/3');
   assert.equal(await page.locator('#total-rewards').textContent(), '3');
   assert.ok((await page.locator('#modal-title').textContent()).includes(String(finalCoins)));
-  await page.screenshot({ path: '/workspace/sites/capybara-winter-demo/preview-result.png', animations: 'disabled' });
+  await page.screenshot({ path: artifact('preview-result.png'), animations: 'disabled' });
   await page.getByRole('button', { name: 'Мои награды (3)', exact: true }).click();
   assert.equal(await page.locator('.reward-card.earned').count(), 3);
   await page.getByRole('button', { name: 'Понятно', exact: true }).click();
@@ -87,7 +89,7 @@ try {
     });
     assert.ok(resultLayout.top >= 0 && resultLayout.bottom <= height && resultLayout.artTop >= 0, `result popup overflow at ${width}x${height}`);
     viewportChecks.push({ width, height, ...layout, result: resultLayout });
-    if (width === 390) await viewport.screenshot({ path: '/workspace/sites/capybara-winter-demo/preview-holiday-result.png', animations: 'disabled' });
+    if (width === 390) await viewport.screenshot({ path: artifact('preview-holiday-result.png'), animations: 'disabled' });
     await viewport.close();
   }
   assert.deepEqual(errors, []);

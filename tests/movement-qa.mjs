@@ -1,7 +1,9 @@
-import { chromium } from '/opt/codex/cua_node/lib/node_modules/playwright-core/index.mjs';
+import { chromium } from 'playwright';
+import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 
-const browser = await chromium.launch({ headless: true, executablePath: '/usr/lib/chromium/chromium', args: ['--no-sandbox', '--disable-dev-shm-usage'] });
+const artifact = name => fileURLToPath(new URL('../' + name, import.meta.url));
+const browser = await chromium.launch({ headless: true, ...(process.env.CAPY_CHROMIUM_PATH ? { executablePath: process.env.CAPY_CHROMIUM_PATH } : {}), args: ['--no-sandbox', '--disable-dev-shm-usage'] });
 try {
   const context = await browser.newContext({ viewport: { width: 375, height: 672 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
   const page = await context.newPage();
@@ -32,12 +34,12 @@ try {
   await touch('touchMove', 150);
   assert.equal(await pose(), 'left'); assert.equal(await bag(), 'false');
   assert.equal(await page.locator('#character-front').evaluate(n => getComputedStyle(n).visibility), 'hidden');
-  await page.screenshot({ path: '/workspace/sites/capybara-winter-demo/preview-pose-left.png', animations: 'disabled' });
+  await page.screenshot({ path: artifact('preview-pose-left.png'), animations: 'disabled' });
   await touch('touchMove', 250);
   assert.equal(await pose(), 'right');
   await touch('touchMove', 246);
   assert.equal(await pose(), 'right', 'a small reversal must not flip the pose');
-  await page.screenshot({ path: '/workspace/sites/capybara-winter-demo/preview-pose-right.png', animations: 'disabled' });
+  await page.screenshot({ path: artifact('preview-pose-right.png'), animations: 'disabled' });
   await page.clock.runFor(50);
   assert.equal(await pose(), 'open'); assert.equal(await bag(), 'true');
   assert.equal(await page.locator('#character .capy-image[data-pose="open"]').evaluate(n => getComputedStyle(n).transitionDuration), '0s');
@@ -72,7 +74,7 @@ try {
   assert.equal(await page.locator('#coins').textContent(), '1', 'stopping with a held finger must allow catching');
   assert.ok(await page.locator('#scene').evaluate(n => n.classList.contains('dragging')));
   assert.equal(await bag(), 'true');
-  await page.screenshot({ path: '/workspace/sites/capybara-winter-demo/preview-pose-open.png', animations: 'disabled' });
+  await page.screenshot({ path: artifact('preview-pose-open.png'), animations: 'disabled' });
   await touch('touchEnd');
   await touch('touchStart', 330, 280);
   await touch('touchMove', 280, 280);
