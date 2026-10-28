@@ -11,6 +11,8 @@ try {
   await page.clock.pauseAt(new Date('2026-10-28T00:00:01Z'));
   await page.goto('http://127.0.0.1:8080', { waitUntil: 'networkidle' });
   await page.clock.runFor(4500);
+  await page.locator('#teaching-layer').tap();
+  await page.clock.runFor(260);
   const cdp = await context.newCDPSession(page);
   const touch = async (type, x, y = 580) => {
     await cdp.send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x, y, id: 1 }] });

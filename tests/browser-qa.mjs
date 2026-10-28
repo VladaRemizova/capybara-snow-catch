@@ -20,6 +20,11 @@ try {
   assert.equal(await page.locator('#timer').textContent(), '01:00');
   await page.screenshot({ path: 'preview-new-teaching.png' });
   await page.clock.runFor(3500);
+  assert.equal(await page.locator('#teaching-layer').isVisible(), true);
+  assert.equal(await page.locator('#scene').getAttribute('data-state'), 'idle');
+  assert.equal(await page.locator('#timer').textContent(), '01:00');
+  await page.locator('#teaching-layer').tap({ position: { x: 20, y: 200 } });
+  await page.clock.runFor(260);
   assert.equal(await page.locator('#teaching-layer').isHidden(), true);
   assert.equal(await page.locator('#scene').getAttribute('data-state'), 'running');
   assert.equal(await page.locator('#timer').textContent(), '01:00');
@@ -40,6 +45,9 @@ try {
   await page.clock.runFor(4000);
   assert.equal(await page.locator('#timer').textContent(), pausedTimer);
   await page.clock.runFor(500);
+  assert.equal(await page.locator('#teaching-layer').isVisible(), true);
+  await page.locator('#teaching-layer').tap();
+  await page.clock.runFor(260);
   assert.equal(await page.locator('#teaching-layer').isHidden(), true);
 
   let rewardPauses = 0, switched = false;
@@ -96,7 +104,7 @@ try {
   for(const [width,height] of [[320,568],[390,844],[430,932],[1440,900]]) {
     const p=await browser.newPage({viewport:{width,height}});p.on('pageerror',e=>errors.push(e.message));
     await p.clock.install();await p.goto('http://127.0.0.1:8080',{waitUntil:'networkidle'});
-    await p.clock.runFor(4500);await p.clock.fastForward(61000);await p.clock.runFor(350);
+    await p.locator('#teaching-layer').click();await p.clock.runFor(260);await p.clock.fastForward(61000);await p.clock.runFor(350);
     const layout=await p.locator('#modal').evaluate(n=>{
       const r=n.getBoundingClientRect(),art=n.querySelector('.modal-art').getBoundingClientRect();
       const badge=document.getElementById('total-rewards').getBoundingClientRect(),parent=document.getElementById('rewards-button').getBoundingClientRect();

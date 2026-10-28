@@ -8,6 +8,7 @@ const nodes = new Map();
 let scale = 1, origin = 0, heldElapsed = 0, modalMode = null, lastFocus = null;
 let teachingTimer, prizeTimer, prizeEndTimer, soundOn = false, audio = null;
 let teachingReturn = false, prizeShowing = false, finishPending = false;
+let assetsReady = false, teachingTapQueued = false;
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 
@@ -312,6 +313,9 @@ function startGame() {
   cleanEffects(); game.start(); origin = performance.now(); hideModal(); render(); beep();
 }
 function finishTeaching() {
+  if ($('teaching-layer').hidden || $('teaching-layer').classList.contains('leaving')) return;
+  if (!assetsReady) { teachingTapQueued = true; return; }
+  teachingTapQueued = false;
   $('teaching-layer').classList.add('leaving');
   teachingTimer = setTimeout(() => {
     $('teaching-layer').hidden = true;
@@ -335,7 +339,6 @@ function showTeaching(returnToGame = false) {
       image.style.transform = `translate(${x-w/2}px,${y-h/2-133}px)`; field.append(image);
     }
   }
-  teachingTimer = setTimeout(finishTeaching, 4200);
 }
 function setVariant(variant) {
   game.variant = variant;
@@ -383,6 +386,7 @@ $('modal-content').addEventListener('click', event => {
 });
 $('reset-button').addEventListener('click', startGame);
 $('close-button').addEventListener('click', () => showTeaching());
+$('teaching-layer').addEventListener('click', finishTeaching);
 $('help-button').addEventListener('click', () => showTeaching(true));
 $('variant-button').addEventListener('click', () => { syncClock(); setVariant(game.variant === 1 ? 2 : 1); });
 $('rewards-button').addEventListener('click', showRewards);
@@ -402,12 +406,15 @@ document.addEventListener('keydown', event => {
   }
   if (event.key === 'Escape' && game.status === 'paused') { hideModal(); resume(); }
 });
-// Show the Figma teaching screen immediately and start its display time after assets load.
+// Keep teaching visible until a tap; an early tap waits for the game assets.
 const preloadNames = [...ITEM_TYPES, ...[1,2].flatMap(v => ['open','left','right'].map(pose => `capy-${v}-${pose}`)), 'foreground', 'background', 'result-capy', 'prize-icon', 'gesture-dot', 'gesture-glint', 'stat-shade', 'result-shade', 'result-shadow', 'result-prize-icon', ...PRIZE_PIECES.map(p => p.name)];
 Promise.all(preloadNames.map(name => new Promise(resolve => {
   const image = new Image(); image.onload = () => resolve(true); image.onerror = () => resolve(false); image.src = `assets/${name}.png`;
 }))).then(results => {
-  if (results.every(Boolean)) showTeaching();
+  if (results.every(Boolean)) {
+    assetsReady = true; showTeaching();
+    if (teachingTapQueued) finishTeaching();
+  }
   else {
     $('teaching-layer').querySelector('p').innerHTML = 'Не удалось загрузить игру.<br>Коснитесь, чтобы повторить';
     $('teaching-layer').addEventListener('click', () => location.reload(), { once: true });
