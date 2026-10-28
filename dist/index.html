@@ -8,7 +8,7 @@
   <title>Поймай удачу</title>
   <link rel="icon" href="assets/reward.png" type="image/png">
   <link rel="preload" href="assets/background.png" as="image">
-  <link rel="preload" href="assets/capybara.png" as="image">
+  <link rel="preload" href="assets/capy-1-open.png" as="image">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -44,31 +44,42 @@
 
       <div class="falling-field" id="falling-field" aria-hidden="true"></div>
       <div class="character" id="character" data-pose="open" aria-hidden="true">
-        <img class="capy-image" data-pose="open" src="assets/capybara.png" alt="" draggable="false">
-        <img class="capy-image" data-pose="left" src="assets/capybara-left.png" alt="" draggable="false">
-        <img class="capy-image" data-pose="right" src="assets/capybara-right.png" alt="" draggable="false">
+        <img class="capy-image" data-pose="open" src="assets/capy-1-open.png" alt="" draggable="false">
+        <img class="capy-image" data-pose="left" src="assets/capy-1-left.png" alt="" draggable="false">
+        <img class="capy-image" data-pose="right" src="assets/capy-1-right.png" alt="" draggable="false">
       </div>
-      <div class="character character-front" id="character-front" data-pose="open" aria-hidden="true"><img class="capy-image" data-pose="open" src="assets/capybara.png" alt="" draggable="false"></div>
+      <div class="character character-front" id="character-front" data-pose="open" aria-hidden="true">
+        <img class="capy-image" data-pose="open" src="assets/capy-1-open.png" alt="" draggable="false">
+        <img class="capy-image" data-pose="left" src="assets/capy-1-left.png" alt="" draggable="false">
+        <img class="capy-image" data-pose="right" src="assets/capy-1-right.png" alt="" draggable="false">
+      </div>
       <img class="foreground" src="assets/foreground.png" alt="" draggable="false">
       <div class="effects" id="effects" aria-hidden="true"></div>
-      <div class="tutorial" id="tutorial" hidden><span>Ведите капибару.<br>Остановитесь, чтобы поймать</span><svg viewBox="0 0 70 24" aria-hidden="true"><path d="M7 12h56M15 4l-8 8 8 8M55 4l8 8-8 8"/></svg></div>
-      <div class="toast" id="toast" role="status" hidden></div>
+      <button class="variant-button" id="variant-button" aria-label="Выбрать капибару 2" title="Сменить капибару"><span aria-hidden="true">↔</span><span id="variant-number">1/2</span></button>
       <aside class="side-buttons" aria-label="Настройки игры">
         <button class="image-button" id="help-button" aria-label="Правила игры"><img src="assets/help.png" alt=""></button>
         <button class="image-button sound-button" id="sound-button" aria-label="Включить звук" aria-pressed="false"><img src="assets/sound.png" alt=""><span class="mute-mark"></span></button>
       </aside>
 
-      <div class="modal-layer" id="modal-layer">
-        <section class="modal intro-modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-          <img class="modal-art" src="assets/result-art.png" alt="Капибара с красным мешком">
-          <div id="modal-content">
-            <h1 id="modal-title">Поймай удачу!</h1>
-            <p class="intro-text">Помогите капибаре собрать<br>как можно больше предметов.</p>
-            <div class="intro-facts"><span><img src="assets/timer.png" alt="">60 секунд</span><span><img src="assets/coin.png" alt="">Предмет = 1 монета</span></div>
-            <p class="touch-instruction">Ведите капибару и останавливайтесь,<br>чтобы открыть мешок и поймать предмет.<br>Отпустили? Коснитесь её снова.</p>
-            <p class="intro-rewards">20 / 30 / 40 монет — 1 / 2 / 3 награды</p>
-            <button class="primary" id="start-button">Начать игру</button>
-          </div>
+      <div class="teaching-layer" id="teaching-layer" role="dialog" aria-modal="true" aria-label="Обучение управлению">
+        <div class="teaching-content">
+          <p>Двигайте капибару<br>пальцем и собирайте<br>предметы</p>
+          <div class="gesture-track"><span class="gesture-finger"><img src="assets/gesture-dot.png" alt=""><img class="gesture-glint" src="assets/gesture-glint.png" alt=""></span></div>
+        </div>
+      </div>
+      <div class="prize-layer" id="prize-layer" role="status" hidden>
+        <div class="prize-composition" id="prize-composition">
+          <img class="prize-glow" src="assets/prize-piece-0.png" alt="">
+          <div class="prize-confetti" id="prize-confetti" aria-hidden="true"></div>
+          <h2>Награда<br><span id="prize-message">1 из 3 получена!</span></h2>
+          <img class="prize-art" src="assets/prize-icon.png" alt="">
+        </div>
+      </div>
+      <div class="modal-layer" id="modal-layer" hidden>
+        <section class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+          <img class="result-shadow" src="assets/result-shadow.png" alt="">
+          <img class="modal-art" src="assets/result-capy.png" alt="Капибара с мешком монет">
+          <div id="modal-content"></div>
         </section>
       </div>
       <div class="sr-only" id="announcer" role="status" aria-live="polite"></div>

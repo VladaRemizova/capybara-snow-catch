@@ -23,7 +23,7 @@ export function rewardProgress(coins) {
 }
 
 export class CatchGame {
-  constructor(height = 672) { this.height = height; this.reset(); }
+  constructor(height = 672) { this.height = height; this.variant = 1; this.reset(); }
   reset() {
     this.status = 'idle'; this.elapsed = 0; this.coins = 0;
     this.characterX = 187.5; this.objects = []; this.pointerId = null;
@@ -34,21 +34,20 @@ export class CatchGame {
   }
   start() { this.reset(); this.status = 'running'; }
   get characterY() { return this.height - 228; }
-  get catchY() { return this.characterY + 109; }
+  get catchY() { return this.characterY + (this.variant === 2 ? 123 : 120); }
   get remaining() { return Math.max(0, Math.ceil(ROUND_SECONDS - this.elapsed)); }
   get progress() { return rewardProgress(this.coins); }
-  canCatchAt(time) {
-    return this.pointerId === null || this.motionDirection === 'open' ||
-      time >= this.lastMovedAt + MOTION_SETTLE_SECONDS;
+  canCatchAt() { return true; }
+  get bagOpen() { return true; }
+  get pose() {
+    return this.pointerId === null || this.elapsed >= this.lastMovedAt + MOTION_SETTLE_SECONDS ? 'open' : this.motionDirection;
   }
-  get bagOpen() { return this.canCatchAt(this.elapsed); }
-  get pose() { return this.bagOpen ? 'open' : this.motionDirection; }
   stopMotion() {
     this.motionDirection = 'open'; this.lastMovedAt = -Infinity;
     this.motionAnchorX = this.characterX; this.motionSampleX = this.characterX;
   }
   settleMotion() {
-    if (this.motionDirection !== 'open' && this.bagOpen) this.stopMotion();
+    if (this.motionDirection !== 'open' && this.pose === 'open') this.stopMotion();
   }
   movePose(direction) {
     this.motionDirection = direction; this.lastMovedAt = this.elapsed;
@@ -91,7 +90,7 @@ export class CatchGame {
     }
     const offset = nextX - this.motionAnchorX;
     if (this.motionDirection === 'open') {
-      // Small aiming corrections move the character without closing the sack.
+      // Small aiming corrections do not change the head direction.
       if (Math.abs(offset) >= POSE_DEADZONE_PIXELS) this.movePose(offset < 0 ? 'left' : 'right');
     } else {
       const direction = this.motionDirection === 'right' ? 1 : -1;
@@ -127,7 +126,6 @@ export class CatchGame {
   advanceTo(elapsed) {
     if (this.status !== 'running') return [];
     const next = clamp(elapsed, this.elapsed, ROUND_SECONDS);
-    const previousTime = this.elapsed;
     const delta = next - this.elapsed;
     const events = [];
     this.elapsed = next;
@@ -153,8 +151,7 @@ export class CatchGame {
       const previousBottom = object.y + bottomOffset;
       object.y += this.speed * delta;
       const crossesMouth = previousBottom <= this.catchY && object.y + bottomOffset >= this.catchY;
-      const crossingTime = previousTime + Math.max(0, this.catchY - previousBottom) / this.speed;
-      if (crossesMouth && this.canCatchAt(crossingTime) && Math.abs(object.x - this.characterX) <= 45) {
+      if (crossesMouth && Math.abs(object.x - this.characterX) <= 45) {
         const before = this.progress.rewards;
         this.coins++;
         events.push({ type: 'catch', object: { ...object }, coins: this.coins });
@@ -162,7 +159,7 @@ export class CatchGame {
       } else if (object.y < this.height + 75) survivors.push(object);
     }
     this.objects = survivors;
-    // Settle after collision checks so a closed crossing is never awarded later.
+    // Head direction settles independently from the always-open sack.
     this.settleMotion();
     if (next >= this.nextSpawn && (next >= TUTORIAL_SECONDS || this.objects.length === 0)) {
       events.push({ type: 'spawn', object: this.spawn() });

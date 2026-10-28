@@ -125,13 +125,13 @@ test('rules pause releases the finger and restart resets the entire round', () =
   assert.equal(game.characterX, 187.5); assert.equal(game.pointerId, null);
 });
 
-test('poses follow movement and a stationary held finger opens the sack', () => {
+test('head poses follow movement while the sack stays open', () => {
   const game = new CatchGame(); game.start();
   assert.equal(game.pose, 'open');
   game.beginDrag(1, game.characterX, game.characterY + 70);
   assert.equal(game.pose, 'open');
   game.drag(1, 170);
-  assert.equal(game.pose, 'left'); assert.equal(game.bagOpen, false);
+  assert.equal(game.pose, 'left'); assert.equal(game.bagOpen, true);
   game.advanceTo(.02); game.drag(1, 190);
   assert.equal(game.pose, 'right');
   game.advanceTo(.02 + MOTION_SETTLE_SECONDS - .001);
@@ -143,7 +143,7 @@ test('poses follow movement and a stationary held finger opens the sack', () => 
   game.release(1); assert.equal(game.pose, 'open');
 });
 
-test('stationary jitter does not close the sack and a stopped edge opens it', () => {
+test('stationary jitter and a stopped edge keep the forward head pose', () => {
   const game = new CatchGame(); game.start();
   game.beginDrag(1, game.characterX, game.characterY + 70);
   game.drag(1, 187.6);
@@ -154,32 +154,33 @@ test('stationary jitter does not close the sack and a stopped edge opens it', ()
   game.drag(1, 200); assert.equal(game.pose, 'open');
 });
 
-test('a closed sack misses an item and opening later cannot collect it retroactively', () => {
-  const game = new CatchGame(); game.start();
-  game.nextSpawn = 100;
-  game.beginDrag(1, game.characterX, game.characterY + 70);
-  game.drag(1, 175);
-  game.objects = [{ id: 1, kind: 'hotdog', x: 175, y: game.catchY - 59.5 * .33 - 1 }];
-  assert.equal(game.advanceTo(.03).filter(e => e.type === 'catch').length, 0);
-  assert.equal(game.coins, 0);
-  game.release();
-  assert.equal(game.advanceTo(.06).filter(e => e.type === 'catch').length, 0);
-  assert.equal(game.coins, 0);
-  game.objects.push({ id: 2, kind: 'hotdog', x: 175, y: game.catchY - 59.5 * .33 - 1 });
-  assert.equal(game.advanceTo(.09).filter(e => e.type === 'catch').length, 1);
-  assert.equal(game.coins, 1);
+test('both characters catch during deliberate left and right movement', () => {
+  for (const variant of [1, 2]) for (const x of [175, 200]) {
+    const game = new CatchGame(); game.variant = variant; game.start(); game.nextSpawn = 100;
+    game.beginDrag(1, game.characterX, game.characterY + 70); game.drag(1, x);
+    assert.equal(game.pose, x < 187.5 ? 'left' : 'right');
+    assert.equal(game.bagOpen, true);
+    game.objects = [{ id: 1, kind: 'hotdog', x, y: game.catchY - 59.5 * .33 - 1 }];
+    assert.equal(game.advanceTo(.03).filter(e => e.type === 'catch').length, 1);
+    assert.equal(game.coins, 1);
+    assert.equal(game.advanceTo(.06).filter(e => e.type === 'catch').length, 0);
+  }
 });
 
-test('the sack must be open at the actual crossing time between frames', () => {
-  const game = new CatchGame(); game.start(); game.nextSpawn = 100;
-  game.beginDrag(1, game.characterX, game.characterY + 70); game.drag(1, 175);
-  game.advanceTo(.02);
-  // This object crosses at .03, while the sack is closed; the step ends at .05 with it open.
-  game.objects = [{ id: 1, kind: 'hotdog', x: 175, y: game.catchY - 59.5 * .33 - game.speed * .01 }];
-  assert.equal(game.advanceTo(.05).filter(e => e.type === 'catch').length, 0);
-  assert.equal(game.bagOpen, true); assert.equal(game.pointerId, 1);
-  game.objects = [{ id: 2, kind: 'hotdog', x: 175, y: game.catchY - 59.5 * .33 - 1 }];
-  assert.equal(game.advanceTo(.08).filter(e => e.type === 'catch').length, 1);
+test('pausing on a reward freezes falling items, time and coins until resumed', () => {
+  const game = new CatchGame(); game.start(); game.coins = 19; game.nextSpawn = 100;
+  game.objects = [
+    { id: 1, kind: 'hotdog', x: game.characterX, y: game.catchY - 59.5 * .33 - 1 },
+    { id: 2, kind: 'oil', x: 78.5, y: 200 },
+  ];
+  const events = game.advanceTo(.03);
+  assert.equal(events.filter(e => e.type === 'reward').length, 1);
+  game.pause(); const objects = structuredClone(game.objects);
+  assert.deepEqual(game.advanceTo(3.03), []);
+  assert.deepEqual(game.objects, objects); assert.equal(game.elapsed, .03); assert.equal(game.coins, 20);
+  game.resume(); game.advanceTo(.06);
+  assert.ok(game.objects[0].y > objects[0].y);
+  assert.equal(game.coins, 20);
 });
 
 test('aiming corrections inside the safe zone follow the finger and keep the sack open', () => {

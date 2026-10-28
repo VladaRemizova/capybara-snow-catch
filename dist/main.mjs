@@ -1,13 +1,15 @@
 import { CatchGame, ITEM_SIZES, ITEM_TYPES } from './game-core.mjs';
+import { PRIZE_PIECES } from './prize-art.mjs';
 
 const $ = id => document.getElementById(id);
 const scene = $('scene'), phone = $('phone'), field = $('falling-field');
 const game = new CatchGame();
 const nodes = new Map();
-let scale = 1, origin = 0, heldElapsed = 0, modalMode = 'intro', lastFocus = null;
-let toastTimer, tutorialHideTimer, soundOn = false, audio = null;
+let scale = 1, origin = 0, heldElapsed = 0, modalMode = null, lastFocus = null;
+let teachingTimer, prizeTimer, prizeEndTimer, soundOn = false, audio = null;
+let teachingReturn = false, prizeShowing = false, finishPending = false;
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const introHTML = $('modal-content').innerHTML;
+
 
 function sizeScene() {
   scale = phone.clientWidth / 375;
@@ -27,14 +29,12 @@ function syncClock() {
   if (game.status === 'running') processEvents(game.advanceTo((performance.now() - origin) / 1000));
 }
 scene.addEventListener('pointerdown', event => {
-  if (event.target.closest('button, .modal-layer') || (event.pointerType === 'mouse' && event.button !== 0)) return;
+  if (event.target.closest('button, .modal-layer, .teaching-layer, .prize-layer') || (event.pointerType === 'mouse' && event.button !== 0)) return;
   syncClock();
   const { x, y } = point(event);
   if (!game.beginDrag(event.pointerId, x, y)) return;
   scene.setPointerCapture(event.pointerId);
   scene.classList.add('dragging');
-  clearTimeout(tutorialHideTimer);
-  tutorialHideTimer = setTimeout(() => { $('tutorial').hidden = true; }, 900);
   event.preventDefault();
 });
 scene.addEventListener('pointermove', event => {
@@ -186,34 +186,59 @@ function catchEffect(object) {
       { transform: 'translate(148px,91px) scale(.65)', opacity: 0 },
     ], { duration: 880, easing: 'cubic-bezier(.22,.6,.35,1)', fill: 'forwards' });
     animate($('coin-stat'), [
-      { boxShadow: 'inset -6px -6px #d3deeb, 0 0 0 0 #ffdd8999' },
-      { boxShadow: 'inset -6px -6px #d3deeb, 0 0 0 5px #ffdd8980, 0 0 24px #ffda6b99', offset: .3 },
-      { boxShadow: 'inset -6px -6px #d3deeb, 0 0 0 10px #ffdd8900' },
+      { boxShadow: '0 0 0 0 #ffdd8999' },
+      { boxShadow: '0 0 0 5px #ffdd8980, 0 0 24px #ffda6b99', offset: .3 },
+      { boxShadow: '0 0 0 10px #ffdd8900' },
     ], { duration: 550 });
   }
   pop($('coin-stat')); beep();
 }
-function toast(text) {
-  clearTimeout(toastTimer); $('toast').textContent = text; $('toast').hidden = false;
-  toastTimer = setTimeout(() => { $('toast').hidden = true; }, 2000);
+function prizeConfetti() {
+  const container = $('prize-confetti'); container.replaceChildren();
+  for (const [n, art] of PRIZE_PIECES.entries()) {
+    if (n === 0) continue;
+    const piece = document.createElement('img');
+    piece.src = `assets/${art.name}.png`; piece.alt = ''; piece.className = 'prize-piece';
+    piece.style.left = `${art.x}px`; piece.style.top = `${art.y}px`;
+    piece.style.width = `${art.w}px`; piece.style.height = `${art.h}px`;
+    if (n >= 3) {
+      piece.style.setProperty('--from-x', `${187.5-art.x-art.w/2}px`);
+      piece.style.setProperty('--from-y', `${371-art.y-art.h/2}px`);
+      piece.style.setProperty('--spin', `${n*53}deg`);
+      piece.style.animationDelay = `${n%6*22}ms`;
+    } else {
+      piece.style.animation = 'none'; piece.style.zIndex = n === 0 ? '-1' : '4';
+    }
+    container.append(piece);
+  }
+}
+function showPrize(rewards) {
+  heldElapsed = game.elapsed; game.pause();
+  scene.classList.remove('dragging', 'ready-to-grab');
+  prizeShowing = true;
+  $('prize-message').textContent = `${rewards} из 3 получена!`;
+  $('prize-layer').classList.remove('leaving'); $('prize-layer').hidden = false;
+  prizeConfetti();
+  $('announcer').textContent = `Получена награда ${rewards} из трёх`;
+  beep(true);
+  prizeTimer = setTimeout(() => $('prize-layer').classList.add('leaving'), 2650);
+  prizeEndTimer = setTimeout(() => {
+    $('prize-layer').hidden = true; prizeShowing = false;
+    $('prize-confetti').replaceChildren();
+    if (finishPending || game.status === 'finished') { finishPending = false; showResult(); }
+    else resume();
+  }, 3000);
 }
 function processEvents(events) {
   for (const event of events) {
     if (event.type === 'catch') catchEffect(event.object);
     if (event.type === 'reward') {
-      holidayBurst(game.characterX, game.catchY - 22, true);
-      toast(`Награда ${event.rewards} из 3 получена!`);
-      $('announcer').textContent = `Получена награда ${event.rewards} из трёх`;
-      pop($('reward-stat')); pop($('total-rewards')); beep(true);
-    }
-    if (event.type === 'tutorial-complete') {
-      $('tutorial').hidden = true;
-      toast('Отлично! Теперь предметов станет больше');
+      pop($('reward-stat')); pop($('total-rewards')); showPrize(event.rewards);
     }
     if (event.type === 'finish') {
-      $('tutorial').hidden = true; scene.classList.remove('dragging');
+      scene.classList.remove('dragging');
       $('announcer').textContent = `Время вышло. Поймано ${game.coins} монет. Наград: ${game.progress.rewards}`;
-      showResult();
+      if (prizeShowing) finishPending = true; else showResult();
     }
   }
 }
@@ -226,6 +251,7 @@ function renderCharacter() {
   scene.dataset.bagOpen = String(game.bagOpen);
 }
 function render() {
+  scene.dataset.state = game.status;
   renderCharacter();
   $('timer').textContent = `${String(Math.floor(game.remaining / 60)).padStart(2, '0')}:${String(game.remaining % 60).padStart(2, '0')}`;
   $('timer').setAttribute('aria-label', `Осталось ${game.remaining} секунд`);
@@ -254,18 +280,18 @@ function render() {
   }
   for (const [id, node] of nodes) if (!activeIds.has(id)) { node.remove(); nodes.delete(id); }
 }
-function pause() { syncClock(); heldElapsed = game.elapsed; game.pause(); scene.classList.remove('dragging'); }
+function pause() {
+  syncClock();
+  if (game.status === 'running') { heldElapsed = game.elapsed; game.pause(); }
+  scene.classList.remove('dragging');
+}
 function resume() {
   if (game.status === 'paused') { origin = performance.now() - heldElapsed * 1000; game.resume(); }
 }
 function showModal(mode, content) {
   lastFocus = document.activeElement; modalMode = mode;
   $('modal-content').innerHTML = content; $('modal-layer').hidden = false;
-  $('modal').classList.toggle('intro-modal', mode === 'intro');
-  $('modal').classList.toggle('holiday-result', mode === 'result');
-  const art = $('modal').querySelector('.modal-art');
-  art.src = mode === 'result' ? 'assets/holiday-result.png' : 'assets/result-art.png';
-  art.alt = mode === 'result' ? 'Новогодняя капибара в праздничной шапке с мешком подарков' : 'Капибара с красным мешком';
+  $('modal').classList.toggle('result-modal', mode === 'result');
   requestAnimationFrame(() => $('modal-content').querySelector('button')?.focus({ preventScroll: true }));
 }
 function hideModal() {
@@ -273,38 +299,71 @@ function hideModal() {
   if (lastFocus instanceof HTMLElement) lastFocus.focus({ preventScroll: true });
 }
 function cleanEffects() {
-  clearTimeout(toastTimer); clearTimeout(tutorialHideTimer);
-  $('toast').hidden = true; $('tutorial').hidden = true;
-  for (const animation of scene.getAnimations({ subtree: true })) animation.cancel();
+  clearTimeout(teachingTimer); clearTimeout(prizeTimer); clearTimeout(prizeEndTimer);
+  $('prize-layer').hidden = true; $('teaching-layer').hidden = true;
+  prizeShowing = false; finishPending = false;
+  for (const id of ['effects', 'character', 'character-front', 'coin-stat', 'reward-stat', 'total-rewards']) {
+    for (const animation of $(id).getAnimations({ subtree: true })) animation.cancel();
+  }
   $('effects').replaceChildren(); scene.querySelectorAll('.caught-item').forEach(n => n.remove());
   scene.classList.remove('dragging', 'ready-to-grab');
 }
 function startGame() {
-  cleanEffects(); game.start(); origin = performance.now(); hideModal(); render();
-  $('tutorial').hidden = false; beep();
+  cleanEffects(); game.start(); origin = performance.now(); hideModal(); render(); beep();
 }
-function showIntro() {
-  cleanEffects(); game.reset(); render();
-  showModal('intro', introHTML);
+function finishTeaching() {
+  $('teaching-layer').classList.add('leaving');
+  teachingTimer = setTimeout(() => {
+    $('teaching-layer').hidden = true;
+    field.querySelectorAll('.demo-item').forEach(n => n.remove());
+    if (teachingReturn) resume(); else startGame();
+  }, 240);
+}
+function showTeaching(returnToGame = false) {
+  if (prizeShowing) return;
+  clearTimeout(teachingTimer);
+  teachingReturn = returnToGame && game.status === 'running';
+  if (teachingReturn) pause(); else { cleanEffects(); game.reset(); render(); }
+  hideModal();
+  $('teaching-layer').classList.remove('leaving'); $('teaching-layer').hidden = false;
+  if (!teachingReturn) {
+    const demo = [['oil',187.5,199],['coffee-lid',78.5,315],['sandwich',187.5,393],['hotdog',296.5,297],['coffee',296.5,481]];
+    for (const [kind,x,y] of demo) {
+      const image = document.createElement('img'), [w,h] = ITEM_SIZES[kind];
+      image.src = `assets/${kind}.png`; image.className = 'falling-item demo-item';
+      image.style.width = `${w}px`; image.style.height = `${h}px`;
+      image.style.transform = `translate(${x-w/2}px,${y-h/2-133}px)`; field.append(image);
+    }
+  }
+  teachingTimer = setTimeout(finishTeaching, 4200);
+}
+function setVariant(variant) {
+  game.variant = variant;
+  for (const image of scene.querySelectorAll('.capy-image')) image.src = `assets/capy-${variant}-${image.dataset.pose}.png`;
+  $('variant-number').textContent = `${variant}/2`;
+  $('variant-button').setAttribute('aria-label', `Выбрать капибару ${variant === 1 ? 2 : 1}`);
+  scene.dataset.variant = String(variant); renderCharacter();
 }
 const plural = (n, one, few, many) => n % 10 === 1 && n % 100 !== 11 ? one : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? few : many;
 function showResult() {
   const p = game.progress;
   showModal('result', `
-    <p class="result-eyebrow">Праздничный улов</p>
     <h1 id="modal-title">Поймано ${game.coins} ${plural(game.coins, 'монета', 'монеты', 'монет')}!</h1>
     <div class="result-stats">
-      <div class="result-stat"><img src="assets/timer.png" alt=""><div><small>Время игры</small><strong>01:00</strong></div></div>
-      <div class="result-stat"><img src="assets/coin.png" alt=""><div><small>Монеты</small><strong>${game.coins}</strong></div></div>
+      <div class="result-stat"><img src="assets/timer.png" alt=""><div><small>ВРЕМЯ</small><strong>01:00</strong></div></div>
+      <div class="result-stat"><img src="assets/coin.png" alt=""><div><small>МОНЕТЫ</small><strong>${game.coins}</strong></div></div>
     </div>
-    <div class="result-reward"><img src="assets/reward.png" alt=""><div><strong>${p.rewards} ${plural(p.rewards, 'награда', 'награды', 'наград')}</strong><p>${p.rewards === 3 ? 'Вы собрали все награды за игру!' : `До ${p.rewards === 0 ? 'первой' : 'следующей'} награды — ${p.remaining} ${plural(p.remaining, 'монета', 'монеты', 'монет')}`}</p></div></div>
-    <button class="primary" data-action="rewards">Мои награды (${p.rewards})</button>
-    <button class="secondary" data-action="restart">Сыграть ещё</button>
-    <button class="text-button" data-action="intro">На главный экран</button>`);
+    <div class="result-reward"><img src="assets/result-prize-icon.png" alt=""><div><strong>+${p.rewards} ${plural(p.rewards, 'награда', 'награды', 'наград')}</strong><p>${p.rewards === 3 ? 'Все три награды получены!' : `Ещё ${p.remaining} ${plural(p.remaining, 'монета', 'монеты', 'монет')} до ${p.rewards === 2 ? 'третьей' : p.rewards === 1 ? 'второй' : 'первой'} награды`}</p></div></div>
+    <div class="result-actions">
+      <button class="primary" data-action="rewards" ${p.rewards === 0 ? 'disabled' : ''}>Открыть (${p.rewards})</button>
+      <button class="secondary" data-action="restart">Сыграть еще</button>
+      <button class="text-button" data-action="rewards">Мои награды</button>
+    </div>`);
 }
 function showRewards() {
   const previous = modalMode;
   pause();
+  if (prizeShowing) return;
   const p = game.progress;
   showModal('rewards', `
     <h2 id="modal-title">Ваши награды</h2>
@@ -313,29 +372,19 @@ function showRewards() {
     <p class="reward-description">За один раунд можно получить<br>не больше трёх наград.</p>
     <button class="primary" data-action="${previous === 'result' || game.status === 'finished' ? 'result' : game.status === 'idle' ? 'intro' : 'resume'}">${game.status === 'paused' ? 'Продолжить игру' : 'Понятно'}</button>`);
 }
-function showRules() {
-  pause();
-  showModal('rules', `
-    <h2 id="modal-title">Как играть</h2>
-    <ol class="rules">
-      <li><b>1</b><span>Зажмите капибару и ведите влево-вправо. Отпустили палец — коснитесь её снова.</span></li>
-      <li><b>2</b><span>Остановитесь, чтобы открыть мешок. На ходу предметы не ловятся. Один предмет — одна монета, пропуск без штрафа.</span></li>
-      <li><b>3</b><span>У вас 60 секунд. Через первые 10 секунд предметов станет больше и они начнут падать быстрее.</span></li>
-      <li><b>4</b><span>20, 30 и 40 монет дают одну, две и три награды. После 40 монет продолжайте собирать!</span></li>
-    </ol><button class="primary" data-action="${game.status === 'paused' ? 'resume' : game.status === 'finished' ? 'result' : 'intro'}">${game.status === 'paused' ? 'Продолжить игру' : 'Понятно'}</button>`);
-}
 $('modal-content').addEventListener('click', event => {
   const button = event.target.closest('button'); if (!button) return;
   const action = button.id === 'start-button' ? 'restart' : button.dataset.action;
   if (action === 'restart') startGame();
   if (action === 'resume') { hideModal(); resume(); }
-  if (action === 'intro') showIntro();
+  if (action === 'intro') showTeaching();
   if (action === 'result') showResult();
   if (action === 'rewards') showRewards();
 });
 $('reset-button').addEventListener('click', startGame);
-$('close-button').addEventListener('click', showIntro);
-$('help-button').addEventListener('click', showRules);
+$('close-button').addEventListener('click', () => showTeaching());
+$('help-button').addEventListener('click', () => showTeaching(true));
+$('variant-button').addEventListener('click', () => { syncClock(); setVariant(game.variant === 1 ? 2 : 1); });
 $('rewards-button').addEventListener('click', showRewards);
 $('sound-button').addEventListener('click', () => {
   soundOn = !soundOn;
@@ -344,7 +393,7 @@ $('sound-button').addEventListener('click', () => {
   beep();
 });
 document.addEventListener('keydown', event => {
-  if ($('modal-layer').hidden) return;
+  if ($('modal-layer').hidden || prizeShowing) return;
   const buttons = [...$('modal').querySelectorAll('button')];
   if (event.key === 'Tab') {
     const first = buttons[0], last = buttons.at(-1);
@@ -353,15 +402,17 @@ document.addEventListener('keydown', event => {
   }
   if (event.key === 'Escape' && game.status === 'paused') { hideModal(); resume(); }
 });
-// Load every product before the timer begins; the initial button remains disabled while loading.
-const startButton = $('start-button'); startButton.disabled = true; startButton.textContent = 'Загружаем игру…';
-Promise.all([...ITEM_TYPES, 'capybara', 'capybara-left', 'capybara-right', 'foreground', 'background', 'result-art', 'holiday-result'].map(name => new Promise(resolve => {
+// Show the Figma teaching screen immediately and start its display time after assets load.
+const preloadNames = [...ITEM_TYPES, ...[1,2].flatMap(v => ['open','left','right'].map(pose => `capy-${v}-${pose}`)), 'foreground', 'background', 'result-capy', 'prize-icon', 'gesture-dot', 'gesture-glint', 'stat-shade', 'result-shade', 'result-shadow', 'result-prize-icon', ...PRIZE_PIECES.map(p => p.name)];
+Promise.all(preloadNames.map(name => new Promise(resolve => {
   const image = new Image(); image.onload = () => resolve(true); image.onerror = () => resolve(false); image.src = `assets/${name}.png`;
 }))).then(results => {
-  startButton.disabled = false;
-  startButton.textContent = results.every(Boolean) ? 'Начать игру' : 'Повторить загрузку';
-  if (!results.every(Boolean)) startButton.addEventListener('click', event => { event.stopImmediatePropagation(); location.reload(); }, { capture: true });
+  if (results.every(Boolean)) showTeaching();
+  else {
+    $('teaching-layer').querySelector('p').innerHTML = 'Не удалось загрузить игру.<br>Коснитесь, чтобы повторить';
+    $('teaching-layer').addEventListener('click', () => location.reload(), { once: true });
+  }
 });
-sizeScene();
+setVariant(1); sizeScene();
 function frame() { syncClock(); render(); requestAnimationFrame(frame); }
 requestAnimationFrame(frame);

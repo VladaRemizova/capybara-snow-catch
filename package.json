@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "node scripts/serve.mjs",
     "test": "node --test --test-isolation=none tests/game-core.test.mjs",
-    "check": "node --check dist/main.mjs && node --check dist/game-core.mjs",
+    "check": "node --check dist/main.mjs && node --check dist/game-core.mjs && node --check dist/prize-art.mjs",
     "test:browser": "node tests/browser-qa.mjs && node tests/movement-qa.mjs"
   },
   "devDependencies": { "playwright": "1.57.0" }

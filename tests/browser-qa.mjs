@@ -1,97 +1,111 @@
-// Run npm ci and npx playwright install chromium before browser checks.
 import { chromium } from 'playwright';
-import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
-
-const artifact = name => fileURLToPath(new URL('../' + name, import.meta.url));
 const browser = await chromium.launch({ headless: true, ...(process.env.CAPY_CHROMIUM_PATH ? { executablePath: process.env.CAPY_CHROMIUM_PATH } : {}), args: ['--no-sandbox', '--disable-dev-shm-usage'] });
 const errors = [];
 try {
   const context = await browser.newContext({ viewport: { width: 375, height: 672 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
-  const page = await context.newPage();
-  page.on('pageerror', error => errors.push(error.message));
-  await page.clock.install();
+  const page = await context.newPage(); page.on('pageerror', e => errors.push(e.message));
+  await page.clock.install({ time: new Date('2026-10-28T12:00:00Z') });
+  await page.clock.pauseAt(new Date('2026-10-28T12:00:01Z'));
   await page.goto('http://127.0.0.1:8080', { waitUntil: 'networkidle' });
-  await page.locator('#start-button').click();
-  await page.clock.runFor(400);
+  assert.equal(await page.locator('#teaching-layer').isVisible(), true);
+  assert.equal(await page.locator('#modal-layer').isHidden(), true);
+  assert.equal(await page.locator('#start-button, #tutorial, #toast').count(), 0);
+  const fingerX = () => page.locator('.gesture-finger').evaluate(n => n.getBoundingClientRect().x);
+  await page.locator('.gesture-finger').evaluate(n => { const a=n.getAnimations()[0]; a.pause(); a.currentTime=0; });
+  const initialFinger = await fingerX();
+  await page.locator('.gesture-finger').evaluate(n => { n.getAnimations()[0].currentTime=1050; });
+  await page.clock.runFor(1050);
+  assert.ok(await fingerX() > initialFinger + 75, 'teaching finger should travel inside the track');
+  assert.equal(await page.locator('#timer').textContent(), '01:00');
+  await page.screenshot({ path: 'preview-new-teaching.png' });
+  await page.clock.runFor(3500);
+  assert.equal(await page.locator('#teaching-layer').isHidden(), true);
+  assert.equal(await page.locator('#scene').getAttribute('data-state'), 'running');
+  assert.equal(await page.locator('#timer').textContent(), '01:00');
   const cdp = await context.newCDPSession(page);
-  const touch = (type, x, y) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x, y, id: 1 }] });
+  const touch = async (type, x, y = 580) => {
+    await cdp.send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x, y, id: 1 }] });
+    await new Promise(r => setTimeout(r, 20));
+  };
   const characterX = () => page.locator('#character').evaluate(n => { const r = n.getBoundingClientRect(); return r.x + r.width / 2; });
-
-  await touch('touchStart', 207.5, 580);
-  assert.equal(await characterX(), 187.5, 'touching off-center must not move the character');
-  await touch('touchMove', 260, 580);
+  await touch('touchStart', 207.5); await touch('touchMove', 260); await page.clock.runFor(16);
+  assert.equal(await characterX(), 240); await touch('touchEnd');
+  await touch('touchStart', 40, 220); await touch('touchMove', 100, 220); await touch('touchEnd');
   assert.equal(await characterX(), 240);
-  await touch('touchEnd');
-  await touch('touchStart', 40, 220);
-  await touch('touchMove', 100, 220);
-  await touch('touchEnd');
-  assert.equal(await characterX(), 240, 'a touch away from the character must not re-grab it');
-  await touch('touchStart', 260, 580);
-  await touch('touchMove', 207.5, 580);
-  await touch('touchEnd');
+  await touch('touchStart', 260); await touch('touchMove', 207.5); await touch('touchEnd');
   assert.equal(await characterX(), 187.5);
-
-  // Pause via rules and verify the visible timer does not lose game time.
   await page.locator('#help-button').click();
   const pausedTimer = await page.locator('#timer').textContent();
-  await page.clock.runFor(2500);
+  await page.clock.runFor(4000);
   assert.equal(await page.locator('#timer').textContent(), pausedTimer);
-  await page.getByRole('button', { name: 'Продолжить игру', exact: true }).click();
+  await page.clock.runFor(500);
+  assert.equal(await page.locator('#teaching-layer').isHidden(), true);
 
-  await touch('touchStart', 187.5, 580);
-  for (let step = 0; step < 615; step++) {
+  let rewardPauses = 0, switched = false;
+  for (let step = 0; step < 650; step++) {
+    if (!await page.locator('#prize-layer').isHidden()) {
+      rewardPauses++;
+      assert.equal(await page.locator('#prize-message').textContent(), `${rewardPauses} из 3 получена!`);
+      assert.equal(await page.locator('#coins').textContent(), String([20,30,40][rewardPauses-1]));
+      const frozenTimer = await page.locator('#timer').textContent();
+      const frozenItems = await page.locator('#falling-field').innerHTML();
+      await page.clock.runFor(1000);
+      assert.equal(await page.locator('#timer').textContent(), frozenTimer);
+      assert.equal(await page.locator('#falling-field').innerHTML(), frozenItems);
+      assert.equal(await page.locator('#prize-layer').isVisible(), true);
+      if (rewardPauses === 1) await page.screenshot({ path: 'preview-new-prize.png', animations: 'disabled' });
+      await page.clock.runFor(1500);
+      assert.equal(await page.locator('#prize-layer').isVisible(), true);
+      await page.clock.runFor(650);
+      assert.equal(await page.locator('#prize-layer').isHidden(), true);
+      assert.equal(await page.locator('#scene').getAttribute('data-state'), 'running');
+    }
     if (!await page.locator('#modal-layer').isHidden()) break;
-    const nextX = await page.locator('.falling-field img').evaluateAll(nodes => nodes
-      .map(n => { const r = n.getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2 }; })
-      .filter(p => p.y < 550).sort((a, b) => b.y - a.y)[0]?.x);
-    if (nextX !== undefined) await touch('touchMove', nextX, 580);
+    if (step > 200 && !switched) {
+      const x = await characterX(); await page.locator('#variant-button').click(); switched = true;
+      assert.equal(await characterX(), x);
+      assert.equal(await page.locator('#scene').getAttribute('data-variant'), '2');
+      await page.screenshot({ path: 'preview-new-variant2.png' });
+    }
+    const target = await page.locator('#falling-field img').evaluateAll(ns => ns.map(n => {
+      const r = n.getBoundingClientRect(); return { x:r.x+r.width/2, y:r.y+r.height/2 };
+    }).filter(p=>p.y<550).sort((a,b)=>b.y-a.y)[0]?.x);
+    if (target !== undefined) {
+      await touch('touchStart', await characterX()); await touch('touchMove', target); await touch('touchEnd');
+    }
     await page.clock.runFor(100);
-    if (step === 145) await page.screenshot({ path: artifact('preview-game.png') });
+    if (step===145) await page.screenshot({ path: 'preview-new-game.png' });
   }
+  assert.equal(rewardPauses, 3);
   assert.equal(await page.locator('#timer').textContent(), '00:00');
   const finalCoins = Number(await page.locator('#coins').textContent());
-  assert.ok(finalCoins > 40, `expected a perfect play round above 40 coins, got ${finalCoins}`);
+  assert.ok(finalCoins>40, `expected more than 40 coins, got ${finalCoins}`);
   assert.equal(await page.locator('#rewards').textContent(), '3/3');
-  assert.equal(await page.locator('#total-rewards').textContent(), '3');
   assert.ok((await page.locator('#modal-title').textContent()).includes(String(finalCoins)));
-  await page.screenshot({ path: artifact('preview-result.png'), animations: 'disabled' });
-  await page.getByRole('button', { name: 'Мои награды (3)', exact: true }).click();
-  assert.equal(await page.locator('.reward-card.earned').count(), 3);
-  await page.getByRole('button', { name: 'Понятно', exact: true }).click();
-  await page.getByRole('button', { name: 'Сыграть ещё', exact: true }).click();
-  assert.equal(await page.locator('#timer').textContent(), '01:00');
-  assert.equal(await page.locator('#coins').textContent(), '0');
-  assert.equal(await page.locator('#rewards').textContent(), '0/3');
-  await page.locator('#sound-button').click();
-  assert.equal(await page.locator('#sound-button').getAttribute('aria-pressed'), 'true');
-  await page.locator('#sound-button').click();
-  assert.equal(await page.locator('#sound-button').getAttribute('aria-pressed'), 'false');
-  assert.deepEqual(errors, []);
-
-  const viewportChecks = [];
-  for (const [width, height] of [[320, 568], [390, 844], [430, 932], [1440, 900]]) {
-    const viewport = await browser.newPage({ viewport: { width, height } });
-    viewport.on('pageerror', error => errors.push(error.message));
-    await viewport.clock.install();
-    await viewport.goto('http://127.0.0.1:8080', { waitUntil: 'networkidle' });
-    const layout = await viewport.evaluate(() => {
-      const modal = document.getElementById('modal').getBoundingClientRect();
-      return { width: document.documentElement.scrollWidth, modalTop: modal.top, modalBottom: modal.bottom, height: innerHeight };
+  await page.clock.runFor(300);
+  await page.screenshot({ path: 'preview-new-result.png', animations: 'disabled' });
+  await page.getByRole('button', {name:'Открыть (3)',exact:true}).click();
+  assert.equal(await page.locator('.reward-card.earned').count(),3);
+  await page.getByRole('button',{name:'Понятно',exact:true}).click();
+  await page.getByRole('button',{name:'Сыграть еще',exact:true}).click();
+  assert.equal(await page.locator('#timer').textContent(),'01:00');
+  assert.equal(await page.locator('#coins').textContent(),'0');
+  assert.equal(await page.locator('#scene').getAttribute('data-variant'),'2');
+  const viewportChecks=[];
+  for(const [width,height] of [[320,568],[390,844],[430,932],[1440,900]]) {
+    const p=await browser.newPage({viewport:{width,height}});p.on('pageerror',e=>errors.push(e.message));
+    await p.clock.install();await p.goto('http://127.0.0.1:8080',{waitUntil:'networkidle'});
+    await p.clock.runFor(4500);await p.clock.fastForward(61000);await p.clock.runFor(350);
+    const layout=await p.locator('#modal').evaluate(n=>{
+      const r=n.getBoundingClientRect(),art=n.querySelector('.modal-art').getBoundingClientRect();
+      const badge=document.getElementById('total-rewards').getBoundingClientRect(),parent=document.getElementById('rewards-button').getBoundingClientRect();
+      return {top:r.top,bottom:r.bottom,artTop:art.top,overflow:document.documentElement.scrollWidth>innerWidth,badgeTop:badge.top-parent.top,badgeRight:parent.right-badge.right,badgeBottom:parent.bottom-badge.bottom};
     });
-    assert.ok(layout.width <= width, `horizontal overflow at ${width}`);
-    assert.ok(layout.modalTop >= 0 && layout.modalBottom <= layout.height, `modal overflow at ${width}x${height}`);
-    await viewport.locator('#start-button').click();
-    await viewport.clock.fastForward(61000);
-    const resultLayout = await viewport.locator('#modal').evaluate(node => {
-      const r = node.getBoundingClientRect(), art = node.querySelector('.modal-art').getBoundingClientRect();
-      return { top: r.top, bottom: r.bottom, artTop: art.top };
-    });
-    assert.ok(resultLayout.top >= 0 && resultLayout.bottom <= height && resultLayout.artTop >= 0, `result popup overflow at ${width}x${height}`);
-    viewportChecks.push({ width, height, ...layout, result: resultLayout });
-    if (width === 390) await viewport.screenshot({ path: artifact('preview-holiday-result.png'), animations: 'disabled' });
-    await viewport.close();
+    assert.ok(!layout.overflow&&layout.artTop>=0&&layout.bottom<=height,`popup overflow at ${width}x${height}`);
+    assert.ok(Math.abs(layout.badgeTop-layout.badgeBottom)<.1 && Math.abs(layout.badgeTop-layout.badgeRight)<.1);
+    viewportChecks.push({width,height,...layout});await p.close();
   }
-  assert.deepEqual(errors, []);
-  console.log(JSON.stringify({ touchRegrab: 'passed', fullRound: 'passed', finalCoins, rewards: 3, restart: 'passed', pause: 'passed', sound: 'passed', errors, viewportChecks }, null, 2));
-} finally { await browser.close(); }
+  assert.deepEqual(errors,[]);
+  console.log(JSON.stringify({onboarding:'passed',rewardPauses,finalCoins,switching:'passed',regrab:'passed',viewportChecks,errors},null,2));
+}finally{await browser.close();}
