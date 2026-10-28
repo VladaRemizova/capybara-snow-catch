@@ -18,7 +18,7 @@
       <div class="sky-shade"></div>
       <header class="header">
         <img class="brand" src="assets/brand.png" alt="Лукойл. Поймай удачу" draggable="false">
-        <button class="rewards-total" id="rewards-button" aria-label="Посмотреть награды">Награды <span id="total-rewards">0</span></button>
+        <div class="rewards-total" id="rewards-button">Награды <span id="total-rewards">0</span></div>
         <button class="image-button reset" id="reset-button" aria-label="Начать заново"><img src="assets/reset.png" alt=""></button>
         <button class="image-button close" id="close-button" aria-label="Вернуться к началу"><img src="assets/close.png" alt=""></button>
       </header>
@@ -26,17 +26,17 @@
       <section class="stats" aria-label="Результат игры">
         <div class="stat time-stat">
           <img class="stat-icon" src="assets/timer.png" alt="">
-          <div class="stat-copy"><span class="stat-label">Осталось</span><strong id="timer" role="timer" aria-label="Осталось 60 секунд">01:00</strong></div>
+          <div class="stat-copy"><span class="stat-label"><img src="assets/label-time.svg" width="43" height="6" alt="ОСТАЛОСЬ"></span><strong id="timer" role="timer" aria-label="Осталось 60 секунд">01:00</strong></div>
           <img class="snow snow-left" src="assets/snow-left.png" alt="">
         </div>
         <div class="stat coin-stat" id="coin-stat">
           <img class="coin-icon" src="assets/coin.png" alt="">
-          <div class="stat-copy"><span class="stat-label">монеты</span><strong id="coins">0</strong></div>
+          <div class="stat-copy"><span class="stat-label"><img src="assets/label-coins.svg" width="34" height="6" alt="МОНЕТЫ"></span><strong id="coins">0</strong></div>
           <img class="snow snow-middle" src="assets/snow-middle.png" alt="">
         </div>
         <div class="stat reward-stat" id="reward-stat">
           <img class="reward-icon" src="assets/reward.png" alt="">
-          <div class="stat-copy"><span class="stat-label">награда</span><strong id="rewards">0/3</strong></div>
+          <div class="stat-copy"><span class="stat-label"><img src="assets/label-reward.svg" width="37" height="7" alt="НАГРАДА"></span><strong id="rewards">0/3</strong></div>
           <div class="progress" id="progress" role="progressbar" aria-label="Монеты до первой награды" aria-valuemin="0" aria-valuemax="20" aria-valuenow="0"><div id="progress-fill"></div></div>
           <img class="snow snow-right" src="assets/snow-right.png" alt="">
         </div>

@@ -379,7 +379,6 @@ $('close-button').addEventListener('click', () => showTeaching());
 $('teaching-layer').addEventListener('click', finishTeaching);
 $('help-button').addEventListener('click', () => showTeaching(true));
 $('variant-button').addEventListener('click', () => { syncClock(); setVariant(game.variant === 1 ? 2 : 1); });
-$('rewards-button').addEventListener('click', showRewards);
 $('sound-button').addEventListener('click', () => {
   soundOn = !soundOn;
   $('sound-button').setAttribute('aria-pressed', String(soundOn));
