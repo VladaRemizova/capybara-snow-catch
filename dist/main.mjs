@@ -319,7 +319,6 @@ function finishTeaching() {
   $('teaching-layer').classList.add('leaving');
   teachingTimer = setTimeout(() => {
     $('teaching-layer').hidden = true;
-    field.querySelectorAll('.demo-item').forEach(n => n.remove());
     if (teachingReturn) resume(); else startGame();
   }, 240);
 }
@@ -330,15 +329,6 @@ function showTeaching(returnToGame = false) {
   if (teachingReturn) pause(); else { cleanEffects(); game.reset(); render(); }
   hideModal();
   $('teaching-layer').classList.remove('leaving'); $('teaching-layer').hidden = false;
-  if (!teachingReturn) {
-    const demo = [['oil',187.5,199],['coffee-lid',78.5,315],['sandwich',187.5,393],['hotdog',296.5,297],['coffee',296.5,481]];
-    for (const [kind,x,y] of demo) {
-      const image = document.createElement('img'), [w,h] = ITEM_SIZES[kind];
-      image.src = `assets/${kind}.png`; image.className = 'falling-item demo-item';
-      image.style.width = `${w}px`; image.style.height = `${h}px`;
-      image.style.transform = `translate(${x-w/2}px,${y-h/2-133}px)`; field.append(image);
-    }
-  }
 }
 function setVariant(variant) {
   game.variant = variant;
