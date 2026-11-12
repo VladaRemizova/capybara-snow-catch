@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "node scripts/serve.mjs",
     "test": "node --test --test-isolation=none tests/game-core.test.mjs tests/v2-core.test.mjs",
-    "check": "node --check dist/main.mjs && node --check dist/game-core.mjs && node --check dist/prize-art.mjs && node --check dist/v2/main.mjs && node --check dist/v2/game-core.mjs && node --check dist/v2/prizes.mjs && node --check dist/v2/confetti.mjs",
+    "check": "node --check dist/main.mjs && node --check dist/game-core.mjs && node --check dist/prize-art.mjs && node --check dist/v2/main.mjs && node --check dist/v2/game-core.mjs && node --check dist/v2/prizes.mjs && node --check dist/v2/confetti.mjs && node --check dist/v2/ui.mjs && node --check dist/v2/ui-art.mjs && node --check dist/v2/ui-glyphs.mjs",
     "test:browser": "node tests/browser-qa.mjs && node tests/movement-qa.mjs",
     "test:v2:browser": "node tests/v2-browser-qa.mjs"
   },

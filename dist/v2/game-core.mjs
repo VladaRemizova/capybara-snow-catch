@@ -7,7 +7,7 @@ const MOTION_REFRESH_PIXELS = 1;
 export const LANES = [78.5, 187.5, 296.5];
 export const ITEM_TYPES = ['coffee', 'sandwich', 'hotdog'];
 export const ITEM_SIZES = {
-  coffee: [110, 110], sandwich: [100, 100], hotdog: [100, 100], red: [60, 60],
+  coffee: [128, 128], sandwich: [100, 100], hotdog: [100, 100], red: [60, 60],
 };
 const LANE_SEQUENCE = [1, 0, 1, 2, 1, 0, 1, 2, 1, 2, 1, 0];
 const clamp = (n, low, high) => Math.max(low, Math.min(high, n));

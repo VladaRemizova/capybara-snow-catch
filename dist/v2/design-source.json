@@ -18,506 +18,1852 @@
     "winRossko10": "565:3064",
     "cabinet": "565:2583",
     "emptyCabinet": "565:2696",
-    "coupon": "566:3466"
+    "coupon": "566:3466",
+    "resultZero": "565:1887",
+    "resultRating": "581:3912",
+    "couponViewport": "566:3586"
   },
   "assets": [
     {
       "name": "arrow-left",
-      "file": "arrow-left.png",
+      "file": "arrow-left.webp",
       "id": "565:2874",
-      "bytes": 299
+      "width": 36,
+      "height": 36,
+      "bytes": 192,
+      "scale": 2,
+      "rgbaSha256": "86ec46e7b7d3cc4985fd8eb673e18ef610a07c58051da4b1420ce4e1a5c23003"
     },
     {
       "name": "arrow-right",
-      "file": "arrow-right.png",
+      "file": "arrow-right.webp",
       "id": "565:2877",
-      "bytes": 307
+      "width": 36,
+      "height": 36,
+      "bytes": 192,
+      "scale": 2,
+      "rgbaSha256": "76a6405841384e39c88bb93c13ea31800f1099751eb61144a1f1b80930f85e2f"
     },
     {
       "name": "back",
-      "file": "back.png",
+      "file": "back.webp",
       "id": "566:3469",
-      "bytes": 2265
+      "width": 80,
+      "height": 80,
+      "bytes": 1188,
+      "scale": 2,
+      "rgbaSha256": "70b8f9f7cbd692b365b1cacead9bf27e11de186730a603ed781c6a9035e125ec"
     },
     {
       "name": "branch-1",
-      "file": "branch-1.png",
+      "file": "branch-1.webp",
       "id": "565:953",
-      "bytes": 9017
+      "width": 155,
+      "height": 140,
+      "bytes": 20100,
+      "scale": 2,
+      "rgbaSha256": "fbd67dcd430f346dee9e03bc005b35610d1de356a752f1771bcaddd86937ecc7"
     },
     {
       "name": "branch-2",
-      "file": "branch-2.png",
+      "file": "branch-2.webp",
       "id": "565:958",
-      "bytes": 9017
+      "width": 155,
+      "height": 140,
+      "bytes": 20100,
+      "scale": 2,
+      "rgbaSha256": "fbd67dcd430f346dee9e03bc005b35610d1de356a752f1771bcaddd86937ecc7"
     },
     {
       "name": "brand",
-      "file": "brand.png",
+      "file": "brand.webp",
       "id": "565:854",
-      "bytes": 1711
+      "width": 57,
+      "height": 70,
+      "bytes": 782,
+      "scale": 2,
+      "rgbaSha256": "d0007634105df31085510df09625e5450251db69ab526e21dabcfe427f91e96f"
     },
     {
       "name": "button-shine",
-      "file": "button-shine.png",
+      "file": "button-shine.webp",
       "id": "565:829",
-      "bytes": 613
-    },
-    {
-      "name": "cabinet-bg",
-      "file": "cabinet-bg.png",
-      "id": "565:2583",
-      "bytes": 124432
-    },
-    {
-      "name": "capy-left",
-      "file": "capy-left.png",
-      "id": "581:4164",
-      "bytes": 488590
-    },
-    {
-      "name": "capy-open",
-      "file": "capy-open.png",
-      "id": "581:4132",
-      "bytes": 482126
-    },
-    {
-      "name": "capy-right",
-      "file": "capy-right.png",
-      "id": "581:4148",
-      "bytes": 498314
-    },
-    {
-      "name": "capy-smile",
-      "file": "capy-smile.png",
-      "id": "581:4180",
-      "bytes": 480526
+      "width": 44,
+      "height": 34,
+      "bytes": 244,
+      "scale": 2,
+      "rgbaSha256": "e8953f1f28ecfb81e63a0a68b6fa500bcee191577e368c3cf42685a21397244a"
     },
     {
       "name": "coin",
-      "file": "coin.png",
+      "file": "coin.webp",
       "id": "565:911",
-      "bytes": 6741
+      "width": 62,
+      "height": 57,
+      "bytes": 4950,
+      "scale": 2,
+      "rgbaSha256": "fbc925eb9e8aa78d9c8bfe5e86232a1889dbb742d67d0a70e397e93765d80f53"
     },
     {
-      "name": "confetti-0",
-      "file": "confetti-0.svg",
-      "id": "565:2333",
-      "bytes": 1467
+      "name": "entry-bag",
+      "file": "entry-bag.webp",
+      "id": "565:823",
+      "width": 282,
+      "height": 188,
+      "bytes": 72706,
+      "scale": 2,
+      "rgbaSha256": "c38d0669d2a4a277343498626ee0e87dbca484f76388f5bed59a5a5c874b79f8"
     },
     {
-      "name": "confetti-1",
-      "file": "confetti-1.svg",
-      "id": "565:2334",
-      "bytes": 1066
+      "name": "entry-corner",
+      "file": "entry-corner.webp",
+      "id": "565:807",
+      "width": 298,
+      "height": 92,
+      "bytes": 13770,
+      "scale": 2,
+      "rgbaSha256": "bbc4a286e3b346c0ed5a39a8ca35975443c9b26ecd93bb2b56e7e86c4d4322e7"
     },
     {
-      "name": "confetti-10",
-      "file": "confetti-10.svg",
-      "id": "565:2343",
-      "bytes": 1016
+      "name": "entry-heading",
+      "file": "entry-heading.webp",
+      "id": "565:834",
+      "width": 560,
+      "height": 373,
+      "bytes": 112566,
+      "scale": 2,
+      "rgbaSha256": "52ca1e0da44d54f3e70f0c92085a51c5e22f5c9ec1ed1fb2a9424ab8c6681c47"
     },
     {
-      "name": "confetti-11",
-      "file": "confetti-11.svg",
-      "id": "565:2345",
-      "bytes": 1315
+      "name": "entry-left-detail",
+      "file": "entry-left-detail.webp",
+      "id": "565:801",
+      "width": 56,
+      "height": 66,
+      "bytes": 5214,
+      "scale": 2,
+      "rgbaSha256": "dd36f3761a63dd1e3246d507780674de56eb1c6cf8723429d72963a9e1059622"
     },
     {
-      "name": "confetti-12",
-      "file": "confetti-12.svg",
-      "id": "565:2346",
-      "bytes": 1034
+      "name": "entry-logo",
+      "file": "entry-logo.webp",
+      "id": "565:817",
+      "width": 220,
+      "height": 48,
+      "bytes": 3740,
+      "scale": 2,
+      "rgbaSha256": "3867e18464bd50167163fa4f5c0ee104d6b3411df1307a89033e8e54ae9adcaa"
     },
     {
-      "name": "confetti-13",
-      "file": "confetti-13.svg",
-      "id": "565:2347",
-      "bytes": 1037
+      "name": "entry-snow-left",
+      "file": "entry-snow-left.webp",
+      "id": "565:805",
+      "width": 360,
+      "height": 290,
+      "bytes": 62308,
+      "scale": 2,
+      "rgbaSha256": "b4b39d1b7f3960044c0c76696b16b28bb38a35deae39d0309988aa06dc485553"
     },
     {
-      "name": "confetti-14",
-      "file": "confetti-14.svg",
-      "id": "565:2348",
-      "bytes": 1037
+      "name": "entry-snow-right",
+      "file": "entry-snow-right.webp",
+      "id": "565:806",
+      "width": 154,
+      "height": 462,
+      "bytes": 58482,
+      "scale": 2,
+      "rgbaSha256": "0f63cb083085f49c2c394731e1a94171b93e849bb42caf3be0c77b95928fc6c4"
     },
     {
-      "name": "confetti-15",
-      "file": "confetti-15.svg",
-      "id": "565:2349",
-      "bytes": 1049
+      "name": "gesture",
+      "file": "gesture.webp",
+      "id": "565:1185",
+      "width": 74,
+      "height": 74,
+      "bytes": 566,
+      "scale": 2,
+      "rgbaSha256": "596a23d9df041f54e6831222140384f186eb00933e0595bbe9bae93508034311"
     },
     {
-      "name": "confetti-16",
-      "file": "confetti-16.svg",
-      "id": "565:2350",
-      "bytes": 1294
+      "name": "gift",
+      "file": "gift.webp",
+      "id": "565:919",
+      "width": 48,
+      "height": 48,
+      "bytes": 340,
+      "scale": 2,
+      "rgbaSha256": "64dc9d6d3fff810ec53819201af29d8f019a6bc4cc11f00d1117c3bd7b9de87c"
     },
     {
-      "name": "confetti-17",
-      "file": "confetti-17.svg",
-      "id": "565:2351",
-      "bytes": 1294
+      "name": "help",
+      "file": "help.webp",
+      "id": "565:964",
+      "width": 79,
+      "height": 80,
+      "bytes": 1754,
+      "scale": 2,
+      "rgbaSha256": "1e9c45db6d9adb23408053320e64703df9e0b4afa9a4304035b7dc1403736c4b"
     },
     {
-      "name": "confetti-18",
-      "file": "confetti-18.svg",
-      "id": "565:2352",
-      "bytes": 1343
+      "name": "home",
+      "file": "home.webp",
+      "id": "565:882",
+      "width": 80,
+      "height": 80,
+      "bytes": 1326,
+      "scale": 2,
+      "rgbaSha256": "049963b667ad71ecba69ea68878e32ccfc09492f7e0b0dbbb19d9f1bdefa6582"
     },
     {
-      "name": "confetti-19",
-      "file": "confetti-19.svg",
-      "id": "565:2353",
-      "bytes": 1328
+      "name": "item-coffee",
+      "file": "item-coffee.webp",
+      "id": "565:941",
+      "width": 256,
+      "height": 256,
+      "bytes": 19030,
+      "scale": 2,
+      "rgbaSha256": "28433532f551d6fd27f813f7f79fa405ae4fdaaef5d092cb36bb89347df3e226"
+    },
+    {
+      "name": "item-hotdog",
+      "file": "item-hotdog.webp",
+      "id": "565:989",
+      "width": 200,
+      "height": 200,
+      "bytes": 20594,
+      "scale": 2,
+      "rgbaSha256": "6306c775e72a14b5164948ea3ac145abc58d871d078021597dd088bd9656a400"
+    },
+    {
+      "name": "item-red",
+      "file": "item-red.webp",
+      "id": "565:844",
+      "width": 120,
+      "height": 120,
+      "bytes": 12530,
+      "scale": 2,
+      "rgbaSha256": "8bfb7ac5a3ff0ab14c19146dc2ec3bf3d61a5cc71accd28c698bc1193bea29fc"
+    },
+    {
+      "name": "item-sandwich",
+      "file": "item-sandwich.webp",
+      "id": "565:952",
+      "width": 200,
+      "height": 200,
+      "bytes": 29328,
+      "scale": 2,
+      "rgbaSha256": "fa59aa03b5611e1e001555faafa268dbc449bb33ecaff0afbfd70bf4a1ecb20a"
+    },
+    {
+      "name": "pole",
+      "file": "pole.webp",
+      "id": "565:956",
+      "width": 54,
+      "height": 83,
+      "bytes": 3564,
+      "scale": 2,
+      "rgbaSha256": "5f204ebf6a7bcae3f9568a33c10daefc0df2b595dcbb08b82b6d09703a33212b"
+    },
+    {
+      "name": "prize-hoff",
+      "file": "prize-hoff.webp",
+      "id": "565:2964",
+      "width": 362,
+      "height": 361,
+      "bytes": 110554,
+      "scale": 2,
+      "rgbaSha256": "805ea3749605b73ba15964918067dd569a040c613f14d8dd1517430f729abe12"
+    },
+    {
+      "name": "prize-rossko10",
+      "file": "prize-rossko10.webp",
+      "id": "565:2975",
+      "width": 382,
+      "height": 393,
+      "bytes": 129590,
+      "scale": 2,
+      "rgbaSha256": "1709f7e3ab1025187eca17a3cc34cb99ccac0b34e1e9f63f8500df6d578c4efc"
+    },
+    {
+      "name": "prize-rossko5",
+      "file": "prize-rossko5.webp",
+      "id": "565:2984",
+      "width": 402,
+      "height": 418,
+      "bytes": 143956,
+      "scale": 2,
+      "rgbaSha256": "7e65401563432a4b4148ec162637191c58e276d035d690a4d0ba522a8d054c69"
+    },
+    {
+      "name": "result-capy",
+      "file": "result-capy.webp",
+      "id": "565:1884",
+      "width": 290,
+      "height": 406,
+      "bytes": 130990,
+      "scale": 2,
+      "rgbaSha256": "c6aee3538fbe09b14d70990866d6cfb3c552856b9d19302ebb99d5d4ea1a0b7c"
+    },
+    {
+      "name": "reward-gift",
+      "file": "reward-gift.webp",
+      "id": "565:2354",
+      "width": 126,
+      "height": 126,
+      "bytes": 662,
+      "scale": 2,
+      "rgbaSha256": "bf357d24c8e811a2fbdec67391c02462f45816eb1acb5cb7bbe77f843b1c2625"
+    },
+    {
+      "name": "sign",
+      "file": "sign.webp",
+      "id": "565:945",
+      "width": 52,
+      "height": 64,
+      "bytes": 2592,
+      "scale": 2,
+      "rgbaSha256": "a36ea6533ce0579cbb2dc51c0c354af3c9be0deaa1d8f20704e0a9392d406922"
+    },
+    {
+      "name": "small-tree",
+      "file": "small-tree.webp",
+      "id": "565:949",
+      "width": 70,
+      "height": 122,
+      "bytes": 14334,
+      "scale": 2,
+      "rgbaSha256": "efb8e840af8cb6f047cc3dc28873263874f1022e4c8bcb2f3a37d71ed10b17d8"
+    },
+    {
+      "name": "snow-coins",
+      "file": "snow-coins.webp",
+      "id": "565:916",
+      "width": 71,
+      "height": 47,
+      "bytes": 572,
+      "scale": 2,
+      "rgbaSha256": "b109a4ddc9cb64b44f46ef6f0593886941e1fd5a4fef4524bc77e4cc39f5cf2b"
+    },
+    {
+      "name": "snow-left",
+      "file": "snow-left.webp",
+      "id": "565:962",
+      "width": 372,
+      "height": 292,
+      "bytes": 71940,
+      "scale": 2,
+      "rgbaSha256": "fa98d4ba86d63a7f0cfd74a1ac4cb936d536717e9cd3a662e347a3e4b4779660"
+    },
+    {
+      "name": "snow-pole",
+      "file": "snow-pole.webp",
+      "id": "565:1014",
+      "width": 27,
+      "height": 39,
+      "bytes": 1898,
+      "scale": 2,
+      "rgbaSha256": "0a24b1c78071ae22653d25f6adb0b64ba29f20fa68beaadf06f8b45b3c53a326"
+    },
+    {
+      "name": "snow-prizes",
+      "file": "snow-prizes.webp",
+      "id": "565:937",
+      "width": 97,
+      "height": 56,
+      "bytes": 782,
+      "scale": 2,
+      "rgbaSha256": "bb5cc1f85d3d7bcee82a8e6449b07817cd51f313eb9c605fee835e6322edfc3f"
+    },
+    {
+      "name": "snow-time",
+      "file": "snow-time.webp",
+      "id": "565:906",
+      "width": 96,
+      "height": 46,
+      "bytes": 722,
+      "scale": 2,
+      "rgbaSha256": "ab7c7e03e8779b28b601035fd813c109a5296e1c2e767f8164e46a096b7bcda0"
+    },
+    {
+      "name": "sound-off",
+      "file": "sound-off.webp",
+      "id": "565:974",
+      "width": 79,
+      "height": 80,
+      "bytes": 1990,
+      "scale": 2,
+      "rgbaSha256": "b952836b165292d127f16119ca677e80f5cddddc1abce205b967de6d947017a5"
+    },
+    {
+      "name": "stat-shade",
+      "file": "stat-shade.webp",
+      "id": "565:909",
+      "width": 94,
+      "height": 54,
+      "bytes": 310,
+      "scale": 2,
+      "rgbaSha256": "168e847efbf15b36b5e17a693d044c2f8e2fc2e0c607eafab7eae8223204b340"
+    },
+    {
+      "name": "station-snow-1",
+      "file": "station-snow-1.webp",
+      "id": "565:846",
+      "width": 84,
+      "height": 41,
+      "bytes": 3588,
+      "scale": 2,
+      "rgbaSha256": "19667f986913d7433b5455d4091cfe3402a4ec51339eda123f98c2f43f9b7342"
+    },
+    {
+      "name": "station-snow-2",
+      "file": "station-snow-2.webp",
+      "id": "565:847",
+      "width": 24,
+      "height": 14,
+      "bytes": 704,
+      "scale": 2,
+      "rgbaSha256": "456f15184e8f15db9c8e6c7732799c83e1a0afd693adf33208d8e851141a12a2"
+    },
+    {
+      "name": "station-snow-3",
+      "file": "station-snow-3.webp",
+      "id": "565:848",
+      "width": 120,
+      "height": 37,
+      "bytes": 2930,
+      "scale": 2,
+      "rgbaSha256": "308e4fd8c4c77ad9a4813371a01cd25140d1c2a6c7bb9c4ad76d2898f4d181b0"
+    },
+    {
+      "name": "timer",
+      "file": "timer.webp",
+      "id": "565:898",
+      "width": 48,
+      "height": 48,
+      "bytes": 444,
+      "scale": 2,
+      "rgbaSha256": "53235a14b82808201ad0c77713596fbd90c8badb233bc62366d78e20ad25124a"
+    },
+    {
+      "name": "tree-1",
+      "file": "tree-1.webp",
+      "id": "565:961",
+      "width": 234,
+      "height": 134,
+      "bytes": 19000,
+      "scale": 2,
+      "rgbaSha256": "0e265dd964fe27ee36165990b5f223665b0df7c0951736d423dcb0537db5a4f5"
+    },
+    {
+      "name": "tree-2",
+      "file": "tree-2.webp",
+      "id": "565:990",
+      "width": 140,
+      "height": 106,
+      "bytes": 17958,
+      "scale": 2,
+      "rgbaSha256": "49b82d772c88528ee19a1d3cd23db892aabaa95779efe248e9d6f1ff2859d3f2"
+    },
+    {
+      "name": "tree-3",
+      "file": "tree-3.webp",
+      "id": "565:991",
+      "width": 241,
+      "height": 202,
+      "bytes": 36356,
+      "scale": 2,
+      "rgbaSha256": "8b25645af46ca3f0b1e814501ed089cbbdf4e475ce8537a628e2b8c7e3c40f6c"
+    },
+    {
+      "name": "tree-bottom",
+      "file": "tree-bottom.webp",
+      "id": "565:994",
+      "width": 238,
+      "height": 204,
+      "bytes": 50602,
+      "scale": 2,
+      "rgbaSha256": "2d7ea6ded0ac3043bca1d8f6cd0c881380faafee47af86f991b0e716a0e33c7d"
+    },
+    {
+      "name": "trophy",
+      "file": "trophy.webp",
+      "id": "565:868",
+      "width": 80,
+      "height": 80,
+      "bytes": 1786,
+      "scale": 2,
+      "rgbaSha256": "f206e07b96dde39a22e7bdb2f14e2090c356b8bff447087afe835513164715ff"
+    },
+    {
+      "name": "button-play",
+      "file": "pixel/button-play.webp",
+      "id": "565:827",
+      "width": 524,
+      "height": 110,
+      "bytes": 18870,
+      "scale": 2,
+      "rgbaSha256": "6e40e4d4192afea0b23d52d85fa3b0fb17ebd42b411a2b2947910082e2bfaf8f"
+    },
+    {
+      "name": "button-my-prizes",
+      "file": "pixel/button-my-prizes.webp",
+      "id": "565:832",
+      "width": 524,
+      "height": 110,
+      "bytes": 1550,
+      "scale": 2,
+      "rgbaSha256": "08ce780776a8c22b912fa5bda35c629a47cdc58441c6f528750ad84e3542534a"
+    },
+    {
+      "name": "button-understood",
+      "file": "pixel/button-understood.webp",
+      "id": "565:1393",
+      "width": 566,
+      "height": 96,
+      "bytes": 1610,
+      "scale": 2,
+      "rgbaSha256": "64ec788fdc3268692171dc7e0008dee364d525feb9c855812653928fa256026d"
+    },
+    {
+      "name": "button-reward-claim",
+      "file": "pixel/button-reward-claim.webp",
+      "id": "565:2576",
+      "width": 480,
+      "height": 102,
+      "bytes": 2374,
+      "scale": 2,
+      "rgbaSha256": "16b2ab12359bfe2ef0fb9b647a7bc80f58420e8300a17e47f3e8b3a6bae4cc41"
+    },
+    {
+      "name": "button-continue",
+      "file": "pixel/button-continue.webp",
+      "id": "565:2581",
+      "width": 480,
+      "height": 110,
+      "bytes": 1674,
+      "scale": 2,
+      "rgbaSha256": "a719f9843ffb27c5cdcf8350074eed1f28c0bb545cbb24ecf64dfeee80098909"
+    },
+    {
+      "name": "button-result-claim",
+      "file": "pixel/button-result-claim.webp",
+      "id": "565:1877",
+      "width": 518,
+      "height": 102,
+      "bytes": 2398,
+      "scale": 2,
+      "rgbaSha256": "2d032d86d4e15b76e625d2a484e09b7bbf70214f15b89baace5ac6f5efabfcce"
+    },
+    {
+      "name": "button-result-replay",
+      "file": "pixel/button-result-replay.webp",
+      "id": "565:1882",
+      "width": 518,
+      "height": 110,
+      "bytes": 2142,
+      "scale": 2,
+      "rgbaSha256": "c460ec30897194a95f94d51fc55a1ae9b8917aef3d3b518ac20bdcd202828825"
+    },
+    {
+      "name": "button-zero-claim",
+      "file": "pixel/button-zero-claim.webp",
+      "id": "565:2147",
+      "width": 518,
+      "height": 102,
+      "bytes": 2830,
+      "scale": 2,
+      "rgbaSha256": "1a7cd1fded86548ea53bb0fe7361946ddd6193dce4ad6c15798a1b324a677d9c"
+    },
+    {
+      "name": "button-spin",
+      "file": "pixel/button-spin.webp",
+      "id": "565:3013",
+      "width": 686,
+      "height": 102,
+      "bytes": 2090,
+      "scale": 2,
+      "rgbaSha256": "25fe116b6ae68a8b97727e9068c1b202bf379aea2fb356a545e86431674fe72e"
+    },
+    {
+      "name": "button-more-prizes",
+      "file": "pixel/button-more-prizes.webp",
+      "id": "565:3059",
+      "width": 686,
+      "height": 102,
+      "bytes": 2402,
+      "scale": 2,
+      "rgbaSha256": "0b0910aedf23f5fdb9ad2a7a831eac6d4a8e7223aef065fcf6ed4acb9a33fa7a"
+    },
+    {
+      "name": "button-to-prizes",
+      "file": "pixel/button-to-prizes.webp",
+      "id": "565:3102",
+      "width": 686,
+      "height": 102,
+      "bytes": 2466,
+      "scale": 2,
+      "rgbaSha256": "2947b4f9a1a8396a5b95c4c518c41312959e0e4618daf284725b099408874da4"
+    },
+    {
+      "name": "button-play-again",
+      "file": "pixel/button-play-again.webp",
+      "id": "565:2704",
+      "width": 686,
+      "height": 102,
+      "bytes": 1896,
+      "scale": 2,
+      "rgbaSha256": "25a300355e9b2016e049e6c5db64e813bf05f1fe6c48a60c17de9e4207b8ffc8"
+    },
+    {
+      "name": "button-activate-small",
+      "file": "pixel/button-activate-small.webp",
+      "id": "565:2607",
+      "width": 182,
+      "height": 60,
+      "bytes": 1210,
+      "scale": 2,
+      "rgbaSha256": "963fb4a91f6bd568f4e8875b7b9194b4d18d9579131d8eeea627e9a7fd035ae7"
+    },
+    {
+      "name": "button-rating-play",
+      "file": "pixel/button-rating-play.webp",
+      "id": "581:4118",
+      "width": 518,
+      "height": 102,
+      "bytes": 2428,
+      "scale": 2,
+      "rgbaSha256": "5dfa61744a79b40435de675bb00d779fc1a4d00f546bd816d691eb0e752a992b"
+    },
+    {
+      "name": "button-rating-prizes",
+      "file": "pixel/button-rating-prizes.webp",
+      "id": "581:4123",
+      "width": 518,
+      "height": 110,
+      "bytes": 2228,
+      "scale": 2,
+      "rgbaSha256": "3c35f3e54b6ccc370cbbae1d4b2a0cc00650617ba6bade201f09d42ba67a50fd"
+    },
+    {
+      "name": "button-coupon-activate",
+      "file": "pixel/button-coupon-activate.webp",
+      "id": "566:3578",
+      "width": 686,
+      "height": 102,
+      "bytes": 2454,
+      "scale": 2,
+      "rgbaSha256": "b4db60c13511966081a7804f5e5ff6d392ee1927aef9e8d8ff70294f94dce7cc"
+    },
+    {
+      "name": "result-capy-zero",
+      "file": "pixel/result-capy-zero.webp",
+      "id": "565:2154",
+      "width": 290,
+      "height": 406,
+      "bytes": 113132,
+      "scale": 2,
+      "rgbaSha256": "f86bc10259800747c159470a027578b1dbf1bf1480c846a15bb292886e8c07b9"
+    },
+    {
+      "name": "result-rules",
+      "file": "pixel/result-rules.webp",
+      "id": "565:1819",
+      "width": 340,
+      "height": 168,
+      "bytes": 9970,
+      "scale": 2,
+      "rgbaSha256": "12e072ce6238ee5bc175708694e775c27ec0551b9d9363d9917071b56f70e6e1"
+    },
+    {
+      "name": "help-coffee",
+      "file": "pixel/help-coffee.webp",
+      "id": "565:1375",
+      "width": 40,
+      "height": 40,
+      "bytes": 1312,
+      "scale": 2,
+      "rgbaSha256": "a497b3bd7878aa70d7b39a5f86afa2a96e99fe55c9e75416d29584fbd7f3dfaf"
+    },
+    {
+      "name": "help-red",
+      "file": "pixel/help-red.webp",
+      "id": "565:1379",
+      "width": 40,
+      "height": 40,
+      "bytes": 2274,
+      "scale": 2,
+      "rgbaSha256": "9d4602ac84e74bc851b1c18725246edbeea784994bb9668d4f8b9a54f8eba3f2"
+    },
+    {
+      "name": "reward-plus",
+      "file": "pixel/reward-plus.webp",
+      "id": "565:2365",
+      "width": 45,
+      "height": 34,
+      "bytes": 148,
+      "scale": 2,
+      "rgbaSha256": "e0d348e9fe99d92279ea6931a19d9173c2ae03dfe3049cc7a25b729835e11df5"
+    },
+    {
+      "name": "entry-shade",
+      "file": "pixel/entry-shade.webp",
+      "id": "565:804",
+      "width": 750,
+      "height": 292,
+      "bytes": 35480,
+      "scale": 2,
+      "rgbaSha256": "a214f3dde859d6b0625793833d7731a0aeed04d08da677719bbfdbec7d36b6fc"
+    },
+    {
+      "name": "result-shade-pink",
+      "file": "pixel/result-shade-pink.webp",
+      "id": "565:1818",
+      "width": 92,
+      "height": 54,
+      "bytes": 384,
+      "scale": 2,
+      "rgbaSha256": "e7ee0f92be87f6321e96518bc60c68b950bac3e8ed945b1cbe26c417c5a8e6cd"
+    },
+    {
+      "name": "badge-card",
+      "file": "pixel/badge-card.webp",
+      "id": "565:2593",
+      "width": 194,
+      "height": 32,
+      "bytes": 1266,
+      "scale": 2,
+      "rgbaSha256": "cbbfc30f50bcea6c6ec4b6ee14081a125fa4fbc6b55fae29a6197328d838185e"
+    },
+    {
+      "name": "badge-coupon",
+      "file": "pixel/badge-coupon.webp",
+      "id": "566:3516",
+      "width": 220,
+      "height": 40,
+      "bytes": 1374,
+      "scale": 2,
+      "rgbaSha256": "b2b06a66df2dddd82c07f8534aa6529c9fca80be9110d82e31d9bf591ba6f3e2"
+    },
+    {
+      "name": "entry-glow-0",
+      "file": "pixel/entry-glow-0.webp",
+      "id": "565:810",
+      "width": 286,
+      "height": 286,
+      "bytes": 11808,
+      "scale": 2,
+      "rgbaSha256": "d51539b8448434641c2cbcec0b518ceabc642f786741916bc65bcd3947cea315"
+    },
+    {
+      "name": "entry-glow-1",
+      "file": "pixel/entry-glow-1.webp",
+      "id": "565:811",
+      "width": 286,
+      "height": 286,
+      "bytes": 10308,
+      "scale": 2,
+      "rgbaSha256": "0e0a00d01501bb52dce02203b543ffcca8d3687b93f95394c2a3f64dc289ad59"
+    },
+    {
+      "name": "entry-glow-2",
+      "file": "pixel/entry-glow-2.webp",
+      "id": "565:812",
+      "width": 286,
+      "height": 286,
+      "bytes": 10308,
+      "scale": 2,
+      "rgbaSha256": "0e0a00d01501bb52dce02203b543ffcca8d3687b93f95394c2a3f64dc289ad59"
+    },
+    {
+      "name": "entry-glow-3",
+      "file": "pixel/entry-glow-3.webp",
+      "id": "565:813",
+      "width": 168,
+      "height": 194,
+      "bytes": 5514,
+      "scale": 2,
+      "rgbaSha256": "38a63a63afa8a7ad285688f6cb3a28a3cde387eabe5c8b70915a997cc2d86806"
+    },
+    {
+      "name": "entry-glow-4",
+      "file": "pixel/entry-glow-4.webp",
+      "id": "565:814",
+      "width": 133,
+      "height": 175,
+      "bytes": 4330,
+      "scale": 2,
+      "rgbaSha256": "7363510b158bb9ddacd905f8d7e9ad92477c52b5061055445a2b99c831ab7d0e"
+    },
+    {
+      "name": "entry-glow-5",
+      "file": "pixel/entry-glow-5.webp",
+      "id": "565:815",
+      "width": 116,
+      "height": 147,
+      "bytes": 3306,
+      "scale": 2,
+      "rgbaSha256": "95ee08ffa1b6309ce9b57e8faa1902251e764faf90739a1ee34b1b5361765aa8"
+    },
+    {
+      "name": "entry-glow-6",
+      "file": "pixel/entry-glow-6.webp",
+      "id": "565:816",
+      "width": 250,
+      "height": 250,
+      "bytes": 8042,
+      "scale": 2,
+      "rgbaSha256": "8ec9d398f5bd99d057ddfd1564bee48d214c07372c84cfe401ec1cd2f6c812b9"
+    },
+    {
+      "name": "text-565-822",
+      "file": "pixel/text-565-822.webp",
+      "id": "565:822",
+      "width": 410,
+      "height": 51,
+      "bytes": 2838,
+      "scale": 2,
+      "rgbaSha256": "1fafaefecf4c26bf1a8813f0d46ac5cdfca2d739cf3e959b9879489f1b0d414e"
+    },
+    {
+      "name": "text-565-861",
+      "file": "pixel/text-565-861.webp",
+      "id": "565:861",
+      "width": 111,
+      "height": 20,
+      "bytes": 520,
+      "scale": 2,
+      "rgbaSha256": "9d87b99d364f1c1b2a101df9a3a05a381fc3f80cb174104f0bacd48a1b035540"
+    },
+    {
+      "name": "text-565-1184",
+      "file": "pixel/text-565-1184.webp",
+      "id": "565:1184",
+      "width": 269,
+      "height": 50,
+      "bytes": 2296,
+      "scale": 2,
+      "rgbaSha256": "d1b4dfbf9ece6f52942c1651045c974798892069bc68c1c3347d14d39a1ac352"
+    },
+    {
+      "name": "text-565-1367",
+      "file": "pixel/text-565-1367.webp",
+      "id": "565:1367",
+      "width": 239,
+      "height": 39,
+      "bytes": 1170,
+      "scale": 2,
+      "rgbaSha256": "0b7163e3a62bc2b481dc8685354b7543e3d5133d1a5dda7c195087982f589897"
+    },
+    {
+      "name": "text-565-1370",
+      "file": "pixel/text-565-1370.webp",
+      "id": "565:1370",
+      "width": 482,
+      "height": 60,
+      "bytes": 4104,
+      "scale": 2,
+      "rgbaSha256": "00ca0a3b179d8344f7ed2f59a073ac716ae59895cf051eaddc9732b122892ef5"
+    },
+    {
+      "name": "text-565-1377",
+      "file": "pixel/text-565-1377.webp",
+      "id": "565:1377",
+      "width": 343,
+      "height": 24,
+      "bytes": 1538,
+      "scale": 2,
+      "rgbaSha256": "9d1fe66296dd5510cf5b0f5e1f2657f14f210e7dba274d3780286a461e042471"
+    },
+    {
+      "name": "text-565-1381",
+      "file": "pixel/text-565-1381.webp",
+      "id": "565:1381",
+      "width": 315,
+      "height": 24,
+      "bytes": 1450,
+      "scale": 2,
+      "rgbaSha256": "caa2024056361d894178348091fe4e62b8e2298eb575b520c9faaff60052b7d4"
+    },
+    {
+      "name": "text-565-1383",
+      "file": "pixel/text-565-1383.webp",
+      "id": "565:1383",
+      "width": 220,
+      "height": 96,
+      "bytes": 2908,
+      "scale": 2,
+      "rgbaSha256": "09ceaf2ece6b80749e114244997b8e18468e4b0114e9ad3b3e8d892444b5d1f8"
+    },
+    {
+      "name": "text-565-1387",
+      "file": "pixel/text-565-1387.webp",
+      "id": "565:1387",
+      "width": 490,
+      "height": 132,
+      "bytes": 5930,
+      "scale": 2,
+      "rgbaSha256": "dd12686106cd99f16ff5633711a9c0928c335bc4f6ca6fdf2b5c0eb2a151f7e5"
+    },
+    {
+      "name": "text-565-1391",
+      "file": "pixel/text-565-1391.webp",
+      "id": "565:1391",
+      "width": 546,
+      "height": 131,
+      "bytes": 6492,
+      "scale": 2,
+      "rgbaSha256": "09f10155adbf9f6d228daac9a4bc0d63c43853f7f29057a0b32d3ff0123a825e"
+    },
+    {
+      "name": "text-565-1794",
+      "file": "pixel/text-565-1794.webp",
+      "id": "565:1794",
+      "width": 305,
+      "height": 39,
+      "bytes": 1372,
+      "scale": 2,
+      "rgbaSha256": "568a1f24bc42c5720b3ec7c7714cbaa4e38ae88597eae49a5f909c3b38cbf8e0"
+    },
+    {
+      "name": "text-565-1799",
+      "file": "pixel/text-565-1799.webp",
+      "id": "565:1799",
+      "width": 60,
+      "height": 11,
+      "bytes": 336,
+      "scale": 2,
+      "rgbaSha256": "106ee1afa71e11fc807ffaa515322b91f0ade1005c23bc113004ce88edd9f107"
+    },
+    {
+      "name": "text-565-1816",
+      "file": "pixel/text-565-1816.webp",
+      "id": "565:1816",
+      "width": 131,
+      "height": 12,
+      "bytes": 726,
+      "scale": 2,
+      "rgbaSha256": "9f22a78c4fad0f8fd7cbf1ea553930b1b746a5a2136f082ad336f69b097b70ac"
+    },
+    {
+      "name": "text-565-2366",
+      "file": "pixel/text-565-2366.webp",
+      "id": "565:2366",
+      "width": 304,
+      "height": 76,
+      "bytes": 1664,
+      "scale": 2,
+      "rgbaSha256": "d24aa82ead9cb2d877bc3f314b74832b44fdc55bb8a6fa9e621b320804925305"
+    },
+    {
+      "name": "text-566-3341",
+      "file": "pixel/text-566-3341.webp",
+      "id": "566:3341",
+      "width": 316,
+      "height": 76,
+      "bytes": 1776,
+      "scale": 2,
+      "rgbaSha256": "521963440fcb1cebf9b5261b4a6bb377e5fa49ee8d5a8df262c694c9eadec370"
+    },
+    {
+      "name": "text-565-2574",
+      "file": "pixel/text-565-2574.webp",
+      "id": "565:2574",
+      "width": 317,
+      "height": 76,
+      "bytes": 1834,
+      "scale": 2,
+      "rgbaSha256": "caa0a0fe0a65e994ba2780018c42db666c97cec8dcbe830f2bb41d2a1c9d66a6"
+    },
+    {
+      "name": "text-565-3018",
+      "file": "pixel/text-565-3018.webp",
+      "id": "565:3018",
+      "width": 630,
+      "height": 21,
+      "bytes": 2742,
+      "scale": 2,
+      "rgbaSha256": "a8ac42a51be3beda9e9982c55d6ddf519025ad58d47951b2ec3760b757f47ff6"
+    },
+    {
+      "name": "text-565-3055",
+      "file": "pixel/text-565-3055.webp",
+      "id": "565:3055",
+      "width": 146,
+      "height": 30,
+      "bytes": 832,
+      "scale": 2,
+      "rgbaSha256": "01ffbb1804d5445d76f853555f8a2a46e104929664ef1a3322a70119339fef32"
+    },
+    {
+      "name": "text-565-3056",
+      "file": "pixel/text-565-3056.webp",
+      "id": "565:3056",
+      "width": 553,
+      "height": 79,
+      "bytes": 2914,
+      "scale": 2,
+      "rgbaSha256": "4955c74dc6364f66684eb81dd644163d594f3ba5b4847178b236c92c8ec33caa"
+    },
+    {
+      "name": "text-566-3385",
+      "file": "pixel/text-566-3385.webp",
+      "id": "566:3385",
+      "width": 534,
+      "height": 79,
+      "bytes": 4488,
+      "scale": 2,
+      "rgbaSha256": "0a624c5487dc32b247e04ea10712a430552959da44b4d2cd0cc3a034a95be05c"
+    },
+    {
+      "name": "text-565-3099",
+      "file": "pixel/text-565-3099.webp",
+      "id": "565:3099",
+      "width": 554,
+      "height": 79,
+      "bytes": 4534,
+      "scale": 2,
+      "rgbaSha256": "34257184a3cbf12f1affa6f0ae4389cb9cb427b7b53f6ed8c6cd9085ff83a799"
+    },
+    {
+      "name": "text-565-2702",
+      "file": "pixel/text-565-2702.webp",
+      "id": "565:2702",
+      "width": 262,
+      "height": 46,
+      "bytes": 1100,
+      "scale": 2,
+      "rgbaSha256": "7c4469b3bc9605df8279c618fe984c01f1644eb2876f04a5a003ad60149dae83"
+    },
+    {
+      "name": "text-565-2701",
+      "file": "pixel/text-565-2701.webp",
+      "id": "565:2701",
+      "width": 313,
+      "height": 26,
+      "bytes": 1468,
+      "scale": 2,
+      "rgbaSha256": "ca295affe1eff7c6482a24be71696cc4900f0b9cc5b1b1db2c3a34d801b9943d"
+    },
+    {
+      "name": "text-565-2592",
+      "file": "pixel/text-565-2592.webp",
+      "id": "565:2592",
+      "width": 42,
+      "height": 12,
+      "bytes": 348,
+      "scale": 2,
+      "rgbaSha256": "340b80fe140b2d6e2eba64d7a131fad4d268edcb55ba1083d8d7b37d5cc3a61a"
+    },
+    {
+      "name": "text-565-2622",
+      "file": "pixel/text-565-2622.webp",
+      "id": "565:2622",
+      "width": 59,
+      "height": 12,
+      "bytes": 348,
+      "scale": 2,
+      "rgbaSha256": "f6aefbee7b90ead2fceab45d7c5415f819bed3d568f91d6eba5e99dcbb24920e"
+    },
+    {
+      "name": "text-565-2597",
+      "file": "pixel/text-565-2597.webp",
+      "id": "565:2597",
+      "width": 334,
+      "height": 61,
+      "bytes": 2606,
+      "scale": 2,
+      "rgbaSha256": "96974f6b4468c5cda74e1793e11347c3b5d7dffcdca099eb450d4f775e711552"
+    },
+    {
+      "name": "text-566-3403",
+      "file": "pixel/text-566-3403.webp",
+      "id": "566:3403",
+      "width": 424,
+      "height": 61,
+      "bytes": 3872,
+      "scale": 2,
+      "rgbaSha256": "bd67044565cd18ef230357d656eefa110d7330e86aa5cc2016a4b635323b3f1e"
+    },
+    {
+      "name": "text-565-2627",
+      "file": "pixel/text-565-2627.webp",
+      "id": "565:2627",
+      "width": 408,
+      "height": 61,
+      "bytes": 3840,
+      "scale": 2,
+      "rgbaSha256": "a95de22a7cf9ee3f627da1d06dd0bc0c1ef406320b7f7464943d1fcc122732e3"
+    },
+    {
+      "name": "text-565-2602",
+      "file": "pixel/text-565-2602.webp",
+      "id": "565:2602",
+      "width": 105,
+      "height": 18,
+      "bytes": 588,
+      "scale": 2,
+      "rgbaSha256": "c7eec51c0b8cbadcde78111f72d8c7844a979599e5b32783e0382dbe2d057529"
+    },
+    {
+      "name": "text-566-3408",
+      "file": "pixel/text-566-3408.webp",
+      "id": "566:3408",
+      "width": 105,
+      "height": 18,
+      "bytes": 572,
+      "scale": 2,
+      "rgbaSha256": "0eba75fce5d22e34e9b68a6d73158204f1d972e116985db08596a34a99736b52"
+    },
+    {
+      "name": "text-565-2633",
+      "file": "pixel/text-565-2633.webp",
+      "id": "565:2633",
+      "width": 95,
+      "height": 18,
+      "bytes": 554,
+      "scale": 2,
+      "rgbaSha256": "9857fcef54c8730d52ab19787c0bf8cb778be1a0e1871228be17cd49c1abc6f4"
+    },
+    {
+      "name": "text-566-3482",
+      "file": "pixel/text-566-3482.webp",
+      "id": "566:3482",
+      "width": 113,
+      "height": 36,
+      "bytes": 564,
+      "scale": 2,
+      "rgbaSha256": "0be95b9c22ef007d6ee0ba0cd783360c5b5bb9cf82f6d3b5e64cc510f535d911"
+    },
+    {
+      "name": "text-566-3498",
+      "file": "pixel/text-566-3498.webp",
+      "id": "566:3498",
+      "width": 548,
+      "height": 92,
+      "bytes": 3796,
+      "scale": 2,
+      "rgbaSha256": "13ffd1b434cc946ed8e1737bc54b072d99ed36639116f93c1dedae4f354bbe9e"
+    },
+    {
+      "name": "text-566-3500",
+      "file": "pixel/text-566-3500.webp",
+      "id": "566:3500",
+      "width": 188,
+      "height": 24,
+      "bytes": 1230,
+      "scale": 2,
+      "rgbaSha256": "35f01bb1f32ca558139f7a136e28e4fb0109428b3418b499bdd0ec0f6f4a13d1"
+    },
+    {
+      "name": "text-566-3627",
+      "file": "pixel/text-566-3627.webp",
+      "id": "566:3627",
+      "width": 105,
+      "height": 18,
+      "bytes": 678,
+      "scale": 2,
+      "rgbaSha256": "9a0e81ec01275f1e919287fe3e279a26523d2000b2163e7a0445609c84faabcb"
+    },
+    {
+      "name": "text-566-3512",
+      "file": "pixel/text-566-3512.webp",
+      "id": "566:3512",
+      "width": 452,
+      "height": 20,
+      "bytes": 1924,
+      "scale": 2,
+      "rgbaSha256": "0669afc289e819c005b6b079f32ef8460b68e7a6f276782688f4f91e07a09e06"
+    },
+    {
+      "name": "text-566-3520",
+      "file": "pixel/text-566-3520.webp",
+      "id": "566:3520",
+      "width": 577,
+      "height": 32,
+      "bytes": 2542,
+      "scale": 2,
+      "rgbaSha256": "b5ef3ebf081059c3159964825855c6ceddd660f934e6ce1aebf948ac0baf3d4c"
+    },
+    {
+      "name": "text-566-3523",
+      "file": "pixel/text-566-3523.webp",
+      "id": "566:3523",
+      "width": 337,
+      "height": 25,
+      "bytes": 1654,
+      "scale": 2,
+      "rgbaSha256": "2d22e639c1b7de7c3ea14069fd6d62d6a2da0baa5217864ef38086609afcda12"
+    },
+    {
+      "name": "text-566-3528",
+      "file": "pixel/text-566-3528.webp",
+      "id": "566:3528",
+      "width": 8,
+      "height": 17,
+      "bytes": 112,
+      "scale": 2,
+      "rgbaSha256": "cd8a651b7e28a51aaa37117edf841a44c13975e5a06972cce0c18bfa985a6003"
+    },
+    {
+      "name": "text-566-3530",
+      "file": "pixel/text-566-3530.webp",
+      "id": "566:3530",
+      "width": 298,
+      "height": 27,
+      "bytes": 1592,
+      "scale": 2,
+      "rgbaSha256": "3438053f751c346629b6eea500bb8312f5be954393068733ccb561ceac5aa8f6"
+    },
+    {
+      "name": "text-566-3533",
+      "file": "pixel/text-566-3533.webp",
+      "id": "566:3533",
+      "width": 12,
+      "height": 18,
+      "bytes": 182,
+      "scale": 2,
+      "rgbaSha256": "12525b4f579dd976ae32dfd528f1c32edabe15cc7a04271d8fb98d7bc8a765cc"
+    },
+    {
+      "name": "text-566-3535",
+      "file": "pixel/text-566-3535.webp",
+      "id": "566:3535",
+      "width": 489,
+      "height": 63,
+      "bytes": 3310,
+      "scale": 2,
+      "rgbaSha256": "fe11da23003f35a9ef33bb11bf68b3262071207f3190f908e12f270e18582eb9"
+    },
+    {
+      "name": "text-566-3538",
+      "file": "pixel/text-566-3538.webp",
+      "id": "566:3538",
+      "width": 13,
+      "height": 18,
+      "bytes": 258,
+      "scale": 2,
+      "rgbaSha256": "5abb7723957607c71c3a6a15738cc2d36617949260d4387ae8c84f52dcc38df7"
+    },
+    {
+      "name": "text-566-3540",
+      "file": "pixel/text-566-3540.webp",
+      "id": "566:3540",
+      "width": 459,
+      "height": 67,
+      "bytes": 3746,
+      "scale": 2,
+      "rgbaSha256": "fe08d3e8627b64542f6fe69d455c18a50012cbabd528d20aad0f7236baa74e43"
+    },
+    {
+      "name": "text-566-3543",
+      "file": "pixel/text-566-3543.webp",
+      "id": "566:3543",
+      "width": 14,
+      "height": 17,
+      "bytes": 166,
+      "scale": 2,
+      "rgbaSha256": "142cab50524f7662f7a0a742bf759832a1690870c9673ed96981ee49b47d3e30"
+    },
+    {
+      "name": "text-566-3545",
+      "file": "pixel/text-566-3545.webp",
+      "id": "566:3545",
+      "width": 472,
+      "height": 67,
+      "bytes": 4058,
+      "scale": 2,
+      "rgbaSha256": "5bbc93914c24b8d23335f1e8e448b9cb99b6b4804ad767d388a6fdf35e68c268"
+    },
+    {
+      "name": "text-566-3548",
+      "file": "pixel/text-566-3548.webp",
+      "id": "566:3548",
+      "width": 214,
+      "height": 31,
+      "bytes": 1188,
+      "scale": 2,
+      "rgbaSha256": "c4db590c254eb40b839902d533d132b071b0aee1d683764b721fb830795998f7"
+    },
+    {
+      "name": "text-566-3552",
+      "file": "pixel/text-566-3552.webp",
+      "id": "566:3552",
+      "width": 6,
+      "height": 6,
+      "bytes": 100,
+      "scale": 2,
+      "rgbaSha256": "cb459f61c415dc68e8b87f37ce0f0cfa56f196c52c3af29ea518e1bf4a3a3b8b"
+    },
+    {
+      "name": "text-566-3554",
+      "file": "pixel/text-566-3554.webp",
+      "id": "566:3554",
+      "width": 520,
+      "height": 105,
+      "bytes": 6020,
+      "scale": 2,
+      "rgbaSha256": "b0963cfa80a5fdf848611ea38993512428ccc1879447bf966a2ba7cd4eeb8965"
+    },
+    {
+      "name": "text-566-3557",
+      "file": "pixel/text-566-3557.webp",
+      "id": "566:3557",
+      "width": 6,
+      "height": 6,
+      "bytes": 100,
+      "scale": 2,
+      "rgbaSha256": "cb459f61c415dc68e8b87f37ce0f0cfa56f196c52c3af29ea518e1bf4a3a3b8b"
+    },
+    {
+      "name": "text-566-3559",
+      "file": "pixel/text-566-3559.webp",
+      "id": "566:3559",
+      "width": 538,
+      "height": 105,
+      "bytes": 4972,
+      "scale": 2,
+      "rgbaSha256": "7df9150748200ed28cf118fb86a41efd042ca5237cbd52f57d120c072b5ab432"
+    },
+    {
+      "name": "text-566-3562",
+      "file": "pixel/text-566-3562.webp",
+      "id": "566:3562",
+      "width": 6,
+      "height": 6,
+      "bytes": 100,
+      "scale": 2,
+      "rgbaSha256": "cb459f61c415dc68e8b87f37ce0f0cfa56f196c52c3af29ea518e1bf4a3a3b8b"
+    },
+    {
+      "name": "text-566-3564",
+      "file": "pixel/text-566-3564.webp",
+      "id": "566:3564",
+      "width": 566,
+      "height": 264,
+      "bytes": 13562,
+      "scale": 2,
+      "rgbaSha256": "f6fc8c5a54a5a62346527bc1840ee7783d5776fe679c0fb0c31e4ee6029119de"
+    },
+    {
+      "name": "text-566-3567",
+      "file": "pixel/text-566-3567.webp",
+      "id": "566:3567",
+      "width": 6,
+      "height": 6,
+      "bytes": 100,
+      "scale": 2,
+      "rgbaSha256": "cb459f61c415dc68e8b87f37ce0f0cfa56f196c52c3af29ea518e1bf4a3a3b8b"
+    },
+    {
+      "name": "text-566-3569",
+      "file": "pixel/text-566-3569.webp",
+      "id": "566:3569",
+      "width": 536,
+      "height": 146,
+      "bytes": 8240,
+      "scale": 2,
+      "rgbaSha256": "02ade5dcef4a010041e24f41b2319ce83ac4323ee257be3e5864fce352721885"
+    },
+    {
+      "name": "text-566-3572",
+      "file": "pixel/text-566-3572.webp",
+      "id": "566:3572",
+      "width": 587,
+      "height": 63,
+      "bytes": 3384,
+      "scale": 2,
+      "rgbaSha256": "44a96a4307b4e400b96eb8473dd6266c55d585cd8bceeff31f7771183cb6bfa7"
+    },
+    {
+      "name": "text-566-3574",
+      "file": "pixel/text-566-3574.webp",
+      "id": "566:3574",
+      "width": 396,
+      "height": 26,
+      "bytes": 1948,
+      "scale": 2,
+      "rgbaSha256": "be92bdec9f3883e330cf8aa9155a8ad42ed9ec00e9e1929f92711cb40fdf9bc6"
+    },
+    {
+      "name": "text-581-4112",
+      "file": "pixel/text-581-4112.webp",
+      "id": "581:4112",
+      "width": 119,
+      "height": 11,
+      "bytes": 714,
+      "scale": 2,
+      "rgbaSha256": "13b7bbe8a9c12c021705a10c6bed4e0f3c9f12f91bfa56b6e09f2a3b269ef63a"
+    },
+    {
+      "name": "text-581-4115",
+      "file": "pixel/text-581-4115.webp",
+      "id": "581:4115",
+      "width": 280,
+      "height": 26,
+      "bytes": 1430,
+      "scale": 2,
+      "rgbaSha256": "4f873cd2d8dd3a260a8a045d6dabe3e9364890a2edf455a22e85e9d6aa92f42d"
+    },
+    {
+      "name": "text-581-4116",
+      "file": "pixel/text-581-4116.webp",
+      "id": "581:4116",
+      "width": 495,
+      "height": 50,
+      "bytes": 2962,
+      "scale": 2,
+      "rgbaSha256": "969a210fdf791c163e63eefca4b0ab1237a824e9335fa78fa21f439cee0dfc25"
+    },
+    {
+      "name": "ticket-hoff-art",
+      "file": "pixel/ticket-hoff-art.webp",
+      "id": "565:2609",
+      "width": 182,
+      "height": 288,
+      "bytes": 18210,
+      "scale": 2,
+      "rgbaSha256": "68cf93b19d2d3c6dfb113db07b82f73eff6ff7a5b8b1e1c3960ecf7adcd41962"
+    },
+    {
+      "name": "ticket-rossko10-art",
+      "file": "pixel/ticket-rossko10-art.webp",
+      "id": "566:3415",
+      "width": 207,
+      "height": 288,
+      "bytes": 29182,
+      "scale": 2,
+      "rgbaSha256": "a7eabe2755563fdada7c2ddaf21e358f2b5b2244ec1fed8c1ff5035d74bdc9ef"
+    },
+    {
+      "name": "ticket-rossko5-art",
+      "file": "pixel/ticket-rossko5-art.webp",
+      "id": "565:2640",
+      "width": 207,
+      "height": 272,
+      "bytes": 30144,
+      "scale": 2,
+      "rgbaSha256": "3973ae053ca13fe1e8a45043cab9a05677bc23dec6a149d790bfec1a6ec6834d"
+    },
+    {
+      "name": "copy-icon",
+      "file": "pixel/copy-icon.webp",
+      "id": "565:2604",
+      "width": 38,
+      "height": 38,
+      "bytes": 280,
+      "scale": 2,
+      "rgbaSha256": "108cbb8424045099f11ab927c965d9fa058e4a93d127763c529363d2015df16f"
+    },
+    {
+      "name": "result-shade-gray",
+      "file": "pixel/result-shade-gray.webp",
+      "id": "565:1801",
+      "width": 92,
+      "height": 54,
+      "bytes": 322,
+      "scale": 2,
+      "rgbaSha256": "6d1e1eddf000c012932226bdfc85bc6ab218ee3a1f9ef292bcbd885949c0bab5"
+    },
+    {
+      "name": "coupon-step-1",
+      "file": "pixel/coupon-step-1.webp",
+      "id": "566:3527",
+      "width": 44,
+      "height": 44,
+      "bytes": 352,
+      "scale": 2,
+      "rgbaSha256": "1cdbd54569c83aad82c9111aecd30ed2e2be403be7c946ecf32ec9e1e68a0d9c"
+    },
+    {
+      "name": "coupon-step-2",
+      "file": "pixel/coupon-step-2.webp",
+      "id": "566:3532",
+      "width": 44,
+      "height": 44,
+      "bytes": 422,
+      "scale": 2,
+      "rgbaSha256": "4158576f7cf2bcf4ef49f9ce7412707370bfc9c90a4205ccb3702dc6e8171c0c"
+    },
+    {
+      "name": "coupon-step-3",
+      "file": "pixel/coupon-step-3.webp",
+      "id": "566:3537",
+      "width": 44,
+      "height": 44,
+      "bytes": 488,
+      "scale": 2,
+      "rgbaSha256": "1abdf120efb4c286bfee5c485783e9ceb0afb82e243fdd5d102dc8b237f971e6"
+    },
+    {
+      "name": "coupon-step-4",
+      "file": "pixel/coupon-step-4.webp",
+      "id": "566:3542",
+      "width": 44,
+      "height": 44,
+      "bytes": 414,
+      "scale": 2,
+      "rgbaSha256": "b4644e94dffeef1b8f82116171d5a2eaeb4064fa1bb972c42997bcde9257e8d6"
+    },
+    {
+      "name": "gift-third",
+      "file": "pixel/gift-third.webp",
+      "id": "565:2563",
+      "width": 126,
+      "height": 126,
+      "bytes": 662,
+      "scale": 2,
+      "rgbaSha256": "54593b5e0a7375830ead799c5169091b0ed5af48fc9bab563e0ac097590c10a9"
+    },
+    {
+      "name": "roulette-bg",
+      "file": "pixel/roulette-bg.webp",
+      "id": "565:2873",
+      "width": 750,
+      "height": 1344,
+      "bytes": 153570,
+      "scale": 2,
+      "rgbaSha256": "f0c485159599228e6c3b45ea0f0af25575f7b769817ef820ea999ffbdf487de8"
+    },
+    {
+      "name": "hud-count-bg",
+      "file": "pixel/hud-count-bg.webp",
+      "id": "565:862",
+      "width": 47,
+      "height": 51,
+      "bytes": 504,
+      "scale": 2,
+      "rgbaSha256": "a503cf532931af8e942c19ecd800c82045ad5442ca54a5fecd35218f74c7f96e"
+    },
+    {
+      "name": "entry-button-snow",
+      "file": "pixel/entry-button-snow.webp",
+      "id": "565:821",
+      "width": 84,
+      "height": 56,
+      "bytes": 696,
+      "scale": 2,
+      "rgbaSha256": "2b3ab970a7bc05c678efce75ec65d2772b30d7866d404226f53070838fb0a254"
+    },
+    {
+      "name": "empty-ticket",
+      "file": "pixel/empty-ticket.webp",
+      "id": "565:2698",
+      "width": 687,
+      "height": 308,
+      "bytes": 6676,
+      "scale": 2,
+      "rgbaSha256": "ac37b7b480f6aaaad9dd730a6c9887386478ed9b170a9bb540ffc45911b3c3c4"
+    },
+    {
+      "name": "cabinet-bg",
+      "file": "cabinet-bg.webp",
+      "id": "565:2696",
+      "width": 750,
+      "height": 1344,
+      "bytes": 437984,
+      "scale": 2,
+      "rgbaSha256": "de93ba152ecd9e8e74b8e73c0d206ee07af1ede190db6553007ef597241e3ed4"
+    },
+    {
+      "name": "coupon-bg",
+      "file": "coupon-bg.webp",
+      "id": "566:3586",
+      "width": 750,
+      "height": 1344,
+      "bytes": 437984,
+      "scale": 2,
+      "rgbaSha256": "de93ba152ecd9e8e74b8e73c0d206ee07af1ede190db6553007ef597241e3ed4"
+    },
+    {
+      "name": "win-full-hoff",
+      "file": "pixel/win-full-hoff.webp",
+      "id": "565:3021",
+      "width": 600,
+      "height": 828,
+      "bytes": 155250,
+      "scale": 2,
+      "rgbaSha256": "78fa014a351571f97e1bdb1ba0ff0e944c6e9d25e65bb02721e288064aaa543e"
+    },
+    {
+      "name": "win-full-rossko5",
+      "file": "pixel/win-full-rossko5.webp",
+      "id": "566:3350",
+      "width": 600,
+      "height": 828,
+      "bytes": 173670,
+      "scale": 2,
+      "rgbaSha256": "250075b1ca628eb4fad51a67f2877168e48be0392b6670cf8dbe49a1834e7c07"
+    },
+    {
+      "name": "win-full-rossko10",
+      "file": "pixel/win-full-rossko10.webp",
+      "id": "565:3066",
+      "width": 600,
+      "height": 828,
+      "bytes": 167230,
+      "scale": 2,
+      "rgbaSha256": "a5b2b1e4fdf8c40472d5f15faf1c5dca0d5c68dafa264e94b626f6fee3d24733"
+    },
+    {
+      "name": "coupon-prize-art",
+      "file": "pixel/coupon-prize-art.webp",
+      "id": "566:3488",
+      "width": 361,
+      "height": 353,
+      "bytes": 91830,
+      "scale": 2,
+      "rgbaSha256": "4e38702ed7b626f5d09339af1a8451ae1f85982e234ac05aa8fcdd0e96f7b491"
+    },
+    {
+      "name": "coupon-glow",
+      "file": "pixel/coupon-glow.webp",
+      "id": "566:3487",
+      "width": 330,
+      "height": 330,
+      "bytes": 52456,
+      "scale": 2,
+      "rgbaSha256": "80503fcd491a214bd701eb7eab6fe85bf747d811618fff2bce20519ca9d16fc0"
+    },
+    {
+      "name": "win-overlay-glow",
+      "file": "pixel/win-overlay-glow.webp",
+      "id": "565:3023",
+      "width": 425,
+      "height": 425,
+      "bytes": 101110,
+      "scale": 2,
+      "rgbaSha256": "5af1fa2c94cc80676570903cef4877ed3631d70671294c07dd44684f479967dd"
+    },
+    {
+      "name": "entry-bg",
+      "file": "entry-bg.webp",
+      "id": "565:800",
+      "width": 750,
+      "height": 1344,
+      "bytes": 1070742,
+      "scale": 2,
+      "rgbaSha256": "d4551f203fd84f649d5fb1cb11ab0e20998b7c8e7e5bab73fdb46d0f74e1217d"
+    },
+    {
+      "name": "game-bg",
+      "file": "game-bg.webp",
+      "id": "565:841",
+      "width": 750,
+      "height": 1344,
+      "bytes": 924592,
+      "scale": 2,
+      "rgbaSha256": "1c238541b22cc3c442360832ccda6f8595be1e1c5587c4fe7432cb54aedeb185"
+    },
+    {
+      "name": "result-bg",
+      "file": "result-bg.webp",
+      "id": "565:3019",
+      "width": 750,
+      "height": 1344,
+      "bytes": 483092,
+      "scale": 2,
+      "rgbaSha256": "c2e94af57443c459b4b139de24ef4732ff5fb929b5eaa03cfb9f4ae278516b98"
+    },
+    {
+      "name": "capy-open",
+      "file": "capy-open.webp",
+      "id": "581:4132",
+      "width": 488,
+      "height": 724,
+      "bytes": 322156,
+      "displayPixelRatio": 3.33,
+      "rgbaSha256": "d2b791a0302f894f9676f5940895a43786d415a8a31e2d4f69b0477d9487bf67"
+    },
+    {
+      "name": "capy-right",
+      "file": "capy-right.webp",
+      "id": "581:4148",
+      "width": 488,
+      "height": 724,
+      "bytes": 332038,
+      "displayPixelRatio": 3.33,
+      "rgbaSha256": "f526c354b59917dda44ca195b09c5b63193d74c58754bdf3ce9900ddc99c7680"
+    },
+    {
+      "name": "capy-left",
+      "file": "capy-left.webp",
+      "id": "581:4164",
+      "width": 488,
+      "height": 724,
+      "bytes": 325308,
+      "displayPixelRatio": 3.33,
+      "rgbaSha256": "df6a9b44dbbc894518129715000b1429f69d7539d873f87c361fb5f5acad16af"
+    },
+    {
+      "name": "capy-smile",
+      "file": "capy-smile.webp",
+      "id": "581:4180",
+      "width": 488,
+      "height": 724,
+      "bytes": 319230,
+      "displayPixelRatio": 3.33,
+      "rgbaSha256": "01c84b6e7fe9ac1c574f989812a324f02f532ce7de1f9e3e5e355dfa218d5d6b"
     },
     {
       "name": "confetti-2",
       "file": "confetti-2.svg",
       "id": "565:2335",
-      "bytes": 1311
-    },
-    {
-      "name": "confetti-3",
-      "file": "confetti-3.svg",
-      "id": "565:2336",
-      "bytes": 1311
-    },
-    {
-      "name": "confetti-4",
-      "file": "confetti-4.svg",
-      "id": "565:2337",
-      "bytes": 1343
-    },
-    {
-      "name": "confetti-5",
-      "file": "confetti-5.svg",
-      "id": "565:2338",
-      "bytes": 1058
+      "bytes": 1311,
+      "format": "SVG"
     },
     {
       "name": "confetti-6",
       "file": "confetti-6.svg",
       "id": "565:2339",
-      "bytes": 1036
-    },
-    {
-      "name": "confetti-7",
-      "file": "confetti-7.svg",
-      "id": "565:2340",
-      "bytes": 1326
-    },
-    {
-      "name": "confetti-8",
-      "file": "confetti-8.svg",
-      "id": "565:2341",
-      "bytes": 1344
-    },
-    {
-      "name": "confetti-9",
-      "file": "confetti-9.svg",
-      "id": "565:2342",
-      "bytes": 1053
-    },
-    {
-      "name": "entry-bag",
-      "file": "entry-bag.png",
-      "id": "565:823",
-      "bytes": 104201
-    },
-    {
-      "name": "entry-bg",
-      "file": "entry-bg.png",
-      "id": "565:800",
-      "bytes": 479777
-    },
-    {
-      "name": "entry-corner",
-      "file": "entry-corner.png",
-      "id": "565:807",
-      "bytes": 7786
-    },
-    {
-      "name": "entry-heading",
-      "file": "entry-heading.png",
-      "id": "565:834",
-      "bytes": 175669
-    },
-    {
-      "name": "entry-left-detail",
-      "file": "entry-left-detail.png",
-      "id": "565:801",
-      "bytes": 7319
-    },
-    {
-      "name": "entry-logo",
-      "file": "entry-logo.png",
-      "id": "565:817",
-      "bytes": 5489
-    },
-    {
-      "name": "entry-snow-left",
-      "file": "entry-snow-left.png",
-      "id": "565:805",
-      "bytes": 28253
-    },
-    {
-      "name": "entry-snow-right",
-      "file": "entry-snow-right.png",
-      "id": "565:806",
-      "bytes": 26643
-    },
-    {
-      "name": "game-bg",
-      "file": "game-bg.png",
-      "id": "565:841",
-      "bytes": 402510
-    },
-    {
-      "name": "gesture",
-      "file": "gesture.png",
-      "id": "565:1185",
-      "bytes": 1309
-    },
-    {
-      "name": "gift-box",
-      "file": "gift-box.png",
-      "id": "565:3022",
-      "bytes": 26354
-    },
-    {
-      "name": "gift-lid",
-      "file": "gift-lid.png",
-      "id": "565:3029",
-      "bytes": 29713
-    },
-    {
-      "name": "gift",
-      "file": "gift.png",
-      "id": "565:919",
-      "bytes": 461
-    },
-    {
-      "name": "help",
-      "file": "help.png",
-      "id": "565:964",
-      "bytes": 1864
-    },
-    {
-      "name": "home",
-      "file": "home.png",
-      "id": "565:882",
-      "bytes": 2481
-    },
-    {
-      "name": "item-coffee",
-      "file": "item-coffee.png",
-      "id": "565:941",
-      "bytes": 32445
-    },
-    {
-      "name": "item-hotdog",
-      "file": "item-hotdog.png",
-      "id": "565:989",
-      "bytes": 26570
-    },
-    {
-      "name": "item-red",
-      "file": "item-red.png",
-      "id": "565:844",
-      "bytes": 17910
-    },
-    {
-      "name": "item-sandwich",
-      "file": "item-sandwich.png",
-      "id": "565:952",
-      "bytes": 38490
-    },
-    {
-      "name": "label-coins",
-      "file": "label-coins.svg",
-      "id": "565:913",
-      "bytes": 1396
-    },
-    {
-      "name": "label-prizes",
-      "file": "label-prizes.svg",
-      "id": "565:931",
-      "bytes": 1723
+      "bytes": 1036,
+      "format": "SVG"
     },
     {
       "name": "label-time",
       "file": "label-time.svg",
       "id": "565:904",
-      "bytes": 2738
+      "bytes": 2738,
+      "format": "SVG"
     },
     {
-      "name": "pole",
-      "file": "pole.png",
-      "id": "565:956",
-      "bytes": 1546
+      "name": "confetti-9",
+      "file": "confetti-9.svg",
+      "id": "565:2342",
+      "bytes": 1053,
+      "format": "SVG"
     },
     {
-      "name": "prize-hoff",
-      "file": "prize-hoff.png",
-      "id": "565:2964",
-      "bytes": 162527
+      "name": "confetti-3",
+      "file": "confetti-3.svg",
+      "id": "565:2336",
+      "bytes": 1311,
+      "format": "SVG"
     },
     {
-      "name": "prize-rossko10",
-      "file": "prize-rossko10.png",
-      "id": "565:2975",
-      "bytes": 192941
+      "name": "confetti-10",
+      "file": "confetti-10.svg",
+      "id": "565:2343",
+      "bytes": 1016,
+      "format": "SVG"
     },
     {
-      "name": "prize-rossko5",
-      "file": "prize-rossko5.png",
-      "id": "565:2984",
-      "bytes": 207969
+      "name": "confetti-7",
+      "file": "confetti-7.svg",
+      "id": "565:2340",
+      "bytes": 1326,
+      "format": "SVG"
     },
     {
-      "name": "result-bg",
-      "file": "result-bg.png",
-      "id": "565:3019",
-      "bytes": 229808
+      "name": "label-coins",
+      "file": "label-coins.svg",
+      "id": "565:913",
+      "bytes": 1396,
+      "format": "SVG"
     },
     {
-      "name": "result-capy",
-      "file": "result-capy.png",
-      "id": "565:1884",
-      "bytes": 190801
+      "name": "confetti-13",
+      "file": "confetti-13.svg",
+      "id": "565:2347",
+      "bytes": 1037,
+      "format": "SVG"
     },
     {
-      "name": "reward-gift",
-      "file": "reward-gift.png",
-      "id": "565:2354",
-      "bytes": 1816
+      "name": "confetti-15",
+      "file": "confetti-15.svg",
+      "id": "565:2349",
+      "bytes": 1049,
+      "format": "SVG"
     },
     {
-      "name": "sign",
-      "file": "sign.png",
-      "id": "565:945",
-      "bytes": 1092
+      "name": "confetti-0",
+      "file": "confetti-0.svg",
+      "id": "565:2333",
+      "bytes": 1467,
+      "format": "SVG"
     },
     {
-      "name": "small-tree",
-      "file": "small-tree.png",
-      "id": "565:949",
-      "bytes": 5850
+      "name": "confetti-12",
+      "file": "confetti-12.svg",
+      "id": "565:2346",
+      "bytes": 1034,
+      "format": "SVG"
     },
     {
-      "name": "snow-coins",
-      "file": "snow-coins.png",
-      "id": "565:916",
-      "bytes": 1296
+      "name": "confetti-4",
+      "file": "confetti-4.svg",
+      "id": "565:2337",
+      "bytes": 1343,
+      "format": "SVG"
     },
     {
-      "name": "snow-left",
-      "file": "snow-left.png",
-      "id": "565:962",
-      "bytes": 32554
+      "name": "confetti-11",
+      "file": "confetti-11.svg",
+      "id": "565:2345",
+      "bytes": 1315,
+      "format": "SVG"
     },
     {
-      "name": "snow-pole",
-      "file": "snow-pole.png",
-      "id": "565:1014",
-      "bytes": 914
+      "name": "label-prizes",
+      "file": "label-prizes.svg",
+      "id": "565:931",
+      "bytes": 1723,
+      "format": "SVG"
     },
     {
-      "name": "snow-prizes",
-      "file": "snow-prizes.png",
-      "id": "565:937",
-      "bytes": 1543
+      "name": "confetti-18",
+      "file": "confetti-18.svg",
+      "id": "565:2352",
+      "bytes": 1343,
+      "format": "SVG"
     },
     {
-      "name": "snow-time",
-      "file": "snow-time.png",
-      "id": "565:906",
-      "bytes": 1401
+      "name": "confetti-1",
+      "file": "confetti-1.svg",
+      "id": "565:2334",
+      "bytes": 1066,
+      "format": "SVG"
     },
     {
-      "name": "snowflake-1",
-      "file": "snowflake-1.png",
-      "id": "565:2883",
-      "bytes": 1895
+      "name": "confetti-17",
+      "file": "confetti-17.svg",
+      "id": "565:2351",
+      "bytes": 1294,
+      "format": "SVG"
     },
     {
-      "name": "snowflake-2",
-      "file": "snowflake-2.png",
-      "id": "565:2889",
-      "bytes": 2114
+      "name": "confetti-5",
+      "file": "confetti-5.svg",
+      "id": "565:2338",
+      "bytes": 1058,
+      "format": "SVG"
     },
     {
-      "name": "snowflake-3",
-      "file": "snowflake-3.png",
-      "id": "565:2892",
-      "bytes": 2106
+      "name": "confetti-14",
+      "file": "confetti-14.svg",
+      "id": "565:2348",
+      "bytes": 1037,
+      "format": "SVG"
     },
     {
-      "name": "sound-off",
-      "file": "sound-off.png",
-      "id": "565:974",
-      "bytes": 2004
+      "name": "confetti-19",
+      "file": "confetti-19.svg",
+      "id": "565:2353",
+      "bytes": 1328,
+      "format": "SVG"
     },
     {
-      "name": "stat-shade",
-      "file": "stat-shade.png",
-      "id": "565:909",
-      "bytes": 883
+      "name": "confetti-8",
+      "file": "confetti-8.svg",
+      "id": "565:2341",
+      "bytes": 1344,
+      "format": "SVG"
     },
     {
-      "name": "station-snow-1",
-      "file": "station-snow-1.png",
-      "id": "565:846",
-      "bytes": 1528
-    },
-    {
-      "name": "station-snow-2",
-      "file": "station-snow-2.png",
-      "id": "565:847",
-      "bytes": 408
-    },
-    {
-      "name": "station-snow-3",
-      "file": "station-snow-3.png",
-      "id": "565:848",
-      "bytes": 1385
-    },
-    {
-      "name": "timer",
-      "file": "timer.png",
-      "id": "565:898",
-      "bytes": 1073
-    },
-    {
-      "name": "tree-1",
-      "file": "tree-1.png",
-      "id": "565:961",
-      "bytes": 8210
-    },
-    {
-      "name": "tree-2",
-      "file": "tree-2.png",
-      "id": "565:990",
-      "bytes": 7817
-    },
-    {
-      "name": "tree-3",
-      "file": "tree-3.png",
-      "id": "565:991",
-      "bytes": 16010
-    },
-    {
-      "name": "tree-bottom",
-      "file": "tree-bottom.png",
-      "id": "565:994",
-      "bytes": 22658
-    },
-    {
-      "name": "trophy",
-      "file": "trophy.png",
-      "id": "565:868",
-      "bytes": 3029
+      "name": "confetti-16",
+      "file": "confetti-16.svg",
+      "id": "565:2350",
+      "bytes": 1294,
+      "format": "SVG"
     }
   ],
   "vectors": [
@@ -706,5 +2052,17 @@
       "y": 553
     }
   ],
-  "characterSection": "581:4131"
+  "characterSection": "581:4131",
+  "canvas": {
+    "width": 375,
+    "height": 672,
+    "scale": "Width only, max 375 CSS pixels; preserve aspect ratio."
+  },
+  "export": {
+    "rasterScale": 2,
+    "format": "WebP lossless, exact transparent RGB",
+    "rgbaVerifiedAgainstPng": true,
+    "staticText": "Original SF Pro Display Figma text layers at 2×; accessible HTML text retained.",
+    "counters": "SF Pro and Roboto vector glyphs exported from Figma; no installed-font dependency."
+  }
 }

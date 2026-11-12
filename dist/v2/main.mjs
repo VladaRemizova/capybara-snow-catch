@@ -1,6 +1,7 @@
 import { CatchGame, ITEM_SIZES } from './game-core.mjs';
 import { PrizeLedger, PRIZES, SPIN_MS, STORAGE_KEY } from './prizes.mjs';
 import { CONFETTI } from './confetti.mjs';
+import { initUI, refreshUI, setCounter, prizeGeometry, paintReward, paintResult, paintWin, paintPrizeCard, paintEmpty } from './ui.mjs';
 
 const $ = id => document.getElementById(id);
 const scene = $('scene'), phone = $('phone'), field = $('falling-field');
@@ -149,7 +150,7 @@ const poseReady = new Set();
 let renderedPose = 'open';
 for (const target of ['character', 'character-front']) {
   for (const pose of ['open', 'left', 'right', 'smile']) {
-    const img = document.createElement('img'); img.src = `assets/capy-${pose}.png?v=581-4131`; img.alt = ''; img.dataset.pose = pose;
+    const img = document.createElement('img'); img.src = `assets/capy-${pose}.webp?v=581-4131`; img.alt = ''; img.dataset.pose = pose;
     $(target).append(img);
   }
 }
@@ -176,11 +177,11 @@ function renderCharacter() {
 function render() {
   renderCharacter();
   const coins = game.baseCoins + game.coins, progress = game.progress;
-  $('time-value').textContent = `00:${String(game.remaining).padStart(2, '0')}`;
-  if (game.remaining === 60) $('time-value').textContent = '01:00';
-  $('coin-value').textContent = coins;
-  $('prize-value').textContent = `${progress.rewards}/3`;
-  $('owned-count').textContent = ledger.state.prizes.length;
+  setCounter('time-value', game.remaining === 60 ? '01:00' : `00:${String(game.remaining).padStart(2, '0')}`);
+  setCounter('coin-value', coins);
+  setCounter('prize-value', `${progress.rewards}/3`, 'bold18', 21);
+  setCounter('owned-count', ledger.state.prizes.length, 'roboto13', 16);
+  refreshUI();
   $('progress-fill').style.width = `${Math.max(0, Math.min(1, progress.fraction)) * 100}%`;
   $('prize-progress').setAttribute('aria-valuenow', progress.rewards === 3 ? '10' : String(coins % 10));
   $('prize-progress').setAttribute('aria-valuetext', progress.rewards === 3 ? 'Все три приза доступны' : `Ещё ${progress.remaining} монет до следующего приза`);
@@ -191,7 +192,7 @@ function render() {
   for (const object of game.objects) {
     let node = nodes.get(object.id);
     if (!node) {
-      node = document.createElement('img'); node.src = `assets/item-${object.kind}.png`; node.alt = '';
+      node = document.createElement('img'); node.src = `assets/item-${object.kind}.webp`; node.alt = '';
       node.className = 'falling-item' + (object.kind === 'red' ? ' bonus' : ''); node.dataset.kind = object.kind;
       const [w, h] = ITEM_SIZES[object.kind]; node.style.width = `${w}px`; node.style.height = `${h}px`;
       field.append(node); nodes.set(object.id, node);
@@ -290,7 +291,7 @@ function catchEffect(object) {
   const x = game.characterX, y = game.catchY;
   const image = document.createElement('img');
   const [w, h] = ITEM_SIZES[object.kind];
-  image.src = `assets/item-${object.kind}.png`; image.className = 'falling-item caught-item';
+  image.src = `assets/item-${object.kind}.webp`; image.className = 'falling-item caught-item';
   image.style.width = `${w}px`; image.style.height = `${h}px`;
   // This layer sits between the character and the front of its sack.
   image.style.zIndex = '22'; scene.append(image);
@@ -310,7 +311,7 @@ function catchEffect(object) {
   holidayBurst(x, y - 5);
   const labelX = Math.max(45, Math.min(330, x + (x < 210 ? 57 : -57)));
   const label = effectNode('catch-score', labelX, y - 54);
-  label.innerHTML = `<img src="assets/coin.png" alt=""><strong>+${object.value}</strong>`;
+  label.innerHTML = `<img src="assets/coin.webp" alt=""><strong>+${object.value}</strong>`;
   temporary(label, reducedMotion ? [{ opacity: 1 }, { opacity: 0 }] : [
     { transform: 'translate(-50%,0) scale(.78)', opacity: 0 },
     { transform: 'translate(-50%,-10px) scale(1.04)', opacity: 1, offset: .2 },
@@ -318,7 +319,7 @@ function catchEffect(object) {
     { transform: 'translate(-50%,-44px) scale(.95)', opacity: 0 },
   ], { duration: reducedMotion ? 350 : 1000, easing: 'cubic-bezier(.2,.55,.35,1)', fill: 'both' });
   if (!reducedMotion) {
-    const coin = document.createElement('img'); coin.src = 'assets/coin.png'; coin.className = 'flying-coin';
+    const coin = document.createElement('img'); coin.src = 'assets/coin.webp'; coin.className = 'flying-coin';
     $('effects').append(coin);
     const arcX = x + (x > 185 ? -42 : 42);
     temporary(coin, [
@@ -370,7 +371,7 @@ function showReward(count) {
   $('reward-message').innerHTML = count === 1 ? 'Приз<br>1 из 3 доступен!' : `Призы<br>${count} из 3 доступны!`;
   $('all-prizes-actions').hidden = count !== 3;
   $('reward-plus').hidden = count === 3;
-  setModal('reward'); confetti($('reward-confetti'));
+  paintReward(count); setModal('reward'); confetti($('reward-confetti'));
   $('announcer').textContent = `${count} из трёх призов доступны`;
   beep(true); render();
   if (count < 3) {
@@ -389,13 +390,15 @@ async function finishRound() {
   game.objects = []; render();
   await transaction(l => l.commitRound(roundId, game.coins, prizeNow()));
   const available = ledger.state.pending.length;
-  $('result-coins').textContent = ledger.state.coins;
-  $('result-prizes').textContent = `${available} из 3`;
+  const rating = !available && ledger.state.earned === 3;
+  setCounter('result-coins', ledger.state.coins, 'bold18', 21);
+  setCounter('result-prizes', `${rating ? 3 : available} из 3`, 'bold18', 21);
   $('result-claim').disabled = available === 0;
   $('result-claim').textContent = available ? 'Забрать призы' : ledger.state.earned === 3 ? 'Все призы получены' : 'У вас 0 призов';
   // A settled round with pending prizes must be drawn before another round starts.
   $('result-replay').disabled = available > 0;
   $('result-replay').title = available > 0 ? 'Сначала получите все доступные призы' : '';
+  paintResult(rating ? 'rating' : available ? 'available' : 'zero');
   setModal('result'); render();
 }
 
@@ -403,7 +406,7 @@ function renderCabinet() {
   const list = $('prize-list'); list.replaceChildren();
   if (!ledger.state.prizes.length) {
     const empty = document.createElement('div'); empty.className = 'empty-ticket';
-    const p = document.createElement('p'); p.textContent = 'Здесь будут ваши призы'; empty.append(p); list.append(empty);
+    const p = document.createElement('p'); p.textContent = 'Здесь будут ваши призы'; empty.append(p); list.append(empty); paintEmpty(p);
   }
   for (const won of ledger.state.prizes) {
     const prize = PRIZES[won.prizeId];
@@ -413,7 +416,7 @@ function renderCabinet() {
       if (ledger.locked) { restoreDraw(); return; }
       $('coupon-scroll').scrollTop = 0; showScreen('coupon');
     });
-    list.append(card);
+    list.append(card); paintPrizeCard(card, won.prizeId);
   }
   $('cabinet-play').textContent = cabinetReturn ? 'Продолжить игру' : 'Играть еще';
 }
@@ -436,17 +439,16 @@ scene.addEventListener('click', event => {
 });
 
 const reelOrder = ['hoff', 'rossko5', 'rossko10'];
-const prizeSizes = { hoff: [181, 181], rossko10: [191, 197], rossko5: [201, 209] };
 const reelId = index => reelOrder[((index % 3) + 3) % 3];
 function buildReel() {
   const track = $('reel-track'); track.replaceChildren();
   const items = [];
   for (let index = -36; index <= 2; index++) {
     const id = reelId(index), prize = PRIZES[id], img = document.createElement('img');
-    const [w, h] = prizeSizes[id];
+    const g = prizeGeometry(id), { width: w, height: h } = g;
     img.className = 'reel-item' + (index < -1 || index > 1 ? ' extra' : ''); img.src = `assets/${prize.image}`; img.alt = prize.title;
-    img.style.width = `${w}px`; img.style.height = `${h}px`; img.style.left = `${(235 - w) / 2}px`;
-    track.append(img); items.push({ index, img, height: h });
+    img.style.width = `${w}px`; img.style.height = `${h}px`; img.style.left = `${33 + g.left}px`;
+    track.append(img); items.push({ index, img, top: g.top });
   }
   reel = { items, gap: 176, offset: 0, targetIndex: -30 };
   layoutReel(176);
@@ -455,8 +457,8 @@ function layoutReel(gap) {
   if (!reel) return;
   reel.gap = gap;
   // The Figma pointers align with the discount label, below the illustration centre.
-  const center = game.height / 2 - 65;
-  for (const item of reel.items) item.img.style.top = `${center + item.index * gap - item.height / 2}px`;
+  const center = 271 + gap - 176;
+  for (const item of reel.items) item.img.style.top = `${center + item.index * gap - 85 + item.top}px`;
 }
 function showRoulette() {
   if (ledger.state.lastWin) { showWin(); return; }
@@ -465,7 +467,7 @@ function showRoulette() {
   const day = ledger.state.pending[0].day;
   const received = ledger.state.prizes.filter(p => p.day === day).length;
   const total = received + ledger.state.pending.filter(p => p.day === day).length;
-  $('spin-count').textContent = `${received + 1}/${total}`;
+  setCounter('spin-count', `${received + 1}/${total}`, 'bold16', 19);
   $('spin-button').disabled = Boolean(ledger.state.spin);
   $('roulette-screen').classList.toggle('spinning', Boolean(ledger.state.spin));
   if (ledger.state.spin) configureSpin();
@@ -494,14 +496,14 @@ function animateReel() {
   if (!reel || !spin || screenName !== 'roulette') return;
   const t = Math.max(0, Math.min(1, (Date.now() - spin.startedAt) / SPIN_MS));
   const spread = Math.min(1, t / .075);
-  const gap = 176 + 42 * (1 - (1 - spread) ** 3);
+  const gap = 176 + 35 * (1 - (1 - spread) ** 3);
   layoutReel(gap);
   let distance;
   if (t < .08) distance = -17 * Math.sin(t / .08 * Math.PI);
   else {
     const q = (t - .08) / .92;
     const eased = q < .35 ? .5 * (q / .35) ** 2 : 1 - .5 * (1 - (q - .35) / .65) ** 3;
-    distance = -reel.targetIndex * 218 * eased;
+    distance = -reel.targetIndex * 211 * eased;
   }
   $('reel-track').style.transform = `translateY(${distance}px)`;
   if (t === 1 && !settlingSpin) {
@@ -519,21 +521,8 @@ function showWin() {
   $('won-prize').src = `assets/${prize.image}`; $('won-prize').alt = prize.title;
   $('won-title').textContent = prize.title;
   $('win-next').textContent = ledger.state.pending.length ? 'Получить еще призы' : 'Перейти в Мои призы';
-  showScreen('win'); confetti($('win-confetti'), true); beep(true);
+  showScreen('win'); paintWin(result.prizeId); beep(true);
 }
-function createRouletteSnow() {
-  const host = $('roulette-snow');
-  const flakes = [[50,52,24],[311,113,30],[45,382,30],[300,576,24],[28,115,18]];
-  for (const [i, [x, y, size]] of flakes.entries()) {
-    const img = document.createElement('img'); img.src = `assets/snowflake-${i % 3 + 1}.png`; img.alt = '';
-    img.style.cssText = `left:${x - 12}px;top:${y - 10}px;width:${size + 24}px;height:${size + 24}px;animation-delay:${i * .4}s`;
-    host.append(img);
-  }
-  for (let i = 0; i < 25; i++) {
-    const dot = document.createElement('i'); dot.style.left = `${25 + i * 97 % 320}px`; dot.style.top = `${30 + i * 137 % 590}px`; host.append(dot);
-  }
-}
-
 $('play-button').addEventListener('click', startRound);
 $('entry-prizes').addEventListener('click', openCabinet);
 $('game-prizes').addEventListener('click', openCabinet);
@@ -554,6 +543,8 @@ $('reward-continue').addEventListener('click', closeReward);
 $('reward-claim').addEventListener('click', finishRound);
 $('result-claim').addEventListener('click', showRoulette);
 $('result-replay').addEventListener('click', startRound);
+$('rating-replay').addEventListener('click', startRound);
+$('rating-prizes').addEventListener('click', openCabinet);
 $('cabinet-play').addEventListener('click', () => {
   if (cabinetReturn && game.status === 'paused' && roundId) { showScreen('game'); setModal(null); resume(); }
   else startRound();
@@ -611,6 +602,6 @@ $('admin-next-day').addEventListener('click', () => adminAction(false));
 $('admin-reset').addEventListener('click', () => adminAction(true));
 
 function frame() { if (!adminBusy) { syncClock(); if (screenName === 'game') render(); animateReel(); } requestAnimationFrame(frame); }
-createRouletteSnow(); sizeScene();
+initUI(); sizeScene();
 if (ledger.locked) restoreDraw();
 requestAnimationFrame(frame);

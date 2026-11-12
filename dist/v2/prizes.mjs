@@ -1,7 +1,7 @@
 export const PRIZES = {
-  hoff: { id: 'hoff', title: 'Скидка 15% на первый заказ в HOFF', code: 'LUKOIL15', image: 'prize-hoff.png', category: 'КОФЕ' },
-  rossko10: { id: 'rossko10', title: 'Скидка 10% на первый заказ автозапчастей ROSSKO', code: 'LUKOIL10', image: 'prize-rossko10.png', category: 'КОФЕ' },
-  rossko5: { id: 'rossko5', title: 'Скидка 5% на первый заказ автозапчастей ROSSKO', code: 'LUKOIL5', image: 'prize-rossko5.png', category: 'БАЛЛЫ' },
+  hoff: { id: 'hoff', title: 'Скидка 15% на первый заказ в HOFF', code: 'LUKOIL15', image: 'prize-hoff.webp', category: 'КОФЕ' },
+  rossko10: { id: 'rossko10', title: 'Скидка 10% на первый заказ автозапчастей ROSSKO', code: 'LUKOIL10', image: 'prize-rossko10.webp', category: 'КОФЕ' },
+  rossko5: { id: 'rossko5', title: 'Скидка 5% на первый заказ автозапчастей ROSSKO', code: 'LUKOIL5', image: 'prize-rossko5.webp', category: 'БАЛЛЫ' },
 };
 export const PRIZE_IDS = Object.keys(PRIZES);
 export const SPIN_MS = 9500;
