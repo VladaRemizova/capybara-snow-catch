@@ -1,0 +1,709 @@
+{
+  "fileKey": "5fhh9qeCrS3NT1T9Sw1unj",
+  "sessionId": "5dcca9d8-ddea-4845-91b9-2220d47cc7f9",
+  "pageId": "265:5440",
+  "screens": {
+    "entry": "565:800",
+    "game": "565:841",
+    "teaching": "565:1017",
+    "help": "565:1190",
+    "result": "565:1617",
+    "reward1": "565:2157",
+    "reward2": "566:3132",
+    "reward3": "565:2367",
+    "roulette": "565:2873",
+    "rouletteSpinning": "565:2751",
+    "winHoff": "565:3019",
+    "winRossko5": "566:3348",
+    "winRossko10": "565:3064",
+    "cabinet": "565:2583",
+    "emptyCabinet": "565:2696",
+    "coupon": "566:3466"
+  },
+  "assets": [
+    {
+      "name": "arrow-left",
+      "file": "arrow-left.png",
+      "id": "565:2874",
+      "bytes": 299
+    },
+    {
+      "name": "arrow-right",
+      "file": "arrow-right.png",
+      "id": "565:2877",
+      "bytes": 307
+    },
+    {
+      "name": "back",
+      "file": "back.png",
+      "id": "566:3469",
+      "bytes": 2265
+    },
+    {
+      "name": "branch-1",
+      "file": "branch-1.png",
+      "id": "565:953",
+      "bytes": 9017
+    },
+    {
+      "name": "branch-2",
+      "file": "branch-2.png",
+      "id": "565:958",
+      "bytes": 9017
+    },
+    {
+      "name": "brand",
+      "file": "brand.png",
+      "id": "565:854",
+      "bytes": 1711
+    },
+    {
+      "name": "button-shine",
+      "file": "button-shine.png",
+      "id": "565:829",
+      "bytes": 613
+    },
+    {
+      "name": "cabinet-bg",
+      "file": "cabinet-bg.png",
+      "id": "565:2583",
+      "bytes": 124432
+    },
+    {
+      "name": "capy-left",
+      "file": "capy-left.png",
+      "id": "568:3787",
+      "bytes": 488934
+    },
+    {
+      "name": "capy-open",
+      "file": "capy-open.png",
+      "id": "566:3706",
+      "bytes": 482126
+    },
+    {
+      "name": "capy-right",
+      "file": "capy-right.png",
+      "id": "568:3771",
+      "bytes": 498556
+    },
+    {
+      "name": "capy-smile",
+      "file": "capy-smile.png",
+      "id": "568:3803",
+      "bytes": 480765
+    },
+    {
+      "name": "coin",
+      "file": "coin.png",
+      "id": "565:911",
+      "bytes": 6741
+    },
+    {
+      "name": "confetti-0",
+      "file": "confetti-0.svg",
+      "id": "565:2333",
+      "bytes": 1467
+    },
+    {
+      "name": "confetti-1",
+      "file": "confetti-1.svg",
+      "id": "565:2334",
+      "bytes": 1066
+    },
+    {
+      "name": "confetti-10",
+      "file": "confetti-10.svg",
+      "id": "565:2343",
+      "bytes": 1016
+    },
+    {
+      "name": "confetti-11",
+      "file": "confetti-11.svg",
+      "id": "565:2345",
+      "bytes": 1315
+    },
+    {
+      "name": "confetti-12",
+      "file": "confetti-12.svg",
+      "id": "565:2346",
+      "bytes": 1034
+    },
+    {
+      "name": "confetti-13",
+      "file": "confetti-13.svg",
+      "id": "565:2347",
+      "bytes": 1037
+    },
+    {
+      "name": "confetti-14",
+      "file": "confetti-14.svg",
+      "id": "565:2348",
+      "bytes": 1037
+    },
+    {
+      "name": "confetti-15",
+      "file": "confetti-15.svg",
+      "id": "565:2349",
+      "bytes": 1049
+    },
+    {
+      "name": "confetti-16",
+      "file": "confetti-16.svg",
+      "id": "565:2350",
+      "bytes": 1294
+    },
+    {
+      "name": "confetti-17",
+      "file": "confetti-17.svg",
+      "id": "565:2351",
+      "bytes": 1294
+    },
+    {
+      "name": "confetti-18",
+      "file": "confetti-18.svg",
+      "id": "565:2352",
+      "bytes": 1343
+    },
+    {
+      "name": "confetti-19",
+      "file": "confetti-19.svg",
+      "id": "565:2353",
+      "bytes": 1328
+    },
+    {
+      "name": "confetti-2",
+      "file": "confetti-2.svg",
+      "id": "565:2335",
+      "bytes": 1311
+    },
+    {
+      "name": "confetti-3",
+      "file": "confetti-3.svg",
+      "id": "565:2336",
+      "bytes": 1311
+    },
+    {
+      "name": "confetti-4",
+      "file": "confetti-4.svg",
+      "id": "565:2337",
+      "bytes": 1343
+    },
+    {
+      "name": "confetti-5",
+      "file": "confetti-5.svg",
+      "id": "565:2338",
+      "bytes": 1058
+    },
+    {
+      "name": "confetti-6",
+      "file": "confetti-6.svg",
+      "id": "565:2339",
+      "bytes": 1036
+    },
+    {
+      "name": "confetti-7",
+      "file": "confetti-7.svg",
+      "id": "565:2340",
+      "bytes": 1326
+    },
+    {
+      "name": "confetti-8",
+      "file": "confetti-8.svg",
+      "id": "565:2341",
+      "bytes": 1344
+    },
+    {
+      "name": "confetti-9",
+      "file": "confetti-9.svg",
+      "id": "565:2342",
+      "bytes": 1053
+    },
+    {
+      "name": "entry-bag",
+      "file": "entry-bag.png",
+      "id": "565:823",
+      "bytes": 104201
+    },
+    {
+      "name": "entry-bg",
+      "file": "entry-bg.png",
+      "id": "565:800",
+      "bytes": 479777
+    },
+    {
+      "name": "entry-corner",
+      "file": "entry-corner.png",
+      "id": "565:807",
+      "bytes": 7786
+    },
+    {
+      "name": "entry-heading",
+      "file": "entry-heading.png",
+      "id": "565:834",
+      "bytes": 175669
+    },
+    {
+      "name": "entry-left-detail",
+      "file": "entry-left-detail.png",
+      "id": "565:801",
+      "bytes": 7319
+    },
+    {
+      "name": "entry-logo",
+      "file": "entry-logo.png",
+      "id": "565:817",
+      "bytes": 5489
+    },
+    {
+      "name": "entry-snow-left",
+      "file": "entry-snow-left.png",
+      "id": "565:805",
+      "bytes": 28253
+    },
+    {
+      "name": "entry-snow-right",
+      "file": "entry-snow-right.png",
+      "id": "565:806",
+      "bytes": 26643
+    },
+    {
+      "name": "game-bg",
+      "file": "game-bg.png",
+      "id": "565:841",
+      "bytes": 402510
+    },
+    {
+      "name": "gesture",
+      "file": "gesture.png",
+      "id": "565:1185",
+      "bytes": 1309
+    },
+    {
+      "name": "gift-box",
+      "file": "gift-box.png",
+      "id": "565:3022",
+      "bytes": 26354
+    },
+    {
+      "name": "gift-lid",
+      "file": "gift-lid.png",
+      "id": "565:3029",
+      "bytes": 29713
+    },
+    {
+      "name": "gift",
+      "file": "gift.png",
+      "id": "565:919",
+      "bytes": 461
+    },
+    {
+      "name": "help",
+      "file": "help.png",
+      "id": "565:964",
+      "bytes": 1864
+    },
+    {
+      "name": "home",
+      "file": "home.png",
+      "id": "565:882",
+      "bytes": 2481
+    },
+    {
+      "name": "item-coffee",
+      "file": "item-coffee.png",
+      "id": "565:941",
+      "bytes": 32445
+    },
+    {
+      "name": "item-hotdog",
+      "file": "item-hotdog.png",
+      "id": "565:989",
+      "bytes": 26570
+    },
+    {
+      "name": "item-red",
+      "file": "item-red.png",
+      "id": "565:844",
+      "bytes": 17910
+    },
+    {
+      "name": "item-sandwich",
+      "file": "item-sandwich.png",
+      "id": "565:952",
+      "bytes": 38490
+    },
+    {
+      "name": "label-coins",
+      "file": "label-coins.svg",
+      "id": "565:913",
+      "bytes": 1396
+    },
+    {
+      "name": "label-prizes",
+      "file": "label-prizes.svg",
+      "id": "565:931",
+      "bytes": 1723
+    },
+    {
+      "name": "label-time",
+      "file": "label-time.svg",
+      "id": "565:904",
+      "bytes": 2738
+    },
+    {
+      "name": "pole",
+      "file": "pole.png",
+      "id": "565:956",
+      "bytes": 1546
+    },
+    {
+      "name": "prize-hoff",
+      "file": "prize-hoff.png",
+      "id": "565:2964",
+      "bytes": 162527
+    },
+    {
+      "name": "prize-rossko10",
+      "file": "prize-rossko10.png",
+      "id": "565:2975",
+      "bytes": 192941
+    },
+    {
+      "name": "prize-rossko5",
+      "file": "prize-rossko5.png",
+      "id": "565:2984",
+      "bytes": 207969
+    },
+    {
+      "name": "result-bg",
+      "file": "result-bg.png",
+      "id": "565:3019",
+      "bytes": 229808
+    },
+    {
+      "name": "result-capy",
+      "file": "result-capy.png",
+      "id": "565:1884",
+      "bytes": 190801
+    },
+    {
+      "name": "reward-gift",
+      "file": "reward-gift.png",
+      "id": "565:2354",
+      "bytes": 1816
+    },
+    {
+      "name": "sign",
+      "file": "sign.png",
+      "id": "565:945",
+      "bytes": 1092
+    },
+    {
+      "name": "small-tree",
+      "file": "small-tree.png",
+      "id": "565:949",
+      "bytes": 5850
+    },
+    {
+      "name": "snow-coins",
+      "file": "snow-coins.png",
+      "id": "565:916",
+      "bytes": 1296
+    },
+    {
+      "name": "snow-left",
+      "file": "snow-left.png",
+      "id": "565:962",
+      "bytes": 32554
+    },
+    {
+      "name": "snow-pole",
+      "file": "snow-pole.png",
+      "id": "565:1014",
+      "bytes": 914
+    },
+    {
+      "name": "snow-prizes",
+      "file": "snow-prizes.png",
+      "id": "565:937",
+      "bytes": 1543
+    },
+    {
+      "name": "snow-time",
+      "file": "snow-time.png",
+      "id": "565:906",
+      "bytes": 1401
+    },
+    {
+      "name": "snowflake-1",
+      "file": "snowflake-1.png",
+      "id": "565:2883",
+      "bytes": 1895
+    },
+    {
+      "name": "snowflake-2",
+      "file": "snowflake-2.png",
+      "id": "565:2889",
+      "bytes": 2114
+    },
+    {
+      "name": "snowflake-3",
+      "file": "snowflake-3.png",
+      "id": "565:2892",
+      "bytes": 2106
+    },
+    {
+      "name": "sound-off",
+      "file": "sound-off.png",
+      "id": "565:974",
+      "bytes": 2004
+    },
+    {
+      "name": "stat-shade",
+      "file": "stat-shade.png",
+      "id": "565:909",
+      "bytes": 883
+    },
+    {
+      "name": "station-snow-1",
+      "file": "station-snow-1.png",
+      "id": "565:846",
+      "bytes": 1528
+    },
+    {
+      "name": "station-snow-2",
+      "file": "station-snow-2.png",
+      "id": "565:847",
+      "bytes": 408
+    },
+    {
+      "name": "station-snow-3",
+      "file": "station-snow-3.png",
+      "id": "565:848",
+      "bytes": 1385
+    },
+    {
+      "name": "timer",
+      "file": "timer.png",
+      "id": "565:898",
+      "bytes": 1073
+    },
+    {
+      "name": "tree-1",
+      "file": "tree-1.png",
+      "id": "565:961",
+      "bytes": 8210
+    },
+    {
+      "name": "tree-2",
+      "file": "tree-2.png",
+      "id": "565:990",
+      "bytes": 7817
+    },
+    {
+      "name": "tree-3",
+      "file": "tree-3.png",
+      "id": "565:991",
+      "bytes": 16010
+    },
+    {
+      "name": "tree-bottom",
+      "file": "tree-bottom.png",
+      "id": "565:994",
+      "bytes": 22658
+    },
+    {
+      "name": "trophy",
+      "file": "trophy.png",
+      "id": "565:868",
+      "bytes": 3029
+    }
+  ],
+  "vectors": [
+    {
+      "name": "label-time",
+      "id": "565:904",
+      "w": 44,
+      "h": 10,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "name": "label-coins",
+      "id": "565:913",
+      "w": 35,
+      "h": 10,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "name": "label-prizes",
+      "id": "565:931",
+      "w": 29,
+      "h": 10,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "name": "confetti-0",
+      "id": "565:2333",
+      "w": 19.686813354492188,
+      "h": 19.908733367919922,
+      "x": 174,
+      "y": 391
+    },
+    {
+      "name": "confetti-1",
+      "id": "565:2334",
+      "w": 4.1035332679748535,
+      "h": 7.32322359085083,
+      "x": 229,
+      "y": 304
+    },
+    {
+      "name": "confetti-2",
+      "id": "565:2335",
+      "w": 2.76300048828125,
+      "h": 5.5179901123046875,
+      "x": 260,
+      "y": 321
+    },
+    {
+      "name": "confetti-3",
+      "id": "565:2336",
+      "w": 2.76300048828125,
+      "h": 5.5179901123046875,
+      "x": 136,
+      "y": 162
+    },
+    {
+      "name": "confetti-4",
+      "id": "565:2337",
+      "w": 2.3169198036193848,
+      "h": 5.17928409576416,
+      "x": 287,
+      "y": 374
+    },
+    {
+      "name": "confetti-5",
+      "id": "565:2338",
+      "w": 4.8000030517578125,
+      "h": 6.964077472686768,
+      "x": 122,
+      "y": 319
+    },
+    {
+      "name": "confetti-6",
+      "id": "565:2339",
+      "w": 2.910003662109375,
+      "h": 3.480010986328125,
+      "x": 105,
+      "y": 392
+    },
+    {
+      "name": "confetti-7",
+      "id": "565:2340",
+      "w": 6.865208148956299,
+      "h": 4.439959526062012,
+      "x": 270,
+      "y": 411
+    },
+    {
+      "name": "confetti-8",
+      "id": "565:2341",
+      "w": 4.694578647613525,
+      "h": 6.833625316619873,
+      "x": 87,
+      "y": 189
+    },
+    {
+      "name": "confetti-9",
+      "id": "565:2342",
+      "w": 4.2299957275390625,
+      "h": 3.524993896484375,
+      "x": 98,
+      "y": 424
+    },
+    {
+      "name": "confetti-10",
+      "id": "565:2343",
+      "w": 5.3489990234375,
+      "h": 7.074095249176025,
+      "x": 238,
+      "y": 211
+    },
+    {
+      "name": "confetti-11",
+      "id": "565:2345",
+      "w": 2.7729949951171875,
+      "h": 2.5179977416992188,
+      "x": 153,
+      "y": 217
+    },
+    {
+      "name": "confetti-12",
+      "id": "565:2346",
+      "w": 2.9980010986328125,
+      "h": 3.6269989013671875,
+      "x": 222,
+      "y": 461
+    },
+    {
+      "name": "confetti-13",
+      "id": "565:2347",
+      "w": 2.44000244140625,
+      "h": 2.0709991455078125,
+      "x": 145,
+      "y": 459
+    },
+    {
+      "name": "confetti-14",
+      "id": "565:2348",
+      "w": 2.44000244140625,
+      "h": 2.0709991455078125,
+      "x": 255,
+      "y": 157
+    },
+    {
+      "name": "confetti-15",
+      "id": "565:2349",
+      "w": 2,
+      "h": 2.79998779296875,
+      "x": 285,
+      "y": 207
+    },
+    {
+      "name": "confetti-16",
+      "id": "565:2350",
+      "w": 2.8409957885742188,
+      "h": 1.6909942626953125,
+      "x": 108,
+      "y": 507
+    },
+    {
+      "name": "confetti-17",
+      "id": "565:2351",
+      "w": 2.8409957885742188,
+      "h": 1.6909942626953125,
+      "x": 152,
+      "y": 308
+    },
+    {
+      "name": "confetti-18",
+      "id": "565:2352",
+      "w": 5.931140899658203,
+      "h": 6.376007080078125,
+      "x": 205,
+      "y": 155
+    },
+    {
+      "name": "confetti-19",
+      "id": "565:2353",
+      "w": 4.382514953613281,
+      "h": 3.9080047607421875,
+      "x": 132,
+      "y": 553
+    }
+  ]
+}
