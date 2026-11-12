@@ -21,7 +21,8 @@
     "coupon": "566:3466",
     "resultZero": "565:1887",
     "resultRating": "581:3912",
-    "couponViewport": "566:3586"
+    "couponViewport": "566:3586",
+    "soundOn": "601:4384"
   },
   "assets": [
     {
@@ -1864,6 +1865,96 @@
       "id": "565:2350",
       "bytes": 1294,
       "format": "SVG"
+    },
+    {
+      "name": "sound-on",
+      "file": "pixel/sound-on.webp",
+      "id": "601:4369",
+      "width": 81,
+      "height": 80,
+      "bytes": 1792,
+      "scale": 2,
+      "rgbaSha256": "08c2735ddd716b4d0ee2dde26c33c13c1a22c8894844270684873d37b7b89d9e"
+    },
+    {
+      "name": "prizes-caption",
+      "file": "pixel/prizes-caption.webp",
+      "id": "601:4404",
+      "width": 111,
+      "height": 20,
+      "bytes": 520,
+      "scale": 2,
+      "rgbaSha256": "9d87b99d364f1c1b2a101df9a3a05a381fc3f80cb174104f0bacd48a1b035540"
+    },
+    {
+      "name": "rating-capy",
+      "file": "pixel/rating-capy.webp",
+      "id": "581:4125",
+      "width": 290,
+      "height": 406,
+      "bytes": 130990,
+      "scale": 2,
+      "rgbaSha256": "c6aee3538fbe09b14d70990866d6cfb3c552856b9d19302ebb99d5d4ea1a0b7c"
+    },
+    {
+      "name": "win-box-layer",
+      "file": "pixel/win-box-layer.webp",
+      "id": "565:3022",
+      "width": 600,
+      "height": 828,
+      "bytes": 47006,
+      "scale": 2,
+      "rgbaSha256": "e2f8a5ca92598dffa0631d4fd7d36ce02f7f0c908910f7a03fed55ca56d3e242"
+    },
+    {
+      "name": "win-lid-layer",
+      "file": "pixel/win-lid-layer.webp",
+      "id": "565:3029",
+      "width": 600,
+      "height": 828,
+      "bytes": 57472,
+      "scale": 2,
+      "rgbaSha256": "b4f621e283efaf8d6fab2e3482d5de328f59b7ab08abe7482f68e5b250bc5a74"
+    },
+    {
+      "name": "win-decor-layer",
+      "file": "pixel/win-decor-layer.webp",
+      "id": "565:3021",
+      "width": 600,
+      "height": 828,
+      "bytes": 4280,
+      "scale": 2,
+      "rgbaSha256": "eb8f06ca5b72d18ae7aca6833e763974d33959503589fd1d7d30a986943c6376"
+    },
+    {
+      "name": "win-prize-hoff",
+      "file": "pixel/win-prize-hoff.webp",
+      "id": "565:3042",
+      "width": 600,
+      "height": 828,
+      "bytes": 54384,
+      "scale": 2,
+      "rgbaSha256": "0a2a01aab8999d72d1d55fe57d8bde0a337b95d43ec346470c4487f53bc275c9"
+    },
+    {
+      "name": "win-prize-rossko5",
+      "file": "pixel/win-prize-rossko5.webp",
+      "id": "566:3423",
+      "width": 600,
+      "height": 828,
+      "bytes": 73700,
+      "scale": 2,
+      "rgbaSha256": "5b9ccd7313ff28a5a0832e148e7691e04f838fb5750b9611df3c24dc6624a4f8"
+    },
+    {
+      "name": "win-prize-rossko10",
+      "file": "pixel/win-prize-rossko10.webp",
+      "id": "565:3087",
+      "width": 600,
+      "height": 828,
+      "bytes": 65834,
+      "scale": 2,
+      "rgbaSha256": "8fdf7b37b646b278ba7534e47de40f5dc91f635260ea81979ede9d7ae0379d26"
     }
   ],
   "vectors": [
@@ -2064,5 +2155,13 @@
     "rgbaVerifiedAgainstPng": true,
     "staticText": "Original SF Pro Display Figma text layers at 2×; accessible HTML text retained.",
     "counters": "SF Pro and Roboto vector glyphs exported from Figma; no installed-font dependency."
+  },
+  "compatibilityAssets": {
+    "reason": "Previously cached prize catalogs referenced PNG. New code uses WebP; these three aliases keep existing tabs intact.",
+    "files": [
+      "prize-hoff.png",
+      "prize-rossko5.png",
+      "prize-rossko10.png"
+    ]
   }
 }

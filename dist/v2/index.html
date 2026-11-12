@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
   <meta name="theme-color" content="#8e172b">
   <title>Поймайте удачу — зимняя игра</title>
-  <link rel="stylesheet" href="styles.css?v=pixel-2">
-  <link rel="stylesheet" href="ui.css?v=pixel-2">
+  <link rel="stylesheet" href="styles.css?v=nov13-3">
+  <link rel="stylesheet" href="ui.css?v=nov13-3">
+  <link rel="stylesheet" href="motion.css?v=nov13-3">
   <link rel="preload" href="assets/entry-bg.webp" as="image">
   <link rel="preload" href="assets/game-bg.webp" as="image">
 </head>
@@ -50,7 +51,7 @@
         <header class="game-header">
           <img class="brand" src="assets/brand.webp" width="29" height="35" alt="ЛУКОЙЛ">
           <nav class="game-nav" aria-label="Меню игры">
-            <button class="prizes-count" id="game-prizes"><span class="prizes-caption">Мои призы</span> <span id="owned-count">0</span></button>
+            <button class="prizes-count" id="game-prizes"><span class="visually-hidden prizes-caption-label">Мои призы</span><img class="prizes-caption-art" alt=""><span id="owned-count">0</span></button>
             <span class="icon-button trophy" aria-label="Рейтинг"><img src="assets/trophy.webp" width="40" height="40" alt=""></span>
             <button class="icon-button" id="game-home" aria-label="На главный экран"><img src="assets/home.webp" width="40" height="40" alt=""></button>
           </nav>
@@ -133,7 +134,7 @@
       </section>
 
       <section id="win-screen" class="screen win-screen" aria-label="Результат рулетки" hidden>
-        <div class="win-art" id="win-art"><img class="won-prize" id="won-prize" src="assets/prize-hoff.webp" alt=""></div>
+        <div class="win-art" id="win-art"><div id="win-layers" class="win-layers" aria-hidden="true"></div><img class="won-prize" id="won-prize" src="assets/prize-hoff.webp" alt=""></div>
         <div class="win-description"><p>Ваш приз:</p><h2 id="won-title">Скидка 15% на первый заказ в HOFF</h2><button class="button primary shine" id="win-next">Получить еще призы</button></div>
       </section>
 
@@ -174,6 +175,6 @@
       <p>Только этот браузер. При смене дня полученные призы сохраняются.</p>
     </div>
   </aside>
-  <script type="module" src="main.mjs?v=pixel-2"></script>
+  <script type="module" src="main.mjs?v=nov13-3"></script>
 </body>
 </html>

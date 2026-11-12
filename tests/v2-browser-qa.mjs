@@ -72,7 +72,7 @@ for (let n = 0; n < 760; n++) {
 await page.mouse.up();
 await page.waitForFunction(() => !document.querySelector('#result-layer').hidden);
 assert.ok(thirdSeen); assert.equal(rewardsSeen, 3); assert.ok(Number(await page.locator('#result-coins').textContent()) >= 30);
-assert.equal((await state()).pending.length, 3); assert.equal(await page.locator('#result-replay').isDisabled(), true);
+assert.equal((await state()).pending.length, 3); assert.equal(await page.locator('#result-replay').isDisabled(), false);
 await shot('result');
 await page.click('#result-claim'); await shot('roulette');
 const expected = (await state()).pending[0].prizeId;
@@ -120,7 +120,7 @@ assert.equal(await page.locator('#cabinet-play').textContent(), 'Продолж�
 await page.click('#cabinet-play');
 let char = await page.locator('#character').boundingBox();
 await page.mouse.move(char.x + 74, char.y + 65); await page.mouse.down();
-await page.mouse.move(130, char.y + 65); await page.mouse.up();
+await page.mouse.move(133, char.y + 65); await page.mouse.up();
 await tick(60100); await page.locator('#result-layer').waitFor({ state: 'visible' });
 assert.equal(await page.locator('#result-coins').textContent(), '0');
 assert.equal(await page.locator('#result-claim').isDisabled(), true);
@@ -137,7 +137,7 @@ await tick(7100); await page.locator('#reward-layer').waitFor({ state: 'visible'
 assert.equal(await page.locator('#coin-value').textContent(), '11');
 await tick(3100);
 char = await page.locator('#character').boundingBox();
-await page.mouse.move(char.x + 74, char.y + 65); await page.mouse.down(); await page.mouse.move(130, char.y + 65); await page.mouse.up();
+await page.mouse.move(char.x + 74, char.y + 65); await page.mouse.down(); await page.mouse.move(133, char.y + 65); await page.mouse.up();
 await tick(60000); await page.locator('#result-layer').waitFor({ state: 'visible' });
 assert.equal((await state()).coins, 11); assert.equal((await state()).pending.length, 1);
 

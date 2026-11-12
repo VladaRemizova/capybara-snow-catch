@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { CatchGame, rewardProgress, ITEM_SIZES } from '../dist/v2/game-core.mjs';
 import { PrizeLedger, moscowDay, SPIN_MS } from '../dist/v2/prizes.mjs';
+import { reelMotion } from '../dist/v2/roulette-motion.mjs';
 
 const noon = Date.parse('2026-11-12T12:00:00Z');
 const makeLedger = () => new PrizeLedger(null, noon, () => .25);
@@ -82,4 +83,69 @@ test('v2 all won prizes are retained across a new day and another three draws', 
   assert.equal(l.locked, false);
   time = noon + 24 * 3600_000; l.commitRound('b', 30, time);
   assert.equal(l.state.pending.length, 3); assert.equal(l.state.prizes.length, 3);
+});
+
+test('v2 moving either way catches a token that has just passed the rim', () => {
+  for (const direction of [-1, 1]) {
+    const g = new CatchGame(); g.start();
+    g.beginDrag(1, g.characterX, g.characterY + 60);
+    const target = g.characterX + direction * 90;
+    g.objects = [{ id: 90, kind: 'red', value: 2, x: target, y: g.catchY + 8 - ITEM_SIZES.red[1] * .33 }];
+    g.drag(1, target);
+    const events = g.advanceTo(.02);
+    assert.equal(g.pose, direction < 0 ? 'left' : 'right');
+    assert.equal(events.filter(e => e.type === 'catch').length, 1);
+    assert.equal(g.coins, 2);
+    assert.equal(g.advanceTo(.04).filter(e => e.type === 'catch').length, 0);
+  }
+});
+
+test('v2 a fast lateral pass sweeps the open bag across the falling object', () => {
+  const g = new CatchGame(); g.start(); g.characterX = 70; g.catchSampleX = 70;
+  g.beginDrag(1, 70, g.characterY + 60);
+  g.objects = [{ id: 90, kind: 'sandwich', value: 1, x: 187.5, y: g.catchY - ITEM_SIZES.sandwich[1] * .33 - .1 }];
+  g.drag(1, 305);
+  assert.equal(g.advanceTo(.02).filter(e => e.type === 'catch').length, 1);
+});
+
+test('v2 objects below the sack opening cannot be recovered by moving underneath', () => {
+  const g = new CatchGame(); g.start(); g.beginDrag(1, g.characterX, g.characterY + 60);
+  g.objects = [{ id: 90, kind: 'red', value: 2, x: 270, y: g.catchY + 40 - ITEM_SIZES.red[1] * .33 }];
+  g.drag(1, 270); g.advanceTo(.02); assert.equal(g.coins, 0);
+});
+
+test('v2 replay banks 20 + 20 coins while retaining only three daily prize rights', () => {
+  const l = makeLedger(); l.commitRound('first', 20, noon);
+  const pending = l.state.pending.map(p => p.id);
+  assert.equal(l.drawing, false);
+  l.commitRound('second', 20, noon);
+  assert.equal(l.state.coins, 40); assert.equal(l.state.pending.length, 3);
+  assert.deepEqual(l.state.pending.slice(0, 2).map(p => p.id), pending);
+  assert.equal(new Set(l.state.pending.map(p => p.prizeId)).size, 3);
+  l.startSpin(noon); assert.equal(l.drawing, true);
+});
+
+test('v2 replay after claiming two prizes keeps them and unlocks only the last daily prize', () => {
+  const l = makeLedger(); l.commitRound('first', 20, noon);
+  let time = noon;
+  for (let n = 0; n < 2; n++) { l.startSpin(time); time += SPIN_MS; l.finishSpin(time); l.acknowledgeWin(); }
+  const won = structuredClone(l.state.prizes);
+  l.commitRound('second', 20, time);
+  assert.deepEqual(l.state.prizes, won); assert.equal(l.state.pending.length, 1);
+  assert.equal(l.state.earned, 3); assert.equal(l.state.coins, 40);
+});
+
+test('v2 the reel reverses briefly then travels continuously to the selected prize', () => {
+  const target = 32 * 211;
+  assert.equal(reelMotion(0, target).offset, 0);
+  assert.ok(reelMotion(100, target).offset < 0);
+  let previous = reelMotion(160, target).offset;
+  for (let ms = 170; ms <= SPIN_MS; ms += 10) {
+    const current = reelMotion(ms, target).offset;
+    assert.ok(current > previous, `No pause or reversal at ${ms} ms`);
+    previous = current;
+  }
+  assert.ok(Math.abs(reelMotion(SPIN_MS, target).offset - target) < 1e-8);
+  // No jump at the boundaries between acceleration, cruise and braking.
+  for (const ms of [760, 3560]) assert.ok(Math.abs(reelMotion(ms + .01, target).offset - reelMotion(ms - .01, target).offset) < .1);
 });

@@ -46,6 +46,7 @@ export class PrizeLedger {
     s.day = day; s.coins = 0; s.earned = 0; s.order = shuffled(PRIZE_IDS, this.random);
     return true;
   }
+  get drawing() { return this.state.spin !== null || this.state.lastWin !== null; }
   get locked() { return this.state.pending.length > 0 || this.state.spin !== null || this.state.lastWin !== null; }
   commitRound(id, coins, now = Date.now()) {
     this.refreshDay(now);

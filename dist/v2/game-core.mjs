@@ -11,6 +11,23 @@ export const ITEM_SIZES = {
 };
 const LANE_SEQUENCE = [1, 0, 1, 2, 1, 0, 1, 2, 1, 2, 1, 0];
 const clamp = (n, low, high) => Math.max(low, Math.min(high, n));
+// Test the entire relative path through the open rim, including a short depth
+// below the lip. Head direction and its animation never close this catch area.
+function passesThroughBag(objectX, tipBefore, tipAfter, capyBefore, capyAfter, rimY) {
+  let enter = 0, leave = 1;
+  for (const [from, to, min, max] of [
+    [tipBefore, tipAfter, rimY - 2, rimY + 26],
+    [objectX - capyBefore, objectX - capyAfter, -52, 52],
+  ]) {
+    const delta = to - from;
+    if (delta === 0) { if (from < min || from > max) return false; continue; }
+    const a = (min - from) / delta, b = (max - from) / delta;
+    enter = Math.max(enter, Math.min(a, b));
+    leave = Math.min(leave, Math.max(a, b));
+    if (enter > leave) return false;
+  }
+  return true;
+}
 
 export function rewardProgress(coins) {
   const rewards = Math.min(3, Math.floor(Math.max(0, coins) / 10));
@@ -26,6 +43,7 @@ export class CatchGame {
   reset() {
     this.status = 'idle'; this.elapsed = 0; this.coins = 0; this.baseCoins = 0;
     this.characterX = 187.5; this.objects = []; this.pointerId = null;
+    this.catchSampleX = this.characterX;
     this.grabOffset = 0; this.serial = 0; this.nextSpawn = 0.4;
     this.spawnCount = 0; this.tutorialComplete = false; this.bonusSpawned = 0;
     this.motionDirection = 'open'; this.lastMovedAt = -Infinity;
@@ -112,8 +130,8 @@ export class CatchGame {
       this.stopMotion();
     }
   }
-  pause() { if (this.status === 'running') { this.status = 'paused'; this.release(); } }
-  resume() { if (this.status === 'paused') this.status = 'running'; }
+  pause() { if (this.status === 'running') { this.status = 'paused'; this.release(); this.catchSampleX = this.characterX; } }
+  resume() { if (this.status === 'paused') { this.status = 'running'; this.catchSampleX = this.characterX; } }
   spawn() {
     const n = this.spawnCount++;
     // Exactly two bonus tokens: the very first object and one at 52 active seconds.
@@ -129,6 +147,8 @@ export class CatchGame {
     if (this.status !== 'running') return [];
     const next = clamp(elapsed, this.elapsed, ROUND_SECONDS);
     const delta = next - this.elapsed;
+    const previousX = this.catchSampleX;
+    this.catchSampleX = this.characterX;
     const events = [];
     this.elapsed = next;
     if (next >= ROUND_SECONDS) {
@@ -152,8 +172,7 @@ export class CatchGame {
       const bottomOffset = ITEM_SIZES[object.kind][1] * 0.33;
       const previousBottom = object.y + bottomOffset;
       object.y += this.speed * delta;
-      const crossesMouth = previousBottom <= this.catchY && object.y + bottomOffset >= this.catchY;
-      if (crossesMouth && Math.abs(object.x - this.characterX) <= 45) {
+      if (passesThroughBag(object.x, previousBottom, object.y + bottomOffset, previousX, this.characterX, this.catchY)) {
         const before = this.progress.rewards;
         this.coins += object.value;
         events.push({ type: 'catch', object: { ...object }, value: object.value, coins: this.coins });

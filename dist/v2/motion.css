@@ -1,0 +1,52 @@
+/* Coordinated transitions requested for the game. Geometry stays in Figma slots. */
+.prizes-count{height:32.66px;border-radius:8.108px;overflow:hidden}
+.prizes-count>.prizes-caption-label{position:absolute;width:1px;height:1px;min-width:0;padding:0;overflow:hidden;clip-path:inset(50%);background:none}
+.prizes-caption-art{position:absolute;pointer-events:none;object-fit:fill}
+#owned-count{top:4px;border-radius:5.17px}
+
+.cabinet-header{position:sticky;top:0;z-index:30;background:url(assets/cabinet-bg.webp) 0 0/375px 672px no-repeat}
+.copy-toast{color:#d2233c;background:#ffdae1;border:1px solid #fb476155;box-shadow:0 5px 20px #80002426}
+.round-button[aria-pressed=true],.round-button[aria-pressed=true] img{box-shadow:none;filter:none}
+#sound-button[aria-pressed=true]>img{left:1px;width:40.5px}
+
+.overlay{background:transparent}
+.overlay:before{content:"";position:absolute;inset:0;background:rgba(0,0,0,.6);pointer-events:none;animation:backdrop-in .2s ease-out both}
+.modal-layer:not([hidden]) .help-card,.modal-layer:not([hidden]) .result-card{z-index:1;transform-origin:50% 55%;animation:panel-in .34s .12s cubic-bezier(.2,.8,.25,1) both}
+.teaching-layer>button{z-index:1}
+.teaching-layer:not([hidden]) .teaching-message{animation:hint-in .28s .12s ease-out both}
+.teaching-layer:not([hidden]) .gesture{animation:swipe 2.1s cubic-bezier(.45,0,.55,1) infinite,hint-opacity .28s .12s ease-out both}
+.reward-composition{z-index:1;animation:panel-in .36s .1s cubic-bezier(.2,.8,.25,1) both}
+.all-prizes-actions{z-index:2;animation:panel-in .34s .16s cubic-bezier(.2,.8,.25,1) both}
+@keyframes backdrop-in{from{opacity:0}to{opacity:1}}
+@keyframes panel-in{from{opacity:0;transform:translateY(8px) scale(.93)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes hint-in{from{opacity:0;translate:0 6px}to{opacity:1;translate:0 0}}
+@keyframes hint-opacity{from{opacity:0}to{opacity:1}}
+
+.win-art{animation:none;transform-origin:50% 58%}
+.win-art.gift-loading{opacity:0}
+.win-layers{position:absolute;inset:0;display:none}
+.win-art.layers-ready .win-native-art{display:none}
+.win-art.layers-ready .win-layers{display:block}
+.win-art.gift-revealing{animation:gift-appear .44s cubic-bezier(.16,.75,.25,1) both}
+.win-box-layer{z-index:1;transform-origin:50% 75%}
+.win-lid-layer{z-index:3;transform-origin:50% 25%}
+.win-decor-layer{z-index:4;transform-origin:150px 240px}
+.win-prize-float{position:absolute;inset:0;z-index:2}
+.win-prize-layer{transform-origin:var(--prize-center-x,147px) 237px}
+.gift-revealing .win-box-layer{animation:box-open .72s .12s cubic-bezier(.2,.8,.25,1) both}
+.gift-revealing .win-lid-layer{animation:lid-open .72s .12s cubic-bezier(.2,.8,.25,1) both}
+.gift-revealing .win-prize-layer{animation:prize-out .7s .18s cubic-bezier(.16,.8,.25,1) both}
+.gift-revealing .win-decor-layer{animation:decor-out .9s .18s cubic-bezier(.14,.7,.25,1) both}
+.gift-revealing .win-prize-float{animation:prize-hover 2.8s 1s ease-in-out infinite}
+.win-screen:not([hidden]) .win-description>p,.win-screen:not([hidden]) .win-description>h2,.win-screen:not([hidden]) .win-description>button{animation:hint-in .3s .45s ease-out both}
+@keyframes gift-appear{from{opacity:0;transform:scale(.72)}to{opacity:1;transform:scale(1)}}
+@keyframes box-open{from{transform:translateY(-25px)}to{transform:translateY(0)}}
+@keyframes lid-open{from{transform:translateY(92px) rotate(-3deg)}to{transform:translateY(0) rotate(0)}}
+@keyframes prize-out{from{opacity:0;transform:translateY(28px) scale(.86)}65%{opacity:1}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes decor-out{from{opacity:0;transform:translateY(30px) scale(.04)}65%{opacity:1;transform:translateY(-3px) scale(1.05)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes prize-hover{0%,100%{translate:0 0}50%{translate:0 -4px}}
+
+@media(prefers-reduced-motion:reduce){
+  .overlay:before,.modal-layer:not([hidden]) .help-card,.modal-layer:not([hidden]) .result-card,.reward-composition,.all-prizes-actions,.win-art.gift-revealing,.gift-revealing .win-box-layer,.gift-revealing .win-lid-layer,.gift-revealing .win-prize-layer,.gift-revealing .win-decor-layer,.win-screen:not([hidden]) .win-description>*{animation:none!important;opacity:1;transform:none;translate:none}
+  .gift-revealing .win-prize-float{animation:none!important}
+}

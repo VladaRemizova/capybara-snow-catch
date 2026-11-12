@@ -1,7 +1,8 @@
-import { CatchGame, ITEM_SIZES } from './game-core.mjs';
-import { PrizeLedger, PRIZES, SPIN_MS, STORAGE_KEY } from './prizes.mjs';
-import { CONFETTI } from './confetti.mjs';
-import { initUI, refreshUI, setCounter, prizeGeometry, paintReward, paintResult, paintWin, paintPrizeCard, paintEmpty } from './ui.mjs';
+import { CatchGame, ITEM_SIZES } from './game-core.mjs?v=nov13-3';
+import { PrizeLedger, PRIZES, SPIN_MS, STORAGE_KEY } from './prizes.mjs?v=nov13-3';
+import { reelMotion } from './roulette-motion.mjs?v=nov13-3';
+import { CONFETTI } from './confetti.mjs?v=nov13-3';
+import { initUI, refreshUI, setCounter, prizeGeometry, paintReward, paintResult, paintWin, paintPrizeCard, paintEmpty } from './ui.mjs?v=nov13-3';
 
 const $ = id => document.getElementById(id);
 const scene = $('scene'), phone = $('phone'), field = $('falling-field');
@@ -56,6 +57,7 @@ new ResizeObserver(sizeScene).observe(phone);
 
 function showScreen(name) {
   screenName = name;
+  clearTimeout(toastTimer); $('copy-toast').hidden = true;
   for (const key of screenNames) $(key + '-screen').hidden = key !== name;
   if (name !== 'game') scene.classList.remove('dragging', 'ready-to-grab');
   render();
@@ -95,7 +97,7 @@ function resume() {
 function pause() { syncClock(); game.pause(); scene.classList.remove('dragging', 'ready-to-grab'); render(); }
 function startRound() {
   ledger = new PrizeLedger(readSaved() || ledger.state, prizeNow()); persist();
-  if (ledger.locked) { restoreDraw(); return; }
+  if (ledger.drawing) { restoreDraw(); return; }
   clearRewardTimers(); rewardQueue = []; rewardBusy = false; smile = false; finishing = false;
   game.start(ledger.state.coins); game.pause();
   roundId = crypto.randomUUID(); cabinetReturn = false;
@@ -302,11 +304,11 @@ function catchEffect(object) {
   ], { duration: reducedMotion ? 60 : 340, easing: 'cubic-bezier(.22,.1,.45,1)', fill: 'forwards' });
   for (const id of ['character', 'character-front']) {
     if (!reducedMotion) animate($(id), [
-      { scale: '1 1' },
-      { scale: '1.018 .985', offset: .3 },
-      { scale: '.995 1.007', offset: .65 },
-      { scale: '1 1' },
-    ], { duration: 340, easing: 'cubic-bezier(.25,.46,.45,.94)' });
+      { translate: '0 0', scale: '1 1' },
+      { translate: '0 -5px', scale: '.998 1.006', offset: .38 },
+      { translate: '0 0', scale: '1.005 .997', offset: .85 },
+      { translate: '0 0', scale: '1 1' },
+    ], { duration: 290, easing: 'cubic-bezier(.25,.46,.45,.94)' });
   }
   holidayBurst(x, y - 5);
   const labelX = Math.max(45, Math.min(330, x + (x < 210 ? 57 : -57)));
@@ -395,9 +397,9 @@ async function finishRound() {
   setCounter('result-prizes', `${rating ? 3 : available} из 3`, 'bold18', 21);
   $('result-claim').disabled = available === 0;
   $('result-claim').textContent = available ? 'Забрать призы' : ledger.state.earned === 3 ? 'Все призы получены' : 'У вас 0 призов';
-  // A settled round with pending prizes must be drawn before another round starts.
-  $('result-replay').disabled = available > 0;
-  $('result-replay').title = available > 0 ? 'Сначала получите все доступные призы' : '';
+  // Replay can bank more coins while earned, unspun prize rights stay intact.
+  $('result-replay').disabled = false;
+  $('result-replay').title = '';
   paintResult(rating ? 'rating' : available ? 'available' : 'zero');
   setModal('result'); render();
 }
@@ -411,7 +413,7 @@ function renderCabinet() {
   for (const won of ledger.state.prizes) {
     const prize = PRIZES[won.prizeId];
     const card = document.createElement('article'); card.className = 'prize-ticket'; card.dataset.prize = won.prizeId;
-    card.innerHTML = `<div class="prize-illustration"><img src="assets/${prize.image}" alt=""></div><div class="prize-info"><div class="ticket-meta"><span>${prize.category}</span><span class="valid-until">Действует до 07.11</span></div><h2>${prize.title}</h2><div class="ticket-code"><button class="code-copy" data-code="${prize.code}" aria-label="Скопировать ${prize.code}"><span>${prize.code}</span><span class="copy-icon" aria-hidden="true"></span></button><button class="ticket-activate">Активировать</button></div></div>`;
+    card.innerHTML = `<div class="prize-illustration"><img src="${prizeGeometry(won.prizeId).src}" alt=""></div><div class="prize-info"><div class="ticket-meta"><span>${prize.category}</span><span class="valid-until">Действует до 07.11</span></div><h2>${prize.title}</h2><div class="ticket-code"><button class="code-copy" data-code="${prize.code}" aria-label="Скопировать ${prize.code}"><span>${prize.code}</span><span class="copy-icon" aria-hidden="true"></span></button><button class="ticket-activate">Активировать</button></div></div>`;
     card.querySelector('.ticket-activate').addEventListener('click', () => {
       if (ledger.locked) { restoreDraw(); return; }
       $('coupon-scroll').scrollTop = 0; showScreen('coupon');
@@ -446,7 +448,7 @@ function buildReel() {
   for (let index = -36; index <= 2; index++) {
     const id = reelId(index), prize = PRIZES[id], img = document.createElement('img');
     const g = prizeGeometry(id), { width: w, height: h } = g;
-    img.className = 'reel-item' + (index < -1 || index > 1 ? ' extra' : ''); img.src = `assets/${prize.image}`; img.alt = prize.title;
+    img.className = 'reel-item' + (index < -1 || index > 1 ? ' extra' : ''); img.src = g.src; img.alt = prize.title;
     img.style.width = `${w}px`; img.style.height = `${h}px`; img.style.left = `${33 + g.left}px`;
     track.append(img); items.push({ index, img, top: g.top });
   }
@@ -495,17 +497,9 @@ function animateReel() {
   const spin = ledger.state.spin;
   if (!reel || !spin || screenName !== 'roulette') return;
   const t = Math.max(0, Math.min(1, (Date.now() - spin.startedAt) / SPIN_MS));
-  const spread = Math.min(1, t / .075);
-  const gap = 176 + 35 * (1 - (1 - spread) ** 3);
-  layoutReel(gap);
-  let distance;
-  if (t < .08) distance = -17 * Math.sin(t / .08 * Math.PI);
-  else {
-    const q = (t - .08) / .92;
-    const eased = q < .35 ? .5 * (q / .35) ** 2 : 1 - .5 * (1 - (q - .35) / .65) ** 3;
-    distance = -reel.targetIndex * 211 * eased;
-  }
-  $('reel-track').style.transform = `translateY(${distance}px)`;
+  const motion = reelMotion(t * SPIN_MS, -reel.targetIndex * 211);
+  layoutReel(motion.gap);
+  $('reel-track').style.transform = `translateY(${motion.offset}px)`;
   if (t === 1 && !settlingSpin) {
     settlingSpin = true;
     transaction(l => l.finishSpin()).then(() => {
@@ -518,7 +512,7 @@ function showWin() {
   const result = ledger.state.lastWin;
   if (!result) { showRoulette(); return; }
   const prize = PRIZES[result.prizeId];
-  $('won-prize').src = `assets/${prize.image}`; $('won-prize').alt = prize.title;
+  $('won-prize').src = prizeGeometry(result.prizeId).src; $('won-prize').alt = prize.title;
   $('won-title').textContent = prize.title;
   $('win-next').textContent = ledger.state.pending.length ? 'Получить еще призы' : 'Перейти в Мои призы';
   showScreen('win'); paintWin(result.prizeId); beep(true);
@@ -537,7 +531,8 @@ $('help-button').addEventListener('click', () => { pause(); if (!rewardBusy && !
 $('help-close').addEventListener('click', () => { setModal(null); resume(); });
 $('sound-button').addEventListener('click', () => {
   soundOn = !soundOn; $('sound-button').setAttribute('aria-pressed', String(soundOn));
-  $('sound-button').setAttribute('aria-label', soundOn ? 'Выключить звук' : 'Включить звук'); beep();
+  $('sound-button').setAttribute('aria-label', soundOn ? 'Выключить звук' : 'Включить звук');
+  document.querySelector('#sound-button img').src = soundOn ? 'assets/pixel/sound-on.webp' : 'assets/sound-off.webp'; beep();
 });
 $('reward-continue').addEventListener('click', closeReward);
 $('reward-claim').addEventListener('click', finishRound);

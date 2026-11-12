@@ -1,6 +1,8 @@
-import { UI_ART, UI_BOXES } from './ui-art.mjs';
-import { GLYPHS } from './ui-glyphs.mjs';
+import { UPDATED_ART } from './ui-updates.mjs?v=nov13-3';
+import { UI_ART as ORIGINAL_ART, UI_BOXES } from './ui-art.mjs?v=nov13-3';
+import { GLYPHS } from './ui-glyphs.mjs?v=nov13-3';
 
+const UI_ART = { ...ORIGINAL_ART, ...UPDATED_ART };
 const $ = id => document.getElementById(id);
 const ready = new Map();
 const glyphReady = new Set();
@@ -132,7 +134,7 @@ export function paintResult(mode) {
   text(metrics[0].querySelector('small'), 'text-565-1799', null, { x: firstX, y: 8, width: 31, height: 8 });
   text(metrics[1].querySelector('small'), rating ? 'text-581-4112' : 'text-565-1816', null, { x: 46, y: 8, width: rating ? 61 : 66, height: 8 });
   Object.assign($('result-coins').style, { left: `${firstX}px`, top: '18px' });
-  image(document.querySelector('.result-capy'), mode === 'zero' ? 'result-capy-zero' : 'result-capy', '565:1792');
+  image(document.querySelector('.result-capy'), rating ? 'rating-capy' : mode === 'zero' ? 'result-capy-zero' : 'result-capy', null, {x:81,y:-100.404541,width:145,height:203});
   if (mode === 'zero') {
     // Both illustration variants use the same 145×203 slot above the card.
     geometry(document.querySelector('.result-capy'), { x: 81, y: -100.404541, width: 145, height: 203 });
@@ -156,7 +158,31 @@ export function paintWin(prizeId) {
   text($('won-title'), { hoff: 'text-565-3056', rossko5: 'text-566-3385', rossko10: 'text-565-3099' }[prizeId], { hoff: '565:3019', rossko5: '566:3348', rossko10: '565:3064' }[prizeId]);
   const origin = {hoff:'565:3021',rossko5:'566:3350',rossko10:'565:3066'}[prizeId];
   image(document.querySelector('.win-native-art'), 'win-full-'+prizeId, origin);
-  refreshUI();
+  revealGift(prizeId); refreshUI();
+}
+
+let giftSequence = 0;
+function revealGift(prizeId) {
+  const sequence = ++giftSequence, art = $('win-art'), layers = $('win-layers');
+  art.classList.remove('gift-revealing','layers-ready'); art.classList.add('gift-loading');
+  void art.offsetWidth; // Restart the entrance for every independently won prize.
+  const keys = ['win-box-layer','win-lid-layer','win-decor-layer','win-prize-'+prizeId];
+  Promise.all(keys.map(key => decode(UI_ART[key].src))).then(loaded => {
+    if (sequence !== giftSequence) return;
+    art.classList.remove('gift-loading');
+    if (!loaded.every(Boolean)) return;
+    layers.replaceChildren();
+    const canvas = {x:0,y:0,width:299.8,height:414};
+    for (const [i,key] of keys.entries()) {
+      const img = document.createElement('img'); img.alt = '';
+      img.className = ['win-box-layer','win-lid-layer','win-decor-layer','win-prize-layer'][i];
+      image(img,key,null,canvas);
+      if (i === 3) { const floating = document.createElement('div'); floating.className='win-prize-float'; floating.append(img); layers.append(floating); }
+      else layers.append(img);
+    }
+    art.style.setProperty('--prize-center-x',prizeId==='hoff'?'139.5px':prizeId==='rossko5'?'149px':'147px');
+    art.classList.add('layers-ready','gift-revealing');
+  });
 }
 
 export function paintEmpty(node) { const a = UI_ART['empty-ticket']; Object.assign(node.parentElement.style, {width:'343px',height:`${a.box.height}px`}); graphic(node.parentElement, 'empty-ticket'); node.classList.add('visually-hidden'); }
@@ -180,6 +206,7 @@ export function paintPrizeCard(card, prizeId) {
 }
 
 export function initUI() {
+  for (const id of ['hoff','rossko5','rossko10']) decode(prizeGeometry(id).src);
   // Pre-decode small UI graphics so entering a popup never reveals an empty label.
   for (const a of Object.values(UI_ART)) if (a.kind === 'text' || a.kind === 'button' || (a.kind === 'art' && a.bytes < 30000)) decode(a.src);
   for (const [selector, key] of [['.entry-logo','entry-logo'],['.entry-heading','entry-heading'],['.entry-bag','entry-bag'],['.entry-left-detail','entry-left-detail'],['.entry-snow-left','entry-snow-left'],['.entry-snow-right','entry-snow-right'],['.entry-corner','entry-corner']]) image(document.querySelector(selector), key);
@@ -194,7 +221,8 @@ export function initUI() {
   image(document.querySelector('.foreground-snow'), 'snow-left');
   const light = document.createElement('div'); light.className = 'world-light'; $('world').insertBefore(light, document.querySelector('.world-piece[src*="sign"]'));
 
-  text(document.querySelector('.prizes-caption'), 'text-565-861');
+  const caption = UI_ART['prizes-caption'];
+  image(document.querySelector('.prizes-caption-art'), 'prizes-caption', null, {x:7+caption.ink.x-caption.box.x,y:9.830078+caption.ink.y-caption.box.y,width:caption.pixelWidth/2,height:caption.pixelHeight/2});
   text(document.querySelector('.teaching-message'), 'text-565-1184', '565:1017');
   image(document.querySelector('.gesture'), 'gesture', '565:1017');
 
@@ -214,6 +242,7 @@ export function initUI() {
   $('roulette-snow').replaceChildren();
   $('roulette-screen').style.backgroundImage = `url(${UI_ART['roulette-bg'].src})`;
   const overlay = addImage($('win-screen'), 'win-overlay-glow', '565:3019', 'win-overlay-art'); $('win-screen').insertBefore(overlay, $('win-art')); overlay.style.mixBlendMode = 'overlay';
+  for (const name of Object.keys(UPDATED_ART).filter(key => key.startsWith('win-'))) decode(UPDATED_ART[name].src);
   const giftArt = addImage($('win-art'), 'win-full-hoff', '565:3021', 'win-native-art');
   giftArt.style.zIndex = '1';
   text(document.querySelector('.cabinet-screen h1'), 'text-565-2702', '565:2696');
