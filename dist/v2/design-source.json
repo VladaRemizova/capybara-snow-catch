@@ -72,26 +72,26 @@
     {
       "name": "capy-left",
       "file": "capy-left.png",
-      "id": "568:3787",
-      "bytes": 488934
+      "id": "581:4164",
+      "bytes": 488590
     },
     {
       "name": "capy-open",
       "file": "capy-open.png",
-      "id": "566:3706",
+      "id": "581:4132",
       "bytes": 482126
     },
     {
       "name": "capy-right",
       "file": "capy-right.png",
-      "id": "568:3771",
-      "bytes": 498556
+      "id": "581:4148",
+      "bytes": 498314
     },
     {
       "name": "capy-smile",
       "file": "capy-smile.png",
-      "id": "568:3803",
-      "bytes": 480765
+      "id": "581:4180",
+      "bytes": 480526
     },
     {
       "name": "coin",
@@ -705,5 +705,6 @@
       "x": 132,
       "y": 553
     }
-  ]
+  ],
+  "characterSection": "581:4131"
 }

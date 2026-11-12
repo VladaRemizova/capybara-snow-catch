@@ -12,18 +12,30 @@ let scale = 1, screenName = 'entry', origin = 0, roundId = null;
 let soundOn = false, audio = null, modal = null, modalFocus = null;
 let rewardBusy = false, smile = false, cabinetReturn = false, finishing = false;
 let rewardTimers = [], rewardQueue = [], toastTimer, reel = null;
+let adminBusy = false;
+const DEMO_CLOCK_KEY = `${STORAGE_KEY}-demo-clock`;
+function readDemoDays() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(DEMO_CLOCK_KEY));
+    return Math.max(0, Math.min(10000, Math.floor(Number(saved?.days) || 0)));
+  } catch { return 0; }
+}
+let demoDays = readDemoDays();
+// The administrative day offset applies to prize accounting, not the game or reel clocks.
+const prizeNow = () => Date.now() + demoDays * 86400_000;
 
 function readSaved() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch { return null; }
 }
-let ledger = new PrizeLedger(readSaved());
+let ledger = new PrizeLedger(readSaved(), prizeNow());
 function persist() {
   try { localStorage.setItem(STORAGE_KEY, ledger.serialize()); } catch { /* Private browser storage may be unavailable. */ }
+  renderAdmin();
 }
 persist();
 async function transaction(action) {
   const perform = () => {
-    ledger = new PrizeLedger(readSaved() || ledger.state);
+    ledger = new PrizeLedger(readSaved() || ledger.state, prizeNow());
     const result = action(ledger);
     persist(); return result;
   };
@@ -88,7 +100,7 @@ function resume() {
 }
 function pause() { syncClock(); game.pause(); scene.classList.remove('dragging', 'ready-to-grab'); render(); }
 function startRound() {
-  ledger = new PrizeLedger(readSaved() || ledger.state); persist();
+  ledger = new PrizeLedger(readSaved() || ledger.state, prizeNow()); persist();
   if (ledger.locked) { restoreDraw(); return; }
   clearRewardTimers(); rewardQueue = []; rewardBusy = false; smile = false; finishing = false;
   game.start(ledger.state.coins); game.pause();
@@ -142,7 +154,7 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) game.
 
 for (const target of ['character', 'character-front']) {
   for (const pose of ['open', 'left', 'right', 'smile']) {
-    const img = document.createElement('img'); img.src = `assets/capy-${pose}.png`; img.alt = ''; img.dataset.pose = pose;
+    const img = document.createElement('img'); img.src = `assets/capy-${pose}.png?v=581-4131`; img.alt = ''; img.dataset.pose = pose;
     $(target).append(img);
   }
 }
@@ -369,7 +381,7 @@ async function finishRound() {
   finishing = true; game.pause(); game.status = 'finished'; game.release();
   clearRewardTimers(); rewardBusy = false; smile = false; rewardQueue = [];
   game.objects = []; render();
-  await transaction(l => l.commitRound(roundId, game.coins));
+  await transaction(l => l.commitRound(roundId, game.coins, prizeNow()));
   const available = ledger.state.pending.length;
   $('result-coins').textContent = ledger.state.coins;
   $('result-prizes').textContent = `${available} из 3`;
@@ -550,14 +562,49 @@ $('win-next').addEventListener('click', async () => {
   else { cabinetReturn = false; roundId = null; renderCabinet(); showScreen('cabinet'); }
 });
 window.addEventListener('storage', event => {
+  if (event.key === DEMO_CLOCK_KEY) { location.reload(); return; }
   if (event.key !== STORAGE_KEY) return;
-  ledger = new PrizeLedger(readSaved());
+  ledger = new PrizeLedger(readSaved(), prizeNow());
+  renderAdmin();
   render();
   if (screenName === 'cabinet') renderCabinet();
   if (screenName === 'roulette' && ledger.state.lastWin) showWin();
 });
 
-function frame() { syncClock(); if (screenName === 'game') render(); animateReel(); requestAnimationFrame(frame); }
+function renderAdmin() {
+  const date = new Intl.DateTimeFormat('ru-RU', { timeZone: 'Europe/Moscow', day: '2-digit', month: '2-digit', year: 'numeric' }).format(prizeNow());
+  const status = `${date} МСК · призы ${ledger.state.earned}/3`;
+  if ($('admin-state').textContent !== status) $('admin-state').textContent = status;
+}
+$('admin-toggle').addEventListener('click', () => {
+  const expanded = $('admin-toggle').getAttribute('aria-expanded') !== 'true';
+  $('admin-toggle').setAttribute('aria-expanded', String(expanded));
+  $('admin-toggle').textContent = expanded ? 'ADMIN ▴' : 'ADMIN ▾';
+  $('admin-panel').hidden = !expanded; renderAdmin();
+});
+async function adminAction(reset) {
+  if (adminBusy) return;
+  adminBusy = true; game.pause();
+  $('admin-next-day').disabled = true; $('admin-reset').disabled = true;
+  try {
+    await transaction(l => {
+      demoDays = reset ? 0 : Math.min(10000, readDemoDays() + 1);
+      if (reset) l.state = new PrizeLedger(null, prizeNow()).state;
+      else l.refreshDay(prizeNow());
+      // A revision also reloads other demo tabs when resetting an already-zero offset.
+      try { localStorage.setItem(DEMO_CLOCK_KEY, JSON.stringify({ days: demoDays, revision: crypto.randomUUID() })); } catch { /* Optional demo storage. */ }
+    });
+    location.reload();
+  } catch {
+    adminBusy = false; $('admin-next-day').disabled = false; $('admin-reset').disabled = false;
+    $('admin-state').textContent = 'Не удалось выполнить действие. Попробуйте ещё раз.';
+    resume();
+  }
+}
+$('admin-next-day').addEventListener('click', () => adminAction(false));
+$('admin-reset').addEventListener('click', () => adminAction(true));
+
+function frame() { if (!adminBusy) { syncClock(); if (screenName === 'game') render(); animateReel(); } requestAnimationFrame(frame); }
 createRouletteSnow(); sizeScene();
 if (ledger.locked) restoreDraw();
 requestAnimationFrame(frame);

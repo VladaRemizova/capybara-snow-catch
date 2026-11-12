@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
   <meta name="theme-color" content="#8e172b">
   <title>Поймайте удачу — зимняя игра</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=admin-1">
   <link rel="preload" href="assets/entry-bg.png" as="image">
   <link rel="preload" href="assets/game-bg.png" as="image">
 </head>
@@ -159,6 +159,18 @@
       <div id="announcer" class="visually-hidden" role="status" aria-live="polite"></div>
     </div>
   </main>
-  <script type="module" src="main.mjs"></script>
+  <aside class="demo-admin" aria-label="Административная панель демоверсии">
+    <button class="demo-admin-toggle" id="admin-toggle" aria-expanded="false" aria-controls="admin-panel">ADMIN ▾</button>
+    <div class="demo-admin-panel" id="admin-panel" hidden>
+      <strong>Демо · тестовая панель</strong>
+      <output id="admin-state"></output>
+      <div class="demo-admin-actions">
+        <button id="admin-next-day">Следующий день</button>
+        <button id="admin-reset">Сбросить всё</button>
+      </div>
+      <p>Только этот браузер. При смене дня полученные призы сохраняются.</p>
+    </div>
+  </aside>
+  <script type="module" src="main.mjs?v=capy-581-4131-admin-1"></script>
 </body>
 </html>

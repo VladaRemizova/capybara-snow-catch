@@ -144,6 +144,33 @@ for (const [width, height] of [[320, 568], [390, 844], [430, 932], [1440, 900]])
   await page.setViewportSize({ width, height });
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
 }
+
+// Admin day travel resets only the daily limit; a full reset removes the whole v2 run.
+await page.evaluate(winners => {
+  const key = 'capybara-snow-catch-v2', saved = JSON.parse(localStorage.getItem(key));
+  const yesterday = new Date(Date.parse(saved.day + 'T12:00:00Z') - 86400000).toISOString().slice(0, 10);
+  saved.prizes = winners.map(prize => ({ ...prize, id: 'previous-' + prize.id, day: yesterday }));
+  localStorage.setItem(key, JSON.stringify(saved));
+  localStorage.setItem('capybara-qa-unrelated', 'keep');
+}, completed.prizes);
+await page.reload(); await page.setViewportSize({ width: 375, height: 672 });
+const beforeAdmin = await state();
+await page.click('#admin-toggle');
+await shot('admin');
+await Promise.all([page.waitForEvent('load'), page.click('#admin-next-day')]);
+const advanced = await state();
+assert.equal(advanced.day, new Date(Date.parse(beforeAdmin.day + 'T12:00:00Z') + 86400000).toISOString().slice(0, 10));
+assert.equal(advanced.coins, 0); assert.equal(advanced.earned, 0);
+assert.equal(advanced.prizes.length, 3); assert.equal(advanced.pending.length, 1);
+assert.equal(await visible('#roulette-screen'), true);
+await page.click('#admin-toggle');
+await Promise.all([page.waitForEvent('load'), page.click('#admin-reset')]);
+const reset = await state();
+assert.equal(reset.coins, 0); assert.equal(reset.earned, 0); assert.equal(reset.pending.length, 0);
+assert.equal(reset.prizes.length, 0); assert.equal(reset.spin, null); assert.equal(reset.lastWin, null);
+assert.equal(reset.day, beforeAdmin.day); assert.equal(await visible('#entry-screen'), true);
+assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('capybara-snow-catch-v2-demo-clock')).days), 0);
+assert.equal(await page.evaluate(() => localStorage.getItem('capybara-qa-unrelated')), 'keep');
 assert.deepEqual(errors, []);
-console.log(JSON.stringify({ coins: completed.coins, rewardsSeen, prizes: completed.prizes.map(p => p.prizeId), resumedSpin: true, bonusSeen: [...bonusSeen], viewports: 4, errors }, null, 2));
+console.log(JSON.stringify({ coins: completed.coins, rewardsSeen, prizes: completed.prizes.map(p => p.prizeId), resumedSpin: true, bonusSeen: [...bonusSeen], admin: ['next day preserves prizes and rotations', 'complete reset returns to entry'], viewports: 4, errors }, null, 2));
 await browser.close();
