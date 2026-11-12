@@ -44,16 +44,9 @@ async function transaction(action) {
 
 function sizeScene() {
   scale = phone.clientWidth / 375;
-  const height = Math.max(600, phone.clientHeight / scale);
+  const height = 672;
   scene.style.height = `${height}px`;
   scene.style.transform = `scale(${scale})`;
-  $('world').style.transform = `scaleY(${height / 672})`;
-  const heroScale = Math.max(1, height / 672);
-  const bag = document.querySelector('.entry-bag');
-  bag.style.left = `${141 * heroScale + (375 - 375 * heroScale) / 2}px`;
-  bag.style.top = `${408 * heroScale + (height - 672 * heroScale) / 2}px`;
-  bag.style.bottom = 'auto';
-  bag.style.width = `${141 * heroScale}px`; bag.style.height = `${94 * heroScale}px`;
   game.setHeight(height);
   render();
   if (reel) layoutReel(reel.gap);
@@ -152,14 +145,27 @@ for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) $('game
 window.addEventListener('blur', () => release());
 document.addEventListener('visibilitychange', () => { if (document.hidden) game.release(); else { syncClock(); render(); } });
 
+const poseReady = new Set();
+let renderedPose = 'open';
 for (const target of ['character', 'character-front']) {
   for (const pose of ['open', 'left', 'right', 'smile']) {
     const img = document.createElement('img'); img.src = `assets/capy-${pose}.png?v=581-4131`; img.alt = ''; img.dataset.pose = pose;
     $(target).append(img);
   }
 }
+for (const pose of ['open', 'left', 'right', 'smile']) {
+  const images = [...document.querySelectorAll(`.character img[data-pose="${pose}"]`)];
+  Promise.all(images.map(img => img.decode().catch(() => {}))).then(() => {
+    if (images.every(img => img.complete && img.naturalWidth > 0)) poseReady.add(pose);
+    renderCharacter();
+  });
+}
 function renderCharacter() {
-  const pose = smile ? 'smile' : game.pose;
+  const requestedPose = smile ? 'smile' : game.pose;
+  // Swap decoded images in one paint; keep the previous pose until the new one is ready.
+  if (poseReady.has(requestedPose)) renderedPose = requestedPose;
+  else if (!poseReady.has(renderedPose)) renderedPose = poseReady.has('open') ? 'open' : poseReady.values().next().value || 'open';
+  const pose = renderedPose;
   for (const target of ['character', 'character-front']) {
     $(target).style.left = `${game.characterX - 74}px`;
     $(target).style.top = `${game.characterY}px`;

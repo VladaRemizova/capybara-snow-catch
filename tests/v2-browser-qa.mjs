@@ -17,6 +17,7 @@ const state = () => page.evaluate(() => JSON.parse(localStorage.getItem('capybar
 const shot = name => page.screenshot({ path: `${output}/${name}.png`, animations: 'disabled' });
 await page.goto(url);
 await page.evaluate(() => Promise.all([...document.images].map(img => img.decode().catch(() => {}))));
+assert.equal(await page.locator('.character img').evaluateAll(images => images.every(img => getComputedStyle(img).transitionProperty === 'none')), true);
 await shot('entry');
 await page.click('#entry-prizes'); assert.equal(await page.locator('.prize-ticket').count(), 0);
 assert.equal(await page.locator('.empty-ticket').count(), 1); await shot('empty');
@@ -143,6 +144,10 @@ assert.equal((await state()).coins, 11); assert.equal((await state()).pending.le
 for (const [width, height] of [[320, 568], [390, 844], [430, 932], [1440, 900]]) {
   await page.setViewportSize({ width, height });
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+  const windowSize = await page.locator('#phone').boundingBox();
+  assert.ok(Math.abs(windowSize.width - Math.min(width, 375)) < 1);
+  assert.ok(Math.abs(windowSize.height - windowSize.width * 672 / 375) < 1);
+  assert.equal(await page.locator('#scene').evaluate(n => n.style.height), '672px');
 }
 
 // Admin day travel resets only the daily limit; a full reset removes the whole v2 run.
