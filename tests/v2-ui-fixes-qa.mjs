@@ -49,6 +49,7 @@ await page.click('#help-close');
 await page.evaluate(() => qa.settle(20)); await tick(600);
 const first = await state(); assert.equal(first.pending.length, 2); assert.equal(first.coins, 20);
 assert.equal(await page.locator('#result-replay').isEnabled(), true);
+assert.equal(await page.locator('#result-replay').textContent(), 'Попробовать еще раз');
 await page.click('#result-replay');
 assert.equal(await page.locator('#teaching-layer').isVisible(), true);
 assert.equal((await state()).pending.length, 0);

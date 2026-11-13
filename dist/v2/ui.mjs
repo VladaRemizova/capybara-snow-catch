@@ -1,9 +1,12 @@
-import { REEL_ART } from './roulette-art.mjs?v=nov13-6';
-import { UPDATED_ART } from './ui-updates.mjs?v=nov13-6';
-import { UI_ART as ORIGINAL_ART, UI_BOXES } from './ui-art.mjs?v=nov13-6';
-import { GLYPHS } from './ui-glyphs.mjs?v=nov13-6';
+import { REEL_ART } from './roulette-art.mjs?v=nov13-7';
+import { UPDATED_ART } from './ui-updates.mjs?v=nov13-7';
+import { UI_ART as ORIGINAL_ART, UI_BOXES } from './ui-art.mjs?v=nov13-7';
+import { GLYPHS } from './ui-glyphs.mjs?v=nov13-7';
 
 const UI_ART = { ...ORIGINAL_ART, ...UPDATED_ART };
+for (const [key, file] of [['button-result-replay', 'button-result-retry'], ['button-rating-play', 'button-rating-retry']]) {
+  UI_ART[key] = { ...UI_ART[key], src: `assets/pixel/${file}.webp` };
+}
 const $ = id => document.getElementById(id);
 const ready = new Map();
 const glyphReady = new Set();
