@@ -1,9 +1,9 @@
-import { CatchGame, ITEM_SIZES } from './game-core.mjs?v=v3-nov13-4';
-import { PrizeLedger, PRIZES, SPIN_MS, STORAGE_KEY } from './prizes.mjs?v=v3-nov13-4';
-import { REEL_ART } from './roulette-art.mjs?v=v3-nov13-4';
-import { reelMotion } from './roulette-motion.mjs?v=v3-nov13-4';
-import { CONFETTI } from './confetti.mjs?v=v3-nov13-4';
-import { initUI, refreshUI, prepareRoulette, setCounter, prizeGeometry, paintReward, paintResult, paintWin, paintPrizeCard, paintEmpty } from './ui.mjs?v=v3-nov13-4';
+import { CatchGame, ITEM_SIZES } from './game-core.mjs?v=v3-nov13-5';
+import { PrizeLedger, PRIZES, SPIN_MS, STORAGE_KEY } from './prizes.mjs?v=v3-nov13-5';
+import { REEL_ART } from './roulette-art.mjs?v=v3-nov13-5';
+import { reelMotion } from './roulette-motion.mjs?v=v3-nov13-5';
+import { CONFETTI } from './confetti.mjs?v=v3-nov13-5';
+import { initUI, refreshUI, prepareRoulette, setCounter, prizeGeometry, paintReward, paintResult, paintWin, paintPrizeCard, paintEmpty } from './ui.mjs?v=v3-nov13-5';
 
 const $ = id => document.getElementById(id);
 const scene = $('scene'), phone = $('phone'), field = $('falling-field');
@@ -100,7 +100,6 @@ function resume() {
 function pause() { syncClock(); game.pause(); scene.classList.remove('dragging', 'ready-to-grab'); render(); }
 function startRound() {
   ledger = new PrizeLedger(readSaved() || ledger.state, prizeNow()); persist();
-  if (ledger.drawing) { restoreDraw(); return; }
   clearRewardTimers(); rewardQueue = []; rewardBusy = false; smile = false; finishing = false;
   game.start(ledger.state.coins); game.pause();
   roundId = crypto.randomUUID(); cabinetReturn = false;
@@ -108,14 +107,12 @@ function startRound() {
   showScreen('game'); setModal('teaching');
 }
 function home() {
-  if (ledger.locked) { restoreDraw(); return; }
   clearRewardTimers(); rewardQueue = []; rewardBusy = false; smile = false;
   // Only completed rounds enter the ledger. Discarding this round cannot spend or add coins.
   game.reset(); roundId = null; cabinetReturn = false;
   setModal(null); showScreen('entry');
 }
 function openCabinet() {
-  if (ledger.locked) { restoreDraw(); return; }
   if (game.status === 'running') pause();
   cabinetReturn = Boolean(roundId && game.status === 'paused' && !finishing);
   renderCabinet(); showScreen('cabinet');
@@ -424,7 +421,7 @@ async function replayRound() {
   $('result-replay').disabled = true;
   try {
     const discarded = await transaction(l => l.discardRound(roundId, prizeNow()));
-    if (!discarded && ledger.locked) { restoreDraw(); return; }
+    if (!discarded && ledger.locked) return;
     startRound();
   } finally { $('result-replay').disabled = false; }
 }
@@ -440,7 +437,6 @@ function renderCabinet() {
     const card = document.createElement('article'); card.className = 'prize-ticket'; card.dataset.prize = won.prizeId;
     card.innerHTML = `<div class="prize-illustration"><img src="${prizeGeometry(won.prizeId).src}" alt=""></div><div class="prize-info"><div class="ticket-meta"><span>${prize.category}</span><span class="valid-until">Действует до 07.11</span></div><h2>${prize.cardTitle || prize.title}</h2><div class="ticket-code"><button class="code-copy" data-code="${prize.code}" aria-label="Скопировать ${prize.code}"><span>${prize.code}</span><span class="copy-icon" aria-hidden="true"></span></button><button class="ticket-activate">Активировать</button></div></div>`;
     card.querySelector('.ticket-activate').addEventListener('click', () => {
-      if (ledger.locked) { restoreDraw(); return; }
       $('coupon-scroll').scrollTop = 0; showScreen('coupon');
     });
     list.append(card); paintPrizeCard(card, won.prizeId);
@@ -503,7 +499,7 @@ async function showRoulette() {
   const visit = ++rouletteVisit;
   // Keep the current result visible until the complete destination is decoded.
   if (!await prepareRoulette() || visit !== rouletteVisit) return;
-  if (ledger.state.lastWin || !ledger.state.pending.length) { restoreDraw(); return; }
+  if (ledger.state.lastWin || !ledger.state.pending.length) { showRoulette(); return; }
   const day = ledger.state.pending[0].day;
   const received = ledger.state.prizes.filter(p => p.day === day);
   const remaining = ledger.state.pending.filter(p => p.day === day).length;
@@ -517,11 +513,8 @@ async function showRoulette() {
   const images = [...$('roulette-screen').querySelectorAll('img')];
   const decoded = await Promise.all(images.map(img => img.decode().then(() => true).catch(() => false)));
   if (visit !== rouletteVisit || !decoded.every(Boolean)) return;
-  if (ledger.state.lastWin || !ledger.state.pending.length) { restoreDraw(); return; }
+  if (ledger.state.lastWin || !ledger.state.pending.length) { showRoulette(); return; }
   setModal(null); showScreen('roulette');
-}
-function restoreDraw() {
-  if (ledger.state.lastWin) showWin(); else showRoulette();
 }
 function configureSpin() {
   const spin = ledger.state.spin;
@@ -590,7 +583,9 @@ $('reward-layer').addEventListener('keydown', event => {
 });
 $('reward-continue').addEventListener('click', closeReward);
 $('reward-claim').addEventListener('click', finishRound);
-$('result-claim').addEventListener('click', showRoulette);
+$('result-claim').addEventListener('click', () => {
+  if (screenName === 'game' && modal === 'result' && ledger.locked) showRoulette();
+});
 $('result-replay').addEventListener('click', replayRound);
 $('rating-replay').addEventListener('click', () => {
   if (modal === 'result' && document.querySelector('.result-card').dataset.state === 'rating') startRound();
@@ -654,5 +649,4 @@ $('admin-reset').addEventListener('click', () => adminAction(true));
 
 function frame() { if (!adminBusy) { syncClock(); if (screenName === 'game') render(); animateReel(); } requestAnimationFrame(frame); }
 initUI(); sizeScene();
-if (ledger.locked) restoreDraw();
 requestAnimationFrame(frame);

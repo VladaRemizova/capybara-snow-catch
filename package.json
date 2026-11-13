@@ -16,7 +16,8 @@
     "test:v2:ui": "node tests/v2-ui-fixes-qa.mjs",
     "test:v2:roulette": "node tests/v2-roulette-qa.mjs",
     "test:v3:browser": "node tests/v3-browser-qa.mjs",
-    "test:v3:loading": "node tests/v3-loading-qa.mjs"
+    "test:v3:loading": "node tests/v3-loading-qa.mjs",
+    "test:v3:navigation": "node tests/v3-navigation-qa.mjs"
   },
   "devDependencies": {
     "playwright": "1.57.0"

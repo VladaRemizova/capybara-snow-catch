@@ -30,7 +30,9 @@ const loaded=()=>page.locator('img').evaluateAll(imgs=>Promise.all(imgs.filter(n
 const animations=selector=>page.locator(selector).evaluate(n=>Promise.all(n.getAnimations({subtree:true}).filter(a=>a.effect.getTiming().iterations!==Infinity).map(a=>a.finished.catch(()=>{}))));
 const shot=name=>page.screenshot({path:`${output}/${name}.png`,animations:'allow'});
 try{
- await page.goto(process.env.CAPY_URL||'http://127.0.0.1:8080/v3/');await page.locator('#roulette-screen').waitFor({state:'visible'});await loaded();
+ await page.goto(process.env.CAPY_URL||'http://127.0.0.1:8080/v3/');await page.locator('#entry-screen').waitFor({state:'visible'});
+ await page.click('#play-button');await page.click('#teaching-dismiss');await tick(500);await page.evaluate(()=>qa.settle(0));await tick(600);await page.click('#result-claim');
+ await page.locator('#roulette-screen').waitFor({state:'visible'});await loaded();
  assert.equal(await page.locator('#spin-count').textContent(),'1/3');
  assert.equal(await page.locator('.reel-light').count(),0);
  assert.equal(await page.locator('.reel-prize[data-index="0"] img').count(),1);
