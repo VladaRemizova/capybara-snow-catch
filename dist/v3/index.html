@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
   <meta name="theme-color" content="#8e172b">
   <title>Поймайте удачу — зимняя игра</title>
-  <link rel="stylesheet" href="styles.css?v=v3-nov13-5">
-  <link rel="stylesheet" href="ui.css?v=v3-nov13-5">
-  <link rel="stylesheet" href="motion.css?v=v3-nov13-5">
+  <link rel="stylesheet" href="styles.css?v=v3-nov13-6">
+  <link rel="stylesheet" href="ui.css?v=v3-nov13-6">
+  <link rel="stylesheet" href="motion.css?v=v3-nov13-6">
   <link rel="preload" href="assets/entry-bg.webp" as="image">
   <link rel="preload" href="assets/game-bg.webp" as="image">
 </head>
@@ -133,7 +133,7 @@
         <div class="spin-actions" id="spin-actions"><button class="button pale shine" id="spin-button">Получить приз</button><p>Нажимая «Получить приз», вы соглашаетесь с <button class="text-link" disabled>условиями акции</button></p></div>
       </section>
 
-      <section id="win-screen" class="screen win-screen" aria-label="Результат рулетки" hidden>
+      <section id="win-screen" class="screen win-screen" role="dialog" aria-modal="true" aria-labelledby="won-title" hidden>
         <div class="win-art" id="win-art"><div id="win-layers" class="win-layers" aria-hidden="true"></div><img class="won-prize" id="won-prize" src="assets/pixel/reel-coffee-art.webp" alt=""></div>
         <div class="win-description"><p>Ваш приз:</p><h2 id="won-title">Купон со скидкой 30% на кофе</h2><button class="button primary shine" id="win-next">Получить еще призы</button><p id="win-saved-note" class="win-saved-note" hidden>Приз сохранен в разделе Мои призы</p></div>
       </section>
@@ -175,6 +175,6 @@
       <p>Только этот браузер. При смене дня полученные призы сохраняются.</p>
     </div>
   </aside>
-  <script type="module" src="main.mjs?v=v3-nov13-5"></script>
+  <script type="module" src="main.mjs?v=v3-nov13-6"></script>
 </body>
 </html>

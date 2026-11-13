@@ -1,9 +1,9 @@
-import { CatchGame, ITEM_SIZES } from './game-core.mjs?v=v3-nov13-5';
-import { PrizeLedger, PRIZES, SPIN_MS, STORAGE_KEY } from './prizes.mjs?v=v3-nov13-5';
-import { REEL_ART } from './roulette-art.mjs?v=v3-nov13-5';
-import { reelMotion } from './roulette-motion.mjs?v=v3-nov13-5';
-import { CONFETTI } from './confetti.mjs?v=v3-nov13-5';
-import { initUI, refreshUI, prepareRoulette, setCounter, prizeGeometry, paintReward, paintResult, paintWin, paintPrizeCard, paintEmpty } from './ui.mjs?v=v3-nov13-5';
+import { CatchGame, ITEM_SIZES } from './game-core.mjs?v=v3-nov13-6';
+import { PrizeLedger, PRIZES, SPIN_MS, STORAGE_KEY } from './prizes.mjs?v=v3-nov13-6';
+import { REEL_ART } from './roulette-art.mjs?v=v3-nov13-6';
+import { reelMotion } from './roulette-motion.mjs?v=v3-nov13-6';
+import { CONFETTI } from './confetti.mjs?v=v3-nov13-6';
+import { initUI, refreshUI, prepareRoulette, prepareWin, setCounter, prizeGeometry, paintReward, paintResult, paintWin, paintPrizeCard, paintEmpty } from './ui.mjs?v=v3-nov13-6';
 
 const $ = id => document.getElementById(id);
 const scene = $('scene'), phone = $('phone'), field = $('falling-field');
@@ -17,6 +17,7 @@ let rewardBusy = false, smile = false, cabinetReturn = false, finishing = false;
 let rewardTimers = [], rewardQueue = [], toastTimer, reel = null;
 let adminBusy = false;
 let rouletteVisit = 0;
+let winUnderlay = null;
 const DEMO_CLOCK_KEY = `${STORAGE_KEY}-demo-clock`;
 function readDemoDays() {
   try {
@@ -59,9 +60,16 @@ new ResizeObserver(sizeScene).observe(phone);
 
 function showScreen(name) {
   rouletteVisit++;
+  winUnderlay = name === 'win' ? (screenName === 'win' ? winUnderlay : screenName) : null;
   screenName = name;
+  scene.dataset.screen = name;
   clearTimeout(toastTimer); $('copy-toast').hidden = true;
-  for (const key of screenNames) $(key + '-screen').hidden = key !== name;
+  for (const key of screenNames) {
+    const screen = $(key + '-screen'), underlay = key === winUnderlay;
+    screen.hidden = key !== name && !underlay;
+    screen.inert = underlay;
+    screen.classList.toggle('win-underlay', underlay);
+  }
   if (name !== 'game') scene.classList.remove('dragging', 'ready-to-grab');
   render();
 }
@@ -521,6 +529,7 @@ function configureSpin() {
   if (!spin || !reel) return;
   const token = ledger.state.pending.find(p => p.id === spin.pendingId);
   if (!token) return;
+  prepareWin(token.prizeId);
   for (let index = -30; index >= -32; index--) if (reelId(index, reel.startIndex) === token.prizeId) reel.targetIndex = index;
   $('spin-button').disabled = true;
   $('roulette-screen').classList.add('spinning');
@@ -550,16 +559,22 @@ function animateReel() {
     });
   }
 }
-function showWin() {
+async function showWin() {
   const result = ledger.state.lastWin;
   if (!result) { showRoulette(); return; }
+  const visit = ++rouletteVisit;
   const prize = PRIZES[result.prizeId];
   $('won-prize').src = prizeGeometry(result.prizeId).src; $('won-prize').alt = prize.title;
   $('won-title').textContent = prize.title;
   $('win-next').textContent = ledger.state.pending.length ? 'Получить еще призы' : 'Перейти в Мои призы';
   $('win-saved-note').hidden = ledger.state.pending.length === 0;
-  showScreen('win'); paintWin(result.prizeId); beep(true);
+  const ready = await paintWin(result.prizeId);
+  if (!ready || visit !== rouletteVisit || ledger.state.lastWin?.id !== result.id) return;
+  showScreen('win'); $('win-next').focus({ preventScroll: true }); beep(true);
 }
+$('win-screen').addEventListener('keydown', event => {
+  if (event.key === 'Tab') { event.preventDefault(); $('win-next').focus(); }
+});
 $('play-button').addEventListener('click', startRound);
 $('entry-prizes').addEventListener('click', openCabinet);
 $('game-prizes').addEventListener('click', openCabinet);
@@ -648,5 +663,5 @@ $('admin-next-day').addEventListener('click', () => adminAction(false));
 $('admin-reset').addEventListener('click', () => adminAction(true));
 
 function frame() { if (!adminBusy) { syncClock(); if (screenName === 'game') render(); animateReel(); } requestAnimationFrame(frame); }
-initUI(); sizeScene();
+initUI(); sizeScene(); scene.dataset.screen = screenName;
 requestAnimationFrame(frame);

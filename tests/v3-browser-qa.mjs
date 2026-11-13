@@ -32,7 +32,7 @@ const shot=name=>page.screenshot({path:`${output}/${name}.png`,animations:'allow
 try{
  await page.goto(process.env.CAPY_URL||'http://127.0.0.1:8080/v3/');await page.locator('#entry-screen').waitFor({state:'visible'});
  await page.click('#play-button');await page.click('#teaching-dismiss');await tick(500);await page.evaluate(()=>qa.settle(0));await tick(600);await page.click('#result-claim');
- await page.locator('#roulette-screen').waitFor({state:'visible'});await loaded();
+ await page.locator('#roulette-screen:not(.win-underlay)').waitFor({state:'visible'});await loaded();
  assert.equal(await page.locator('#spin-count').textContent(),'1/3');
  assert.equal(await page.locator('.reel-light').count(),0);
  assert.equal(await page.locator('.reel-prize[data-index="0"] img').count(),1);
@@ -70,7 +70,7 @@ try{
   assert.equal(await page.locator('#win-saved-note').isVisible(),n<2);
   if(n<2){assert.equal(await page.locator('#win-saved-note').textContent(),'Приз сохранен в разделе Мои призы');const note=await page.locator('#win-saved-note').boundingBox();assert.equal(note.y,635);assert.equal(note.height,13);}
   await shot(`win-${id}`);await page.click('#win-next');
-  if(n<2){await page.locator('#roulette-screen').waitFor({state:'visible'});await loaded();assert.equal(await page.locator('#spin-counter').evaluate(n=>getComputedStyle(n).opacity),'1');}
+  if(n<2){await page.locator('#roulette-screen:not(.win-underlay)').waitFor({state:'visible'});await loaded();await animations('#spin-counter');assert.equal(await page.locator('#spin-counter').evaluate(n=>getComputedStyle(n).opacity),'1');}
  }
  assert.equal(new Set(won).size,3);await page.locator('#cabinet-screen').waitFor({state:'visible'});await loaded();await shot('cabinet');
  for(const id of Object.keys(PRIZES)){
@@ -122,7 +122,7 @@ try{
  assert.equal((await state()).coins,0);assert.equal((await state()).earned,0);assert.equal((await state()).pending.length,0);assert.deepEqual((await state()).prizes,banked.prizes);
  assert.equal(await page.evaluate(key=>localStorage.getItem(key),OLD_KEY),old.serialize());
  // The existing version receives the same small note, with its old prize catalog intact.
- await page.goto('http://127.0.0.1:8080/v2/');await page.locator('#roulette-screen').waitFor({state:'visible'});
+ await page.goto('http://127.0.0.1:8080/v2/');await page.locator('#roulette-screen:not(.win-underlay)').waitFor({state:'visible'});
  for(let n=0;n<3;n++){
   await page.click('#spin-button');await tick(9600);await page.locator('#win-screen').waitFor({state:'visible'});await loaded();
   assert.equal(await page.locator('#win-saved-note').isVisible(),n<2);
