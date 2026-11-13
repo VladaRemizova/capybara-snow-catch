@@ -3,6 +3,8 @@ import { mkdir, readFile } from 'node:fs/promises';
 import { chromium } from 'playwright';
 import { PrizeLedger, STORAGE_KEY, PRIZES } from '../dist/v3/prizes.mjs';
 import { PrizeLedger as OldLedger, STORAGE_KEY as OLD_KEY } from '../dist/v2/prizes.mjs';
+import { ITEM_CONTACTS } from '../dist/v3/collision-shapes.mjs';
+import { BAG_OPENING } from '../dist/v3/game-core.mjs';
 import { REEL_ART, PROMO_ART } from '../dist/v3/promo-art.mjs';
 
 const now=Date.parse('2026-11-13T12:00:00Z');
@@ -84,8 +86,17 @@ try{
  assert.deepEqual(await page.locator('.coupon-footer').boundingBox(),footer);await shot('coupon-bottom');
  // Ranking replay keeps all claimed prizes and accumulates the next round's coins.
  await page.click('#coupon-back');await page.click('#cabinet-play');await page.click('#teaching-dismiss');await tick(500);
- await page.evaluate(()=>{qa.game.nextSpawn=100;qa.game.objects=[{id:901,kind:'coffee',value:1,x:qa.game.characterX+90,y:qa.game.characterY+150}];qa.render();});
- await shot('grazing-body-contact');await tick(16);assert.equal(await page.locator('#coin-value').textContent(),'31');
+ await page.evaluate(()=>{qa.game.nextSpawn=100;qa.game.objects=[{id:901,kind:'coffee',value:1,x:qa.game.characterX+60,y:qa.game.characterY+150}];qa.render();});
+ await tick(16);assert.equal(await page.locator('#coin-value').textContent(),'30');
+ assert.equal(await page.locator('#falling-field img').count(),1);
+ assert.equal(await page.evaluate(()=>getComputedStyle(document.querySelector('#falling-field')).zIndex > getComputedStyle(document.querySelector('#character-front')).zIndex),true);
+ await shot('miss-in-front-of-body');
+ await page.evaluate(({tip,mouth})=>{qa.game.objects=[{id:902,kind:'coffee',value:1,x:qa.game.characterX+mouth.x-tip.x,y:qa.game.catchY-tip.y-5}];qa.render();},{tip:ITEM_CONTACTS.coffee,mouth:BAG_OPENING});
+ await tick(16);assert.equal(await page.locator('#coin-value').textContent(),'30');
+ await shot('approaching-sack-opening');
+ await tick(80);assert.equal(await page.locator('#coin-value').textContent(),'31');
+ assert.equal(await page.locator('.caught-item').evaluate(n=>getComputedStyle(n).zIndex),'22');
+ assert.equal(await page.locator('#falling-field img').count(),0);await shot('entering-sack-opening');
  await page.evaluate(()=>qa.settle(24));await tick(600);await animations('.result-card');
  assert.equal(await page.locator('.result-card').getAttribute('data-state'),'rating');
  assert.equal(await page.locator('#result-coins').textContent(),'54');
@@ -113,5 +124,5 @@ try{
   await page.click('#win-next');
  }
  assert.deepEqual(errors,[]);
- console.log(JSON.stringify({won,combinedReelImages:true,legacyGlowRemoved:true,pinkCards:true,bodyContact:true,cumulativeRankingCoins:61,nativeButtons:true,oldVersionNote:true,independentStorage:true,footerFixed:true,errors},null,2));
+ console.log(JSON.stringify({won,combinedReelImages:true,legacyGlowRemoved:true,pinkCards:true,holeEntryOnly:true,missesInFront:true,cumulativeRankingCoins:61,nativeButtons:true,oldVersionNote:true,independentStorage:true,footerFixed:true,errors},null,2));
 }finally{await browser.close();}

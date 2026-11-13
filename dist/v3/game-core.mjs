@@ -1,4 +1,4 @@
-import { SPRITE_SHAPES } from './collision-shapes.mjs?v=v3-nov13-2';
+import { ITEM_CONTACTS } from './collision-shapes.mjs?v=v3-nov13-3';
 
 export const ROUND_SECONDS = 60;
 export const TUTORIAL_SECONDS = 10;
@@ -13,37 +13,19 @@ export const ITEM_SIZES = {
 };
 const LANE_SEQUENCE = [1, 0, 1, 2, 1, 0, 1, 2, 1, 2, 1, 0];
 const clamp = (n, low, high) => Math.max(low, Math.min(high, n));
-// Sweep the visible sprite contours over the complete relative movement path.
-// A held pose, lateral pass or a frame arriving after first contact cannot miss a catch.
-function pathIntersects(xBefore, yBefore, xAfter, yAfter, minX, minY, maxX, maxY) {
-  let enter = 0, leave = 1;
-  const dx = xAfter - xBefore, dy = yAfter - yBefore;
-  if (dx === 0) {
-    if (xBefore < minX || xBefore > maxX) return false;
-  } else {
-    const a = (minX - xBefore) / dx, b = (maxX - xBefore) / dx;
-    enter = Math.max(enter, Math.min(a, b));
-    leave = Math.min(leave, Math.max(a, b));
-    if (enter > leave) return false;
-  }
-  if (dy === 0) return yBefore >= minY && yBefore <= maxY;
-  const a = (minY - yBefore) / dy, b = (maxY - yBefore) / dy;
-  enter = Math.max(enter, Math.min(a, b));
-  leave = Math.min(leave, Math.max(a, b));
-  return enter <= leave;
-}
-export function touchesCharacter(kind, objectX, yBefore, yAfter, capyBefore, capyAfter, characterY, pose = 'open') {
-  const item = SPRITE_SHAPES.items[kind], character = SPRITE_SHAPES.character[pose] || SPRITE_SHAPES.character.open;
-  if (!item) return false;
-  const x0 = objectX - capyBefore, x1 = objectX - capyAfter;
-  const y0 = yBefore - characterY, y1 = yAfter - characterY;
-  const overlaps = (c, i) => pathIntersects(x0, y0, x1, y1, c[0] - i[2], c[1] - i[3], c[2] - i[0], c[3] - i[1]);
-  if (!overlaps(character.bounds, item.bounds)) return false;
-  for (const c of character.bands) {
-    if (!overlaps(c, item.bounds)) continue;
-    for (const i of item.bands) if (overlaps(c, i)) return true;
-  }
-  return false;
+// Inner opening measured on the shared sack artwork, in logical screen pixels.
+export const BAG_OPENING = Object.freeze({ x: 7, y: 115, halfWidth: 34 });
+export function bagEntry(kind, objectX, yBefore, yAfter, capyBefore, capyAfter, characterY) {
+  const tip = ITEM_CONTACTS[kind];
+  if (!tip) return null;
+  const rim = characterY + BAG_OPENING.y;
+  const before = yBefore + tip.y, after = yAfter + tip.y;
+  // Only a downward entry into the hole counts. Once below it, a missed item
+  // cannot be collected by touching the body or moving the sack sideways.
+  if (before >= rim || after < rim) return null;
+  const fraction = (rim - before) / (after - before);
+  const sackX = capyBefore + (capyAfter - capyBefore) * fraction + BAG_OPENING.x;
+  return Math.abs(objectX + tip.x - sackX) <= BAG_OPENING.halfWidth ? fraction : null;
 }
 
 export function rewardProgress(coins) {
@@ -61,7 +43,6 @@ export class CatchGame {
     this.status = 'idle'; this.elapsed = 0; this.coins = 0; this.baseCoins = 0;
     this.characterX = 187.5; this.objects = []; this.pointerId = null;
     this.catchSampleX = this.characterX;
-    this.catchSamplePose = 'open';
     this.grabOffset = 0; this.serial = 0; this.nextSpawn = 0.4;
     this.spawnCount = 0; this.tutorialComplete = false; this.bonusSpawned = 0;
     this.motionDirection = 'open'; this.lastMovedAt = -Infinity;
@@ -69,7 +50,7 @@ export class CatchGame {
   }
   start(baseCoins = 0) { this.reset(); this.baseCoins = baseCoins; this.status = 'running'; }
   get characterY() { return this.height - 236; }
-  get catchY() { return this.characterY + 112; }
+  get catchY() { return this.characterY + BAG_OPENING.y; }
   get remaining() { return Math.max(0, Math.ceil(ROUND_SECONDS - this.elapsed)); }
   get progress() { return rewardProgress(this.baseCoins + this.coins); }
   canCatchAt() { return true; }
@@ -148,8 +129,8 @@ export class CatchGame {
       this.stopMotion();
     }
   }
-  pause() { if (this.status === 'running') { this.status = 'paused'; this.release(); this.catchSampleX = this.characterX; this.catchSamplePose = 'open'; } }
-  resume() { if (this.status === 'paused') { this.status = 'running'; this.catchSampleX = this.characterX; this.catchSamplePose = 'open'; } }
+  pause() { if (this.status === 'running') { this.status = 'paused'; this.release(); this.catchSampleX = this.characterX; } }
+  resume() { if (this.status === 'paused') { this.status = 'running'; this.catchSampleX = this.characterX; } }
   spawn() {
     const n = this.spawnCount++;
     // Exactly two bonus tokens: the very first object and one at 52 active seconds.
@@ -166,11 +147,9 @@ export class CatchGame {
     const next = clamp(elapsed, this.elapsed, ROUND_SECONDS);
     const delta = next - this.elapsed;
     const previousX = this.catchSampleX;
-    const previousPose = this.catchSamplePose;
     this.catchSampleX = this.characterX;
     const events = [];
     this.elapsed = next;
-    this.catchSamplePose = this.pose;
     if (next >= ROUND_SECONDS) {
       this.status = 'finished'; this.release(); this.objects = [];
       return [{ type: 'finish', coins: this.coins, rewards: this.progress.rewards }];
@@ -191,11 +170,11 @@ export class CatchGame {
     for (const object of this.objects) {
       const previousY = object.y;
       object.y += this.speed * delta;
-      if (touchesCharacter(object.kind, object.x, previousY, object.y, previousX, this.characterX, this.characterY, this.catchSamplePose) ||
-          (previousPose !== this.catchSamplePose && touchesCharacter(object.kind, object.x, previousY, object.y, previousX, this.characterX, this.characterY, previousPose))) {
+      const entry = bagEntry(object.kind, object.x, previousY, object.y, previousX, this.characterX, this.characterY);
+      if (entry !== null) {
         const before = this.progress.rewards;
         this.coins += object.value;
-        events.push({ type: 'catch', object: { ...object }, value: object.value, coins: this.coins });
+        events.push({ type: 'catch', object: { ...object, y: previousY + (object.y - previousY) * entry }, value: object.value, coins: this.coins });
         if (this.progress.rewards > before) events.push({ type: 'reward', rewards: this.progress.rewards });
       } else if (object.y < this.height + 75) survivors.push(object);
     }
