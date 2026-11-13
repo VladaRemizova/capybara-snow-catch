@@ -114,15 +114,44 @@ test('v2 objects below the sack opening cannot be recovered by moving underneath
   g.drag(1, 270); g.advanceTo(.02); assert.equal(g.coins, 0);
 });
 
-test('v2 replay banks 20 + 20 coins while retaining only three daily prize rights', () => {
-  const l = makeLedger(); l.commitRound('first', 20, noon);
-  const pending = l.state.pending.map(p => p.id);
-  assert.equal(l.drawing, false);
-  l.commitRound('second', 20, noon);
-  assert.equal(l.state.coins, 40); assert.equal(l.state.pending.length, 3);
-  assert.deepEqual(l.state.pending.slice(0, 2).map(p => p.id), pending);
-  assert.equal(new Set(l.state.pending.map(p => p.prizeId)).size, 3);
-  l.startSpin(noon); assert.equal(l.drawing, true);
+test('v2 replay discards the attempt coins and unclaimed prizes, including after storage reload', () => {
+  for (const coins of [9, 10, 19, 20, 29]) {
+    let l = makeLedger(); l.commitRound('first', coins, noon);
+    const pending = l.state.pending.map(p => p.id);
+    l = new PrizeLedger(JSON.parse(l.serialize()), noon);
+    assert.equal(l.discardRound('first', noon), true);
+    assert.equal(l.state.coins, 0); assert.equal(l.state.earned, 0); assert.deepEqual(l.state.pending, []);
+    assert.equal(l.discardRound('first', noon), false);
+    assert.deepEqual(l.commitRound('first', coins, noon), []);
+    l.commitRound('second', 30, noon);
+    assert.equal(l.state.coins, 30); assert.equal(l.state.earned, 3);
+    assert.equal(l.state.pending.some(p => pending.includes(p.id)), false);
+    assert.equal(new Set(l.state.pending.map(p => p.prizeId)).size, 3);
+  }
+});
+
+test('v2 replay preserves earlier won prizes and their daily limit', () => {
+  const l = makeLedger(); l.commitRound('won', 10, noon);
+  l.startSpin(noon); l.finishSpin(noon + SPIN_MS); l.acknowledgeWin();
+  const won = structuredClone(l.state.prizes);
+  l.commitRound('retry', 15, noon);
+  assert.equal(l.discardRound('retry', noon), true);
+  assert.deepEqual(l.state.prizes, won); assert.equal(l.state.coins, 10);
+  assert.equal(l.state.earned, 1); assert.equal(l.state.pending.length, 0);
+  l.commitRound('next', 30, noon);
+  assert.equal(l.state.pending.length, 2); assert.equal(l.state.earned, 3);
+  assert.equal(new Set([...l.state.prizes, ...l.state.pending].map(p => p.prizeId)).size, 3);
+});
+
+test('v2 replay cannot undo a claimed or spinning prize or another completed round', () => {
+  const l = makeLedger(); l.commitRound('first', 10, noon);
+  l.commitRound('second', 10, noon);
+  assert.equal(l.discardRound('first', noon), false);
+  l.startSpin(noon); assert.equal(l.discardRound('second', noon), false);
+  l.finishSpin(noon + SPIN_MS); l.acknowledgeWin();
+  l.startSpin(noon + SPIN_MS); l.finishSpin(noon + SPIN_MS * 2); l.acknowledgeWin();
+  assert.equal(l.discardRound('second', noon), false);
+  assert.equal(l.state.prizes.length, 2); assert.equal(l.state.earned, 2);
 });
 
 test('v2 replay after claiming two prizes keeps them and unlocks only the last daily prize', () => {

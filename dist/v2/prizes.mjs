@@ -25,7 +25,7 @@ export class PrizeLedger {
   constructor(saved, now = Date.now(), random = Math.random) {
     this.random = random;
     const fresh = { version: 2, day: moscowDay(now), coins: 0, earned: 0,
-      order: shuffled(PRIZE_IDS, random), pending: [], prizes: [], receipts: [], spin: null, lastWin: null, serial: 0 };
+      order: shuffled(PRIZE_IDS, random), pending: [], prizes: [], receipts: [], replayableRound: null, spin: null, lastWin: null, serial: 0 };
     this.state = saved?.version === 2 ? structuredClone(saved) : fresh;
     const s = this.state;
     s.pending = (s.pending || []).filter(p => PRIZES[p.prizeId]);
@@ -53,6 +53,7 @@ export class PrizeLedger {
     const s = this.state;
     if (s.receipts.includes(id)) return [];
     const amount = Math.max(0, Math.floor(Number(coins) || 0));
+    const before = { coins: s.coins, earned: s.earned };
     s.receipts = [...s.receipts.slice(-99), id];
     s.coins += amount;
     const next = Math.min(3, Math.floor(s.coins / 10));
@@ -62,7 +63,21 @@ export class PrizeLedger {
       s.pending.push(token); added.push(token);
     }
     s.earned = next;
+    s.replayableRound = { id, day: s.day, before, pendingIds: added.map(p => p.id) };
     return added;
+  }
+  discardRound(id, now = Date.now()) {
+    this.refreshDay(now);
+    const s = this.state, round = s.replayableRound;
+    // Only undo the latest completed attempt, before any of its prizes are drawn.
+    if (!round || round.id !== id || this.drawing || round.pendingIds.some(id => !s.pending.some(p => p.id === id))) return false;
+    s.pending = s.pending.filter(p => !round.pendingIds.includes(p.id));
+    if (s.day === round.day) {
+      s.coins = round.before.coins; s.earned = round.before.earned;
+    }
+    // Keep the receipt and serial so a stale tab cannot reapply this attempt.
+    s.replayableRound = null;
+    return true;
   }
   startSpin(now = Date.now()) {
     const s = this.state;

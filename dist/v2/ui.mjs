@@ -1,7 +1,7 @@
-import { REEL_ART } from './roulette-art.mjs?v=nov13-5';
-import { UPDATED_ART } from './ui-updates.mjs?v=nov13-5';
-import { UI_ART as ORIGINAL_ART, UI_BOXES } from './ui-art.mjs?v=nov13-5';
-import { GLYPHS } from './ui-glyphs.mjs?v=nov13-5';
+import { REEL_ART } from './roulette-art.mjs?v=nov13-6';
+import { UPDATED_ART } from './ui-updates.mjs?v=nov13-6';
+import { UI_ART as ORIGINAL_ART, UI_BOXES } from './ui-art.mjs?v=nov13-6';
+import { GLYPHS } from './ui-glyphs.mjs?v=nov13-6';
 
 const UI_ART = { ...ORIGINAL_ART, ...UPDATED_ART };
 const $ = id => document.getElementById(id);
