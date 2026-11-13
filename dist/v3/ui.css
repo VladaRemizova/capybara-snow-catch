@@ -80,7 +80,7 @@
 .cabinet-header{height:64px}
 .prize-list{position:relative;margin-top:63px;gap:12px}
 .prize-ticket{display:block;width:343px;min-height:144px;border-radius:16px;overflow:visible}
-.prize-illustration{position:static;display:contents;background:none;border:0;overflow:visible}
+.prize-illustration{position:absolute;display:block;left:0;top:0;width:86px;height:100%;background:#fff0f2;border:0;border-right:1px dashed #e8b8c1;border-radius:16px 0 0 16px;overflow:visible}
 .prize-illustration img{object-fit:fill;max-width:none;border-radius:0}
 .prize-info,.ticket-meta{display:contents}
 .valid-until{padding:0;display:block;border-radius:0}
@@ -149,5 +149,9 @@
 .reel-window{top:0}
 .win-prize-glow{position:absolute;z-index:2;pointer-events:none}
 .win-native-art{position:absolute;inset:0}
-.coupon-hero{height:188px;overflow:hidden}
+.coupon-hero{height:188px;overflow:visible}
 .coupon-ticket{height:202px;mask-image:radial-gradient(circle 7px at 0 98px,transparent 99%,#000 100%),radial-gradient(circle 7px at 100% 98px,transparent 99%,#000 100%)}
+
+/* The reel clips only at the screen boundary, with no horizontal cutoff below it. */
+.reel-window,.roulette-screen.spinning .reel-window{top:0;bottom:0;transition:none}
+.result-card[data-state=rating][data-replay=available]{left:50%;top:50%;height:448px;translate:-50% -50%}

@@ -24,13 +24,15 @@
         "width": 236,
         "height": 236
       },
-      "src": "assets/pixel/reel-coffee-art.webp",
+      "src": "assets/pixel/reel-coffee-composite.webp",
       "pixelWidth": 472,
       "pixelHeight": 472,
       "scale": 2,
       "kind": "art",
-      "bytes": 60768,
-      "rgbaSha256": "41fd45fc41cc5c97219a358c4e089290dc24a3154ef6c10ac66a73b5d1929463"
+      "bytes": 218576,
+      "rgbaSha256": "25de5ca2cec9cf07d946bd44421740d54ceea8601a18a4a02152114e42d61efd",
+      "combinedLighting": true,
+      "referenceNode": "631:4789"
     },
     "reel-hotdog-art": {
       "name": "reel-hotdog-art",
@@ -54,13 +56,15 @@
         "width": 236,
         "height": 236
       },
-      "src": "assets/pixel/reel-hotdog-art.webp",
+      "src": "assets/pixel/reel-hotdog-composite.webp",
       "pixelWidth": 472,
       "pixelHeight": 472,
       "scale": 2,
       "kind": "art",
-      "bytes": 75886,
-      "rgbaSha256": "b18a289346c524ad009dd8b77c8a908fc1e60332423c5087e47334e16309cb9b"
+      "bytes": 222758,
+      "rgbaSha256": "7ce929e9d945ae5a55fe179ca89338e2f39fd79a59b5b55caed0e0aed629b8ae",
+      "combinedLighting": true,
+      "referenceNode": "631:4800"
     },
     "reel-points-art": {
       "name": "reel-points-art",
@@ -84,13 +88,15 @@
         "width": 236,
         "height": 236
       },
-      "src": "assets/pixel/reel-points-art.webp",
+      "src": "assets/pixel/reel-points-composite.webp",
       "pixelWidth": 472,
       "pixelHeight": 472,
       "scale": 2,
       "kind": "art",
-      "bytes": 41130,
-      "rgbaSha256": "47c907706c6741a82af6d9ec9548332f509a2380bd3829e9a0ad6e4a08ec8bdf"
+      "bytes": 204736,
+      "rgbaSha256": "ad0524ba8ac12c4fe91b8b205fcb2546003ca044effd852f0f40743103ad66cf",
+      "combinedLighting": true,
+      "referenceNode": "631:4809"
     },
     "win-coffee-art": {
       "name": "win-coffee-art",
@@ -674,122 +680,35 @@
   "reels": {
     "coffee": [
       {
-        "id": "631:4850",
-        "src": "assets/pixel/reelCoffee-glow-0.svg",
-        "kind": "light",
-        "blend": "overlay",
-        "x": -31.5,
-        "y": -21.0,
-        "width": 228.0,
-        "height": 228.0
-      },
-      {
-        "src": "assets/pixel/reel-coffee-art.webp",
+        "src": "assets/pixel/reel-coffee-composite.webp",
         "kind": "art",
         "x": -33,
         "y": -33,
         "width": 236,
-        "height": 236
-      },
-      {
-        "id": "631:4855",
-        "src": "assets/pixel/reelCoffee-glow-1.svg",
-        "kind": "light",
-        "blend": "soft-light",
-        "x": 29.5,
-        "y": 36.878662109375,
-        "width": 134.0,
-        "height": 134.0
+        "height": 236,
+        "combinedLighting": true
       }
     ],
     "hotdog": [
       {
-        "id": "631:4845",
-        "src": "assets/pixel/reelHotdog-glow-0.svg",
-        "kind": "light",
-        "blend": "overlay",
-        "x": -28.5,
-        "y": -28.5,
-        "width": 228.0,
-        "height": 228.0
-      },
-      {
-        "src": "assets/pixel/reel-hotdog-art.webp",
+        "src": "assets/pixel/reel-hotdog-composite.webp",
         "kind": "art",
         "x": -33,
         "y": -33,
         "width": 236,
-        "height": 236
+        "height": 236,
+        "combinedLighting": true
       }
     ],
     "points": [
       {
-        "id": "631:4816",
-        "src": "assets/pixel/reelPoints-glow-0.svg",
-        "kind": "light",
-        "blend": "overlay",
-        "x": 7.5,
-        "y": 70.5,
-        "width": 70.0,
-        "height": 70.0
-      },
-      {
-        "id": "631:4817",
-        "src": "assets/pixel/reelPoints-glow-1.svg",
-        "kind": "light",
-        "blend": "overlay",
-        "x": -13.5,
-        "y": 67.5,
-        "width": 59.0,
-        "height": 59.0
-      },
-      {
-        "id": "631:4818",
-        "src": "assets/pixel/reelPoints-glow-2.svg",
-        "kind": "light",
-        "blend": "overlay",
-        "x": 77.5,
-        "y": -15.5,
-        "width": 59.0,
-        "height": 59.0
-      },
-      {
-        "id": "631:4819",
-        "src": "assets/pixel/reelPoints-glow-3.svg",
-        "kind": "light",
-        "blend": "overlay",
-        "x": 107.5,
-        "y": 37.5,
-        "width": 51.0,
-        "height": 51.0
-      },
-      {
-        "id": "631:4858",
-        "src": "assets/pixel/reelPoints-glow-4.svg",
-        "kind": "light",
-        "blend": "overlay",
-        "x": -28.5,
-        "y": -28.5,
-        "width": 228.0,
-        "height": 228.0
-      },
-      {
-        "src": "assets/pixel/reel-points-art.webp",
+        "src": "assets/pixel/reel-points-composite.webp",
         "kind": "art",
         "x": -33,
         "y": -33,
         "width": 236,
-        "height": 236
-      },
-      {
-        "id": "631:4860",
-        "src": "assets/pixel/reelPoints-glow-5.svg",
-        "kind": "light",
-        "blend": "soft-light",
-        "x": 19.5,
-        "y": 18.5,
-        "width": 134.0,
-        "height": 134.0
+        "height": 236,
+        "combinedLighting": true
       }
     ]
   },
@@ -912,5 +831,45 @@
       "width": 87.0,
       "height": 87.0
     }
-  ]
+  ],
+  "combinedReelValidation": [
+    {
+      "prize": "coffee",
+      "bytes": 218576,
+      "maxReferenceError": 0.0,
+      "meanReferenceError": 0.0
+    },
+    {
+      "prize": "hotdog",
+      "bytes": 222758,
+      "maxReferenceError": 1.0,
+      "meanReferenceError": 4.039787417408791e-05
+    },
+    {
+      "prize": "points",
+      "bytes": 204736,
+      "maxReferenceError": 0.0,
+      "meanReferenceError": 0.0
+    }
+  ],
+  "nativeButtons": {
+    "button-result-retry-figma": {
+      "node": "565:1882",
+      "text": "Попробовать еще раз",
+      "src": "assets/pixel/button-result-retry-figma.webp",
+      "scale": 2,
+      "pixelWidth": 518,
+      "pixelHeight": 110,
+      "rgbaSha256": "4264ed6d36c0418c411e8233c35ac81a147fa82436a80992e1406afd09dedf1c"
+    },
+    "button-rating-play-figma": {
+      "node": "581:4118",
+      "text": "Сыграть еще раз",
+      "src": "assets/pixel/button-rating-play-figma.webp",
+      "scale": 2,
+      "pixelWidth": 518,
+      "pixelHeight": 102,
+      "rgbaSha256": "5dfa61744a79b40435de675bb00d779fc1a4d00f546bd816d691eb0e752a992b"
+    }
+  }
 }

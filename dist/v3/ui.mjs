@@ -1,11 +1,13 @@
-import { PROMO_ART, CATALOG, WIN_LIGHTS, COUPON_LIGHTS } from './promo-art.mjs?v=v3-nov13-1';
-import { REEL_ART } from './roulette-art.mjs?v=v3-nov13-1';
-import { UPDATED_ART } from './ui-updates.mjs?v=v3-nov13-1';
-import { UI_ART as ORIGINAL_ART, UI_BOXES } from './ui-art.mjs?v=v3-nov13-1';
-import { GLYPHS } from './ui-glyphs.mjs?v=v3-nov13-1';
+import { PROMO_ART, WIN_LIGHTS, COUPON_LIGHTS } from './promo-art.mjs?v=v3-nov13-2';
+import { REEL_ART } from './roulette-art.mjs?v=v3-nov13-2';
+import { UPDATED_ART } from './ui-updates.mjs?v=v3-nov13-2';
+import { UI_ART as ORIGINAL_ART, UI_BOXES } from './ui-art.mjs?v=v3-nov13-2';
+import { GLYPHS } from './ui-glyphs.mjs?v=v3-nov13-2';
 
-const UI_ART = { ...ORIGINAL_ART, ...UPDATED_ART, ...PROMO_ART };
-for (const [key, file] of [['button-result-replay', 'button-result-retry'], ['button-rating-play', 'button-rating-retry']]) {
+const sharedWinParts = new Set(['win-box-layer','win-lid-layer','win-decor-layer']);
+const sharedArt = Object.fromEntries(Object.entries({ ...ORIGINAL_ART, ...UPDATED_ART }).filter(([key]) => !key.startsWith('win-') || sharedWinParts.has(key)));
+const UI_ART = { ...sharedArt, ...PROMO_ART };
+for (const [key, file] of [['button-result-replay', 'button-result-retry-figma'], ['button-rating-play', 'button-rating-play-figma']]) {
   UI_ART[key] = { ...UI_ART[key], src: `assets/pixel/${file}.webp` };
 }
 UI_ART['win-saved-note'] = {src:'assets/pixel/win-saved-note.webp',box:{x:0,y:0,width:343,height:13},clip:{x:0,y:0,width:343,height:13},pixelWidth:686,pixelHeight:26,scale:2,kind:'text'};
@@ -130,7 +132,7 @@ export function paintReward(count) {
   button($('reward-claim'), 'button-reward-claim'); button($('reward-continue'), 'button-continue');
 }
 
-export function paintResult(mode, replayAllowed = mode !== 'rating') {
+export function paintResult(mode, replayAllowed = true) {
   const card = document.querySelector('.result-card'); card.dataset.state = mode;
   card.dataset.replay = replayAllowed ? 'available' : 'hidden';
   $('result-replay').hidden = !replayAllowed;
@@ -255,8 +257,7 @@ export function initUI() {
   for (const [i, key] of ['result-shade-gray','result-shade-pink'].entries()) { const a = UI_ART[key]; const img = document.createElement('img'); img.className = 'result-native-shade'; img.alt = ''; img.src = a.src; geometry(img, { x: i ? 79.5 : 80, y: 20, width: a.pixelWidth / 2, height: a.pixelHeight / 2 }); metrics[i].prepend(img); }
   $('roulette-snow').replaceChildren();
   $('roulette-screen').style.backgroundImage = `url(${UI_ART['roulette-bg'].src})`;
-  const overlay = addImage($('win-screen'), 'win-overlay-glow', '565:3019', 'win-overlay-art'); $('win-screen').insertBefore(overlay, $('win-art')); overlay.style.mixBlendMode = 'overlay';
-  for (const name of Object.keys(UPDATED_ART).filter(key => key.startsWith('win-'))) decode(UPDATED_ART[name].src);
+  for (const key of sharedWinParts) decode(UI_ART[key].src);
   const giftArt=document.createElement('div');giftArt.className='win-native-art';geometry(giftArt,{x:0,y:0,width:299.8,height:414});$('win-art').append(giftArt);
   for(const a of Object.values(PROMO_ART))decode(a.src);
   text(document.querySelector('.cabinet-screen h1'), 'text-565-2702', '565:2696');

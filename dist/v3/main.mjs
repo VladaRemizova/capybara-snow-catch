@@ -1,9 +1,9 @@
-import { CatchGame, ITEM_SIZES } from './game-core.mjs?v=v3-nov13-1';
-import { PrizeLedger, PRIZES, SPIN_MS, STORAGE_KEY } from './prizes.mjs?v=v3-nov13-1';
-import { REEL_ART } from './roulette-art.mjs?v=v3-nov13-1';
-import { reelMotion } from './roulette-motion.mjs?v=v3-nov13-1';
-import { CONFETTI } from './confetti.mjs?v=v3-nov13-1';
-import { initUI, refreshUI, setCounter, prizeGeometry, paintReward, paintResult, paintWin, paintPrizeCard, paintEmpty } from './ui.mjs?v=v3-nov13-1';
+import { CatchGame, ITEM_SIZES } from './game-core.mjs?v=v3-nov13-2';
+import { PrizeLedger, PRIZES, SPIN_MS, STORAGE_KEY } from './prizes.mjs?v=v3-nov13-2';
+import { REEL_ART } from './roulette-art.mjs?v=v3-nov13-2';
+import { reelMotion } from './roulette-motion.mjs?v=v3-nov13-2';
+import { CONFETTI } from './confetti.mjs?v=v3-nov13-2';
+import { initUI, refreshUI, setCounter, prizeGeometry, paintReward, paintResult, paintWin, paintPrizeCard, paintEmpty } from './ui.mjs?v=v3-nov13-2';
 
 const $ = id => document.getElementById(id);
 const scene = $('scene'), phone = $('phone'), field = $('falling-field');
@@ -411,10 +411,10 @@ async function finishRound() {
   setCounter('result-prizes', `${rating ? 3 : available} из 3`, 'bold18', 21);
   $('result-claim').disabled = available === 0;
   $('result-claim').textContent = available ? 'Забрать призы' : ledger.state.earned === 3 ? 'Все призы получены' : 'У вас 0 призов';
-  // The result popup offers another round until all daily prizes are earned.
+  // Ranking rounds keep accumulated coins after all prize draws are completed.
   $('result-replay').disabled = false;
   $('result-replay').title = '';
-  paintResult(rating ? 'rating' : available ? 'available' : 'zero', ledger.state.earned < 3);
+  paintResult(rating ? 'rating' : available ? 'available' : 'zero', rating || ledger.state.earned < 3);
   setModal('result'); render();
 }
 async function replayRound() {
@@ -581,7 +581,9 @@ $('reward-continue').addEventListener('click', closeReward);
 $('reward-claim').addEventListener('click', finishRound);
 $('result-claim').addEventListener('click', showRoulette);
 $('result-replay').addEventListener('click', replayRound);
-$('rating-replay').addEventListener('click', replayRound);
+$('rating-replay').addEventListener('click', () => {
+  if (modal === 'result' && document.querySelector('.result-card').dataset.state === 'rating') startRound();
+});
 $('rating-prizes').addEventListener('click', openCabinet);
 $('cabinet-play').addEventListener('click', () => {
   if (cabinetReturn && game.status === 'paused' && roundId) { showScreen('game'); setModal(null); resume(); }

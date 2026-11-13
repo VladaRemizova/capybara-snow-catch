@@ -1,3 +1,5 @@
+import { SPRITE_SHAPES } from './collision-shapes.mjs?v=v3-nov13-2';
+
 export const ROUND_SECONDS = 60;
 export const TUTORIAL_SECONDS = 10;
 // A short input gap distinguishes a held, stationary finger from continuous dragging.
@@ -11,22 +13,37 @@ export const ITEM_SIZES = {
 };
 const LANE_SEQUENCE = [1, 0, 1, 2, 1, 0, 1, 2, 1, 2, 1, 0];
 const clamp = (n, low, high) => Math.max(low, Math.min(high, n));
-// Test the entire relative path through the open rim, including a short depth
-// below the lip. Head direction and its animation never close this catch area.
-function passesThroughBag(objectX, tipBefore, tipAfter, capyBefore, capyAfter, rimY) {
+// Sweep the visible sprite contours over the complete relative movement path.
+// A held pose, lateral pass or a frame arriving after first contact cannot miss a catch.
+function pathIntersects(xBefore, yBefore, xAfter, yAfter, minX, minY, maxX, maxY) {
   let enter = 0, leave = 1;
-  for (const [from, to, min, max] of [
-    [tipBefore, tipAfter, rimY - 2, rimY + 26],
-    [objectX - capyBefore, objectX - capyAfter, -52, 52],
-  ]) {
-    const delta = to - from;
-    if (delta === 0) { if (from < min || from > max) return false; continue; }
-    const a = (min - from) / delta, b = (max - from) / delta;
+  const dx = xAfter - xBefore, dy = yAfter - yBefore;
+  if (dx === 0) {
+    if (xBefore < minX || xBefore > maxX) return false;
+  } else {
+    const a = (minX - xBefore) / dx, b = (maxX - xBefore) / dx;
     enter = Math.max(enter, Math.min(a, b));
     leave = Math.min(leave, Math.max(a, b));
     if (enter > leave) return false;
   }
-  return true;
+  if (dy === 0) return yBefore >= minY && yBefore <= maxY;
+  const a = (minY - yBefore) / dy, b = (maxY - yBefore) / dy;
+  enter = Math.max(enter, Math.min(a, b));
+  leave = Math.min(leave, Math.max(a, b));
+  return enter <= leave;
+}
+export function touchesCharacter(kind, objectX, yBefore, yAfter, capyBefore, capyAfter, characterY, pose = 'open') {
+  const item = SPRITE_SHAPES.items[kind], character = SPRITE_SHAPES.character[pose] || SPRITE_SHAPES.character.open;
+  if (!item) return false;
+  const x0 = objectX - capyBefore, x1 = objectX - capyAfter;
+  const y0 = yBefore - characterY, y1 = yAfter - characterY;
+  const overlaps = (c, i) => pathIntersects(x0, y0, x1, y1, c[0] - i[2], c[1] - i[3], c[2] - i[0], c[3] - i[1]);
+  if (!overlaps(character.bounds, item.bounds)) return false;
+  for (const c of character.bands) {
+    if (!overlaps(c, item.bounds)) continue;
+    for (const i of item.bands) if (overlaps(c, i)) return true;
+  }
+  return false;
 }
 
 export function rewardProgress(coins) {
@@ -44,6 +61,7 @@ export class CatchGame {
     this.status = 'idle'; this.elapsed = 0; this.coins = 0; this.baseCoins = 0;
     this.characterX = 187.5; this.objects = []; this.pointerId = null;
     this.catchSampleX = this.characterX;
+    this.catchSamplePose = 'open';
     this.grabOffset = 0; this.serial = 0; this.nextSpawn = 0.4;
     this.spawnCount = 0; this.tutorialComplete = false; this.bonusSpawned = 0;
     this.motionDirection = 'open'; this.lastMovedAt = -Infinity;
@@ -130,8 +148,8 @@ export class CatchGame {
       this.stopMotion();
     }
   }
-  pause() { if (this.status === 'running') { this.status = 'paused'; this.release(); this.catchSampleX = this.characterX; } }
-  resume() { if (this.status === 'paused') { this.status = 'running'; this.catchSampleX = this.characterX; } }
+  pause() { if (this.status === 'running') { this.status = 'paused'; this.release(); this.catchSampleX = this.characterX; this.catchSamplePose = 'open'; } }
+  resume() { if (this.status === 'paused') { this.status = 'running'; this.catchSampleX = this.characterX; this.catchSamplePose = 'open'; } }
   spawn() {
     const n = this.spawnCount++;
     // Exactly two bonus tokens: the very first object and one at 52 active seconds.
@@ -148,9 +166,11 @@ export class CatchGame {
     const next = clamp(elapsed, this.elapsed, ROUND_SECONDS);
     const delta = next - this.elapsed;
     const previousX = this.catchSampleX;
+    const previousPose = this.catchSamplePose;
     this.catchSampleX = this.characterX;
     const events = [];
     this.elapsed = next;
+    this.catchSamplePose = this.pose;
     if (next >= ROUND_SECONDS) {
       this.status = 'finished'; this.release(); this.objects = [];
       return [{ type: 'finish', coins: this.coins, rewards: this.progress.rewards }];
@@ -169,10 +189,10 @@ export class CatchGame {
     }
     const survivors = [];
     for (const object of this.objects) {
-      const bottomOffset = ITEM_SIZES[object.kind][1] * 0.33;
-      const previousBottom = object.y + bottomOffset;
+      const previousY = object.y;
       object.y += this.speed * delta;
-      if (passesThroughBag(object.x, previousBottom, object.y + bottomOffset, previousX, this.characterX, this.catchY)) {
+      if (touchesCharacter(object.kind, object.x, previousY, object.y, previousX, this.characterX, this.characterY, this.catchSamplePose) ||
+          (previousPose !== this.catchSamplePose && touchesCharacter(object.kind, object.x, previousY, object.y, previousX, this.characterX, this.characterY, previousPose))) {
         const before = this.progress.rewards;
         this.coins += object.value;
         events.push({ type: 'catch', object: { ...object }, value: object.value, coins: this.coins });
