@@ -59,6 +59,8 @@
 .result-actions{position:absolute;left:24px;top:346px;width:259px;gap:4px}
 #result-rating-copy{display:contents}
 #result-rating-actions{position:absolute;left:24px;top:314px;width:259px;display:flex;flex-direction:column;gap:4px}
+.result-card[data-replay=hidden]{left:50%;top:50%;height:421px;translate:-50% -50%}
+.result-card[data-state=rating][data-replay=hidden]{height:393px}
 .roulette-screen{background-size:375px 672px;background-repeat:no-repeat}
 .reel-window{mask:none;-webkit-mask:none;filter:none;backdrop-filter:none;transition:bottom .35s}
 .reel-item{object-fit:fill}

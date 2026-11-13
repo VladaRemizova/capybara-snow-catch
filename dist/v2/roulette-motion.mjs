@@ -1,4 +1,4 @@
-import { SPIN_MS } from './prizes.mjs?v=nov13-4';
+import { SPIN_MS } from './prizes.mjs?v=nov13-5';
 
 // The integral of a smooth velocity curve: short anticipation, acceleration,
 // steady travel, then continuous braking. No stop between forward segments.

@@ -1,7 +1,7 @@
-import { REEL_ART } from './roulette-art.mjs?v=nov13-4';
-import { UPDATED_ART } from './ui-updates.mjs?v=nov13-4';
-import { UI_ART as ORIGINAL_ART, UI_BOXES } from './ui-art.mjs?v=nov13-4';
-import { GLYPHS } from './ui-glyphs.mjs?v=nov13-4';
+import { REEL_ART } from './roulette-art.mjs?v=nov13-5';
+import { UPDATED_ART } from './ui-updates.mjs?v=nov13-5';
+import { UI_ART as ORIGINAL_ART, UI_BOXES } from './ui-art.mjs?v=nov13-5';
+import { GLYPHS } from './ui-glyphs.mjs?v=nov13-5';
 
 const UI_ART = { ...ORIGINAL_ART, ...UPDATED_ART };
 const $ = id => document.getElementById(id);
@@ -126,8 +126,11 @@ export function paintReward(count) {
   button($('reward-claim'), 'button-reward-claim'); button($('reward-continue'), 'button-continue');
 }
 
-export function paintResult(mode) {
+export function paintResult(mode, replayAllowed = mode !== 'rating') {
   const card = document.querySelector('.result-card'); card.dataset.state = mode;
+  card.dataset.replay = replayAllowed ? 'available' : 'hidden';
+  $('result-replay').hidden = !replayAllowed;
+  $('rating-replay').hidden = !replayAllowed;
   const rating = mode === 'rating';
   text($('result-title'), 'text-565-1794', null, { x: 24, y: rating ? 117 : 117.427826, width: 259, height: 26 });
   const metrics = document.querySelectorAll('.result-metric');

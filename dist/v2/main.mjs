@@ -1,9 +1,9 @@
-import { CatchGame, ITEM_SIZES } from './game-core.mjs?v=nov13-4';
-import { PrizeLedger, PRIZES, SPIN_MS, STORAGE_KEY } from './prizes.mjs?v=nov13-4';
-import { REEL_ART } from './roulette-art.mjs?v=nov13-4';
-import { reelMotion } from './roulette-motion.mjs?v=nov13-4';
-import { CONFETTI } from './confetti.mjs?v=nov13-4';
-import { initUI, refreshUI, setCounter, prizeGeometry, paintReward, paintResult, paintWin, paintPrizeCard, paintEmpty } from './ui.mjs?v=nov13-4';
+import { CatchGame, ITEM_SIZES } from './game-core.mjs?v=nov13-5';
+import { PrizeLedger, PRIZES, SPIN_MS, STORAGE_KEY } from './prizes.mjs?v=nov13-5';
+import { REEL_ART } from './roulette-art.mjs?v=nov13-5';
+import { reelMotion } from './roulette-motion.mjs?v=nov13-5';
+import { CONFETTI } from './confetti.mjs?v=nov13-5';
+import { initUI, refreshUI, setCounter, prizeGeometry, paintReward, paintResult, paintWin, paintPrizeCard, paintEmpty } from './ui.mjs?v=nov13-5';
 
 const $ = id => document.getElementById(id);
 const scene = $('scene'), phone = $('phone'), field = $('falling-field');
@@ -411,10 +411,10 @@ async function finishRound() {
   setCounter('result-prizes', `${rating ? 3 : available} из 3`, 'bold18', 21);
   $('result-claim').disabled = available === 0;
   $('result-claim').textContent = available ? 'Забрать призы' : ledger.state.earned === 3 ? 'Все призы получены' : 'У вас 0 призов';
-  // Replay can bank more coins while earned, unspun prize rights stay intact.
+  // The result popup offers another round until all daily prizes are earned.
   $('result-replay').disabled = false;
   $('result-replay').title = '';
-  paintResult(rating ? 'rating' : available ? 'available' : 'zero');
+  paintResult(rating ? 'rating' : available ? 'available' : 'zero', ledger.state.earned < 3);
   setModal('result'); render();
 }
 

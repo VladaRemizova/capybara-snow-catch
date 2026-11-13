@@ -72,7 +72,7 @@ for (let n = 0; n < 760; n++) {
 await page.mouse.up();
 await page.waitForFunction(() => !document.querySelector('#result-layer').hidden);
 assert.ok(thirdSeen); assert.equal(rewardsSeen, 3); assert.ok(Number(await page.locator('#result-coins').textContent()) >= 30);
-assert.equal((await state()).pending.length, 3); assert.equal(await page.locator('#result-replay').isDisabled(), false);
+assert.equal((await state()).pending.length, 3); assert.equal(await page.locator('#result-replay').isVisible(), false);
 await shot('result');
 await page.click('#result-claim'); await shot('roulette');
 const expected = (await state()).pending[0].prizeId;
