@@ -1,8 +1,8 @@
-import { PROMO_ART, WIN_LIGHTS, COUPON_LIGHTS } from './promo-art.mjs?v=v3-nov13-6';
-import { REEL_ART } from './roulette-art.mjs?v=v3-nov13-6';
-import { UPDATED_ART } from './ui-updates.mjs?v=v3-nov13-6';
-import { UI_ART as ORIGINAL_ART, UI_BOXES } from './ui-art.mjs?v=v3-nov13-6';
-import { GLYPHS } from './ui-glyphs.mjs?v=v3-nov13-6';
+import { PROMO_ART, WIN_LIGHTS, COUPON_LIGHTS } from './promo-art.mjs?v=v3-nov13-7';
+import { REEL_ART } from './roulette-art.mjs?v=v3-nov13-7';
+import { UPDATED_ART } from './ui-updates.mjs?v=v3-nov13-7';
+import { UI_ART as ORIGINAL_ART, UI_BOXES } from './ui-art.mjs?v=v3-nov13-7';
+import { GLYPHS } from './ui-glyphs.mjs?v=v3-nov13-7';
 
 const sharedWinParts = new Set(['win-box-layer','win-lid-layer','win-decor-layer']);
 const sharedArt = Object.fromEntries(Object.entries({ ...ORIGINAL_ART, ...UPDATED_ART }).filter(([key]) => !key.startsWith('win-') || sharedWinParts.has(key)));
@@ -208,7 +208,7 @@ export function paintPrizeCard(card, prizeId) {
   const h=prizeId==='hotdog'?136:144;
   card.style.height=`${h}px`;card.style.minHeight=`${h}px`;
   const art='ticket-'+prizeId+'-art';image(card.querySelector('.prize-illustration img'),art,UI_ART[art].rootId);
-  text(card.querySelector('.ticket-meta>span'),prizeId==='points'?'text-565-2622':'text-565-2592',null,{x:98,y:18.5,width:prizeId==='points'?31:22,height:11});
+  text(card.querySelector('.ticket-meta>span'),prizeId==='points'?'text-565-2622':'ticket-category-cafe',null,{x:98,y:18.5,width:prizeId==='points'?31:22,height:11});
   graphic(card.querySelector('.valid-until'),'badge-card',null,{x:235.2,y:16,width:96.8,height:16});
   const title='ticket-title-'+prizeId;text(card.querySelector('h2'),title,UI_ART[title].rootId);
   const top=prizeId==='hotdog'?91:92,code=card.querySelector('.ticket-code');geometry(code,{x:98,y:top,width:233,height:36});

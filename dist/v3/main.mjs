@@ -1,9 +1,9 @@
-import { CatchGame, ITEM_SIZES } from './game-core.mjs?v=v3-nov13-6';
-import { PrizeLedger, PRIZES, SPIN_MS, STORAGE_KEY } from './prizes.mjs?v=v3-nov13-6';
-import { REEL_ART } from './roulette-art.mjs?v=v3-nov13-6';
-import { reelMotion } from './roulette-motion.mjs?v=v3-nov13-6';
-import { CONFETTI } from './confetti.mjs?v=v3-nov13-6';
-import { initUI, refreshUI, prepareRoulette, prepareWin, setCounter, prizeGeometry, paintReward, paintResult, paintWin, paintPrizeCard, paintEmpty } from './ui.mjs?v=v3-nov13-6';
+import { CatchGame, ITEM_SIZES } from './game-core.mjs?v=v3-nov13-7';
+import { PrizeLedger, PRIZES, SPIN_MS, STORAGE_KEY } from './prizes.mjs?v=v3-nov13-7';
+import { REEL_ART } from './roulette-art.mjs?v=v3-nov13-7';
+import { reelMotion } from './roulette-motion.mjs?v=v3-nov13-7';
+import { CONFETTI } from './confetti.mjs?v=v3-nov13-7';
+import { initUI, refreshUI, prepareRoulette, prepareWin, setCounter, prizeGeometry, paintReward, paintResult, paintWin, paintPrizeCard, paintEmpty } from './ui.mjs?v=v3-nov13-7';
 
 const $ = id => document.getElementById(id);
 const scene = $('scene'), phone = $('phone'), field = $('falling-field');

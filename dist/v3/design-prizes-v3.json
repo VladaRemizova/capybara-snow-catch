@@ -189,10 +189,17 @@
       "rgbaSha256": "693fff78ce3e3800f2e40b424e1375ffbbd18ee61ac32ce8dc64e83b31eb5f09"
     },
     "ticket-points-art": {
-      "name": "ticket-points-art",
+      "key": "ticket-points-art",
       "id": "631:5709",
       "rootId": "631:5686",
+      "kind": "art",
       "box": {
+        "x": 3592,
+        "y": 3226,
+        "width": 86,
+        "height": 106
+      },
+      "ink": {
         "x": 3592,
         "y": 3226,
         "width": 86,
@@ -204,19 +211,20 @@
         "width": 343,
         "height": 144
       },
+      "text": null,
+      "scale": 2,
+      "name": "ticket-points-art",
       "clip": {
         "x": 3592,
         "y": 3226,
         "width": 86,
         "height": 106
       },
-      "src": "assets/pixel/ticket-points-art.webp",
+      "src": "assets/pixel/ticket-points-art-nov13.webp",
       "pixelWidth": 172,
       "pixelHeight": 212,
-      "scale": 2,
-      "kind": "art",
-      "bytes": 15048,
-      "rgbaSha256": "a5fa2e45964e0ed7c405929a0e078809b5929509dc40b735d086251b7ee659ee"
+      "bytes": 14796,
+      "rgbaSha256": "fb6ad686034711681ad5652729a23e6b9c9379d00ac9f12c2d7e07cb67ec3958"
     },
     "ticket-coffee-art": {
       "name": "ticket-coffee-art",
@@ -575,9 +583,10 @@
       "rgbaSha256": "f72d6e0f3ce13b63163d1afc9030b12f5a598126f412f15a8fe9637369a184ca"
     },
     "win-title-hotdog": {
-      "key": "win-title-coffee",
+      "key": "win-title-hotdog",
       "id": "631:5467",
       "rootId": "631:5432",
+      "kind": "text",
       "box": {
         "x": 2772,
         "y": 3447,
@@ -585,9 +594,9 @@
         "height": 24
       },
       "ink": {
-        "x": 2405.037109375,
+        "x": 2783.802734375,
         "y": 3451.17578125,
-        "width": 295.615234375,
+        "width": 320.0390625,
         "height": 18.271484375
       },
       "rootBox": {
@@ -596,37 +605,37 @@
         "width": 375,
         "height": 672
       },
-      "text": "Купон со скидкой 30% на кофе ",
-      "name": "win-title-coffee",
+      "text": "Купон со скидкой 30% на хот-дог",
+      "scale": 2,
+      "name": "win-title-hotdog",
       "clip": {
-        "x": 2794.037109375,
+        "x": 2783.802734375,
         "y": 3451.17578125,
-        "width": 295.615234375,
+        "width": 320.0390625,
         "height": 18.271484375
       },
-      "src": "assets/pixel/win-title-coffee.webp",
-      "pixelWidth": 592,
+      "src": "assets/pixel/win-title-hotdog-nov13.webp",
+      "pixelWidth": 641,
       "pixelHeight": 37,
-      "scale": 2,
-      "kind": "text",
-      "bytes": 2662,
-      "rgbaSha256": "eeab849ffb3241bb3409557a45038c54f5882a78a909ae2d016a052968f85213"
+      "bytes": 2712,
+      "rgbaSha256": "0982836905dc181a89dad218df7c7ae5bd0433b1790cb416c6c77e799f4c2973"
     },
     "ticket-title-hotdog": {
-      "key": "ticket-title-coffee",
+      "key": "ticket-title-hotdog",
       "id": "631:5726",
       "rootId": "631:5716",
+      "kind": "text",
       "box": {
         "x": 3690,
         "y": 3402,
         "width": 233,
-        "height": 18
+        "height": 36
       },
       "ink": {
-        "x": 3691.015625,
-        "y": 3097.53125,
-        "width": 202.065673828125,
-        "height": 14.203125
+        "x": 3690.8203125,
+        "y": 3405.140625,
+        "width": 165.04833984375,
+        "height": 32.0859375
       },
       "rootBox": {
         "x": 3592,
@@ -634,21 +643,58 @@
         "width": 343,
         "height": 136
       },
-      "text": "Кофе 300 мл — скидка 30%",
-      "name": "ticket-title-coffee",
-      "clip": {
-        "x": 3691.015625,
-        "y": 3405.53125,
-        "width": 202.065673828125,
-        "height": 14.203125
-      },
-      "src": "assets/pixel/ticket-title-coffee.webp",
-      "pixelWidth": 405,
-      "pixelHeight": 29,
+      "text": "Купон со скидкой 30%\nна хот-дог",
       "scale": 2,
+      "name": "ticket-title-hotdog",
+      "clip": {
+        "x": 3690.8203125,
+        "y": 3405.140625,
+        "width": 165.04833984375,
+        "height": 32.0859375
+      },
+      "src": "assets/pixel/ticket-title-hotdog-nov13.webp",
+      "pixelWidth": 331,
+      "pixelHeight": 65,
+      "bytes": 2474,
+      "rgbaSha256": "5b0a92a2b5a53fe31a4790225a04e929fa52cfa68fce86be2bc1b3e3e07fa877"
+    },
+    "ticket-category-cafe": {
+      "key": "ticket-category-cafe",
+      "id": "631:5661",
+      "rootId": "631:5656",
       "kind": "text",
-      "bytes": 2240,
-      "rgbaSha256": "0e3c0faf58d25b5741910f6138acd2c971c7d317182e7b5275b41b94c05b9558"
+      "box": {
+        "x": 3690,
+        "y": 3069.5,
+        "width": 22,
+        "height": 11
+      },
+      "ink": {
+        "x": 3690.53515625,
+        "y": 3071.8125,
+        "width": 20.22802734375,
+        "height": 5.73828125
+      },
+      "rootBox": {
+        "x": 3592,
+        "y": 3051,
+        "width": 343,
+        "height": 144
+      },
+      "text": "Кафе",
+      "scale": 2,
+      "name": "ticket-category-cafe",
+      "clip": {
+        "x": 3690.53515625,
+        "y": 3071.8125,
+        "width": 20.22802734375,
+        "height": 5.73828125
+      },
+      "src": "assets/pixel/ticket-category-cafe-nov13.webp",
+      "pixelWidth": 41,
+      "pixelHeight": 12,
+      "bytes": 394,
+      "rgbaSha256": "d12c52934d50dfcc89a015bc8b2d9384805adfe72e5e57863107ce748bf1403b"
     }
   },
   "catalog": {
@@ -656,7 +702,7 @@
       "id": "coffee",
       "title": "Купон со скидкой 30% на кофе",
       "cardTitle": "Кофе 300 мл — скидка 30%",
-      "category": "КОФЕ",
+      "category": "КАФЕ",
       "code": "LUKOIL15",
       "image": "pixel/ticket-coffee-art.webp"
     },
@@ -666,13 +712,13 @@
       "cardTitle": "+300 баллов\n«Заправься выгодой»",
       "category": "БАЛЛЫ",
       "code": "LUKOIL10",
-      "image": "pixel/ticket-points-art.webp"
+      "image": "pixel/ticket-points-art-nov13.webp"
     },
     "hotdog": {
       "id": "hotdog",
-      "title": "Купон со скидкой 30% на кофе",
-      "cardTitle": "Кофе 300 мл — скидка 30%",
-      "category": "КОФЕ",
+      "title": "Купон со скидкой 30% на хот-дог",
+      "cardTitle": "Купон со скидкой 30%\nна хот-дог",
+      "category": "КАФЕ",
       "code": "LUKOIL5",
       "image": "pixel/ticket-hotdog-art.webp"
     }

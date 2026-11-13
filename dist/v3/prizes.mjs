@@ -1,4 +1,4 @@
-import { CATALOG } from './promo-art.mjs?v=v3-nov13-6';
+import { CATALOG } from './promo-art.mjs?v=v3-nov13-7';
 export const PRIZES = CATALOG;
 export const PRIZE_IDS = Object.keys(PRIZES);
 export const SPIN_MS = 9500;

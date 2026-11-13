@@ -1,4 +1,4 @@
-import { ITEM_CONTACTS } from './collision-shapes.mjs?v=v3-nov13-6';
+import { ITEM_CONTACTS } from './collision-shapes.mjs?v=v3-nov13-7';
 
 export const ROUND_SECONDS = 60;
 export const TUTORIAL_SECONDS = 10;
