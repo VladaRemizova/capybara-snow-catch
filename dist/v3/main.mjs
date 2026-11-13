@@ -1,9 +1,9 @@
-import { CatchGame, ITEM_SIZES } from './game-core.mjs?v=v3-nov13-7';
-import { PrizeLedger, PRIZES, SPIN_MS, STORAGE_KEY } from './prizes.mjs?v=v3-nov13-7';
-import { REEL_ART } from './roulette-art.mjs?v=v3-nov13-7';
-import { reelMotion } from './roulette-motion.mjs?v=v3-nov13-7';
-import { CONFETTI } from './confetti.mjs?v=v3-nov13-7';
-import { initUI, refreshUI, prepareRoulette, prepareWin, setCounter, prizeGeometry, paintReward, paintResult, paintWin, paintPrizeCard, paintEmpty } from './ui.mjs?v=v3-nov13-7';
+import { CatchGame, ITEM_SIZES } from './game-core.mjs?v=v3-nov13-8';
+import { PrizeLedger, PRIZES, SPIN_MS, STORAGE_KEY } from './prizes.mjs?v=v3-nov13-8';
+import { REEL_ART } from './roulette-art.mjs?v=v3-nov13-8';
+import { reelMotion } from './roulette-motion.mjs?v=v3-nov13-8';
+import { CONFETTI } from './confetti.mjs?v=v3-nov13-8';
+import { initUI, refreshUI, prepareRoulette, prepareWin, setCounter, prizeGeometry, paintReward, paintResult, paintWin, paintPrizeCard, paintEmpty } from './ui.mjs?v=v3-nov13-8';
 
 const $ = id => document.getElementById(id);
 const scene = $('scene'), phone = $('phone'), field = $('falling-field');
@@ -109,7 +109,7 @@ function pause() { syncClock(); game.pause(); scene.classList.remove('dragging',
 function startRound() {
   ledger = new PrizeLedger(readSaved() || ledger.state, prizeNow()); persist();
   clearRewardTimers(); rewardQueue = []; rewardBusy = false; smile = false; finishing = false;
-  game.start(ledger.state.coins); game.pause();
+  game.start(ledger.state.coins, ledger.state.dayCoins); game.pause();
   roundId = crypto.randomUUID(); cabinetReturn = false;
   field.replaceChildren(); nodes.clear(); $('effects').replaceChildren();
   showScreen('game'); setModal('teaching');
@@ -193,7 +193,7 @@ function render() {
   setCounter('owned-count', ledger.state.prizes.length, 'roboto13', 16);
   refreshUI();
   $('progress-fill').style.width = `${Math.max(0, Math.min(1, progress.fraction)) * 100}%`;
-  $('prize-progress').setAttribute('aria-valuenow', progress.rewards === 3 ? '10' : String(coins % 10));
+  $('prize-progress').setAttribute('aria-valuenow', progress.rewards === 3 ? '10' : String(progress.earned));
   $('prize-progress').setAttribute('aria-valuetext', progress.rewards === 3 ? 'Все три приза доступны' : `Ещё ${progress.remaining} монет до следующего приза`);
   $('time-stat').classList.toggle('urgent', game.remaining <= 10 && game.remaining > 0 && !modal);
   $('time-stat').classList.toggle('last-seconds', game.remaining <= 5);

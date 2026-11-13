@@ -1,4 +1,4 @@
-import { CATALOG } from './promo-art.mjs?v=v3-nov13-7';
+import { CATALOG } from './promo-art.mjs?v=v3-nov13-8';
 export const PRIZES = CATALOG;
 export const PRIZE_IDS = Object.keys(PRIZES);
 export const SPIN_MS = 9500;
@@ -21,7 +21,7 @@ export function shuffled(ids, random = Math.random) {
 export class PrizeLedger {
   constructor(saved, now = Date.now(), random = Math.random) {
     this.random = random;
-    const fresh = { version: 2, day: moscowDay(now), coins: 0, earned: 0,
+    const fresh = { version: 2, day: moscowDay(now), coins: 0, dayCoins: 0, earned: 0,
       order: shuffled(PRIZE_IDS, random), pending: [], prizes: [], receipts: [], replayableRound: null, spin: null, lastWin: null, serial: 0 };
     this.state = saved?.version === 2 ? structuredClone(saved) : fresh;
     const s = this.state;
@@ -31,6 +31,12 @@ export class PrizeLedger {
     if (!Array.isArray(s.order) || new Set(s.order).size !== 3 || s.order.some(id => !PRIZES[id])) s.order = shuffled(PRIZE_IDS, random);
     s.earned = Math.min(3, Math.max(0, Number(s.earned) || 0));
     s.coins = Math.max(0, Number(s.coins) || 0);
+    // Older saves used coins as the current day's balance. Migrate that progress
+    // before checking the date, preserving the bank when the day changes.
+    s.dayCoins = Math.max(0, Number(s.dayCoins ?? s.coins) || 0);
+    if (s.replayableRound?.before) {
+      s.replayableRound.before.dayCoins ??= s.replayableRound.before.coins;
+    }
     s.serial = Number(s.serial) || 0;
     if (s.spin && !s.pending.some(p => p.id === s.spin.pendingId)) s.spin = null;
     if (s.lastWin && !s.prizes.some(p => p.id === s.lastWin.id)) s.lastWin = null;
@@ -40,7 +46,8 @@ export class PrizeLedger {
     const day = moscowDay(now), s = this.state;
     if (s.day === day) return false;
     // Past prizes and already earned rotations survive midnight.
-    s.day = day; s.coins = 0; s.earned = 0; s.order = shuffled(PRIZE_IDS, this.random);
+    s.day = day; s.dayCoins = 0; s.earned = 0; s.order = shuffled(PRIZE_IDS, this.random);
+    s.replayableRound = null;
     return true;
   }
   get drawing() { return this.state.spin !== null || this.state.lastWin !== null; }
@@ -50,10 +57,11 @@ export class PrizeLedger {
     const s = this.state;
     if (s.receipts.includes(id)) return [];
     const amount = Math.max(0, Math.floor(Number(coins) || 0));
-    const before = { coins: s.coins, earned: s.earned };
+    const before = { coins: s.coins, dayCoins: s.dayCoins, earned: s.earned };
     s.receipts = [...s.receipts.slice(-99), id];
     s.coins += amount;
-    const next = Math.min(3, Math.floor(s.coins / 10));
+    s.dayCoins += amount;
+    const next = Math.max(s.earned, Math.min(3, Math.floor(s.dayCoins / 10)));
     const added = [];
     for (let n = s.earned; n < next; n++) {
       const token = { id: `${s.day}-${++s.serial}`, day: s.day, prizeId: s.order[n] };
@@ -70,7 +78,7 @@ export class PrizeLedger {
     if (!round || round.id !== id || this.drawing || round.pendingIds.some(id => !s.pending.some(p => p.id === id))) return false;
     s.pending = s.pending.filter(p => !round.pendingIds.includes(p.id));
     if (s.day === round.day) {
-      s.coins = round.before.coins; s.earned = round.before.earned;
+      s.coins = round.before.coins; s.dayCoins = round.before.dayCoins; s.earned = round.before.earned;
     }
     // Keep the receipt and serial so a stale tab cannot reapply this attempt.
     s.replayableRound = null;

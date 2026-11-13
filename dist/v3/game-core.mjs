@@ -1,4 +1,4 @@
-import { ITEM_CONTACTS } from './collision-shapes.mjs?v=v3-nov13-7';
+import { ITEM_CONTACTS } from './collision-shapes.mjs?v=v3-nov13-8';
 
 export const ROUND_SECONDS = 60;
 export const TUTORIAL_SECONDS = 10;
@@ -59,7 +59,7 @@ export function rewardProgress(coins) {
 export class CatchGame {
   constructor(height = 672) { this.height = height; this.variant = 1; this.reset(); }
   reset() {
-    this.status = 'idle'; this.elapsed = 0; this.coins = 0; this.baseCoins = 0;
+    this.status = 'idle'; this.elapsed = 0; this.coins = 0; this.baseCoins = 0; this.baseDayCoins = 0;
     this.characterX = 187.5; this.objects = []; this.pointerId = null;
     this.catchSampleX = this.characterX;
     this.grabOffset = 0; this.serial = 0; this.nextSpawn = 0.4;
@@ -67,11 +67,13 @@ export class CatchGame {
     this.motionDirection = 'open'; this.lastMovedAt = -Infinity;
     this.motionAnchorX = this.characterX; this.motionSampleX = this.characterX;
   }
-  start(baseCoins = 0) { this.reset(); this.baseCoins = baseCoins; this.status = 'running'; }
+  start(baseCoins = 0, baseDayCoins = baseCoins) {
+    this.reset(); this.baseCoins = baseCoins; this.baseDayCoins = baseDayCoins; this.status = 'running';
+  }
   get characterY() { return this.height - 236; }
   get catchY() { return this.characterY + BAG_OPENING.y; }
   get remaining() { return Math.max(0, Math.ceil(ROUND_SECONDS - this.elapsed)); }
-  get progress() { return rewardProgress(this.baseCoins + this.coins); }
+  get progress() { return rewardProgress(this.baseDayCoins + this.coins); }
   canCatchAt() { return true; }
   get bagOpen() { return true; }
   get pose() {

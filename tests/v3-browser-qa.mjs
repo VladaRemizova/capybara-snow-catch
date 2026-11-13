@@ -119,7 +119,7 @@ try{
  assert.match(await page.locator('#result-replay').evaluate(n=>n.style.backgroundImage),/button-result-retry-figma.webp/);
  assert.equal(await page.locator('#result-replay').textContent(),'Попробовать еще раз');await shot('native-retry-button');
  await page.click('#result-replay');await page.locator('#teaching-layer').waitFor({state:'visible'});
- assert.equal((await state()).coins,0);assert.equal((await state()).earned,0);assert.equal((await state()).pending.length,0);assert.deepEqual((await state()).prizes,banked.prizes);
+ assert.equal((await state()).coins,61);assert.equal((await state()).dayCoins,0);assert.equal((await state()).earned,0);assert.equal((await state()).pending.length,0);assert.deepEqual((await state()).prizes,banked.prizes);
  assert.equal(await page.evaluate(key=>localStorage.getItem(key),OLD_KEY),old.serialize());
  // The existing version receives the same small note, with its old prize catalog intact.
  await page.goto('http://127.0.0.1:8080/v2/');await page.locator('#roulette-screen:not(.win-underlay)').waitFor({state:'visible'});

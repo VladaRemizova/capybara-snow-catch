@@ -1,8 +1,8 @@
-import { PROMO_ART, WIN_LIGHTS, COUPON_LIGHTS } from './promo-art.mjs?v=v3-nov13-7';
-import { REEL_ART } from './roulette-art.mjs?v=v3-nov13-7';
-import { UPDATED_ART } from './ui-updates.mjs?v=v3-nov13-7';
-import { UI_ART as ORIGINAL_ART, UI_BOXES } from './ui-art.mjs?v=v3-nov13-7';
-import { GLYPHS } from './ui-glyphs.mjs?v=v3-nov13-7';
+import { PROMO_ART, WIN_LIGHTS, COUPON_LIGHTS } from './promo-art.mjs?v=v3-nov13-8';
+import { REEL_ART } from './roulette-art.mjs?v=v3-nov13-8';
+import { UPDATED_ART } from './ui-updates.mjs?v=v3-nov13-8';
+import { UI_ART as ORIGINAL_ART, UI_BOXES } from './ui-art.mjs?v=v3-nov13-8';
+import { GLYPHS } from './ui-glyphs.mjs?v=v3-nov13-8';
 
 const sharedWinParts = new Set(['win-box-layer','win-lid-layer','win-decor-layer']);
 const sharedArt = Object.fromEntries(Object.entries({ ...ORIGINAL_ART, ...UPDATED_ART }).filter(([key]) => !key.startsWith('win-') || sharedWinParts.has(key)));
