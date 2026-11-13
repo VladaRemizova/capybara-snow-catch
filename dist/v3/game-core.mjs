@@ -1,4 +1,4 @@
-import { ITEM_CONTACTS } from './collision-shapes.mjs?v=v3-nov13-3';
+import { ITEM_CONTACTS } from './collision-shapes.mjs?v=v3-nov13-4';
 
 export const ROUND_SECONDS = 60;
 export const TUTORIAL_SECONDS = 10;
@@ -15,17 +15,36 @@ const LANE_SEQUENCE = [1, 0, 1, 2, 1, 0, 1, 2, 1, 2, 1, 0];
 const clamp = (n, low, high) => Math.max(low, Math.min(high, n));
 // Inner opening measured on the shared sack artwork, in logical screen pixels.
 export const BAG_OPENING = Object.freeze({ x: 7, y: 115, halfWidth: 34 });
+function contactFraction(x0, y0, x1, y1, minX, minY, maxX, maxY) {
+  let enter = 0, leave = 1;
+  for (const [start, end, min, max] of [[x0, x1, minX, maxX], [y0, y1, minY, maxY]]) {
+    const delta = end - start;
+    if (!delta) { if (start < min || start > max) return null; continue; }
+    const a = (min - start) / delta, b = (max - start) / delta;
+    enter = Math.max(enter, Math.min(a, b));
+    leave = Math.min(leave, Math.max(a, b));
+    if (enter > leave) return null;
+  }
+  return enter;
+}
 export function bagEntry(kind, objectX, yBefore, yAfter, capyBefore, capyAfter, characterY) {
-  const tip = ITEM_CONTACTS[kind];
-  if (!tip) return null;
-  const rim = characterY + BAG_OPENING.y;
-  const before = yBefore + tip.y, after = yAfter + tip.y;
-  // Only a downward entry into the hole counts. Once below it, a missed item
-  // cannot be collected by touching the body or moving the sack sideways.
-  if (before >= rim || after < rim) return null;
-  const fraction = (rim - before) / (after - before);
-  const sackX = capyBefore + (capyAfter - capyBefore) * fraction + BAG_OPENING.x;
-  return Math.abs(objectX + tip.x - sackX) <= BAG_OPENING.halfWidth ? fraction : null;
+  const item = ITEM_CONTACTS[kind];
+  if (!item || yAfter <= yBefore) return null;
+  const left = BAG_OPENING.x - BAG_OPENING.halfWidth;
+  const right = BAG_OPENING.x + BAG_OPENING.halfWidth;
+  const x0 = objectX - capyBefore, x1 = objectX - capyAfter;
+  const y0 = yBefore - characterY, y1 = yAfter - characterY;
+  const overlap = band => contactFraction(x0, y0, x1, y1,
+    left - band[2], BAG_OPENING.y - band[3], right - band[0], BAG_OPENING.y - band[1]);
+  if (overlap(item.bounds) === null) return null;
+  // Any visible edge touching the inner rim counts. The rest of the capybara
+  // has no collision area, and fully missed items continue in front of it.
+  let first = null;
+  for (const band of item.bands) {
+    const fraction = overlap(band);
+    if (fraction !== null && (first === null || fraction < first)) first = fraction;
+  }
+  return first;
 }
 
 export function rewardProgress(coins) {

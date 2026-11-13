@@ -715,88 +715,90 @@
   "winLights": {
     "coffee": [
       {
-        "id": "631:5275",
-        "src": "assets/pixel/winCoffee-glow-0.svg",
-        "kind": "light",
+        "id": "631:5255",
+        "x": 39.341552734375,
+        "y": 131.223388671875,
+        "width": 213,
+        "height": 213,
         "blend": "overlay",
-        "x": 55.17655944824219,
-        "y": 155.8528289794922,
-        "width": 175.0,
-        "height": 175.0
+        "src": "assets/pixel/win-frame97-base-glow.svg",
+        "kind": "light"
       },
       {
-        "id": "631:5298",
-        "src": "assets/pixel/winCoffee-glow-1.svg",
-        "kind": "light",
+        "id": "631:5275",
+        "x": 55.3857421875,
+        "y": 156.06201171875,
+        "width": 175,
+        "height": 175,
         "blend": "overlay",
-        "x": 22.5,
-        "y": 120.0,
-        "width": 228.0,
-        "height": 228.0
+        "src": "assets/pixel/win-coffee-frame97-glow.svg",
+        "kind": "light"
       },
       {
         "id": "631:5303",
-        "src": "assets/pixel/winCoffee-glow-2.svg",
-        "kind": "light",
+        "x": 108.558837890625,
+        "y": 188.558837890625,
+        "width": 102,
+        "height": 102,
         "blend": "soft-light",
-        "x": 83.5,
-        "y": 177.878662109375,
-        "width": 134.0,
-        "height": 134.0
+        "src": "assets/pixel/win-coffee-frame97-front.svg",
+        "kind": "light",
+        "front": true
       }
     ],
     "hotdog": [
       {
-        "id": "631:5456",
-        "src": "assets/pixel/winHotdog-glow-0.svg",
-        "kind": "light",
+        "id": "631:5255",
+        "x": 39.341552734375,
+        "y": 131.223388671875,
+        "width": 213,
+        "height": 213,
         "blend": "overlay",
-        "x": 55.17655944824219,
-        "y": 155.8528289794922,
-        "width": 175.0,
-        "height": 175.0
+        "src": "assets/pixel/win-frame97-base-glow.svg",
+        "kind": "light"
       },
       {
         "id": "631:5476",
-        "src": "assets/pixel/winHotdog-glow-1.svg",
-        "kind": "light",
+        "x": 50.558837890625,
+        "y": 148.558837890625,
+        "width": 178,
+        "height": 178,
         "blend": "overlay",
-        "x": 25.5,
-        "y": 123.5,
-        "width": 228.0,
-        "height": 228.0
+        "src": "assets/pixel/win-hotdog-frame97-glow.svg",
+        "kind": "light"
       }
     ],
     "points": [
       {
-        "id": "631:5505",
-        "src": "assets/pixel/winPoints-glow-0.svg",
-        "kind": "light",
+        "id": "631:5255",
+        "x": 39.341552734375,
+        "y": 131.223388671875,
+        "width": 213,
+        "height": 213,
         "blend": "overlay",
-        "x": 55.17655944824219,
-        "y": 155.8528289794922,
-        "width": 175.0,
-        "height": 175.0
+        "src": "assets/pixel/win-frame97-base-glow.svg",
+        "kind": "light"
       },
       {
         "id": "631:5524",
-        "src": "assets/pixel/winPoints-glow-1.svg",
-        "kind": "light",
+        "x": 51.558837890625,
+        "y": 149.558837890625,
+        "width": 176,
+        "height": 176,
         "blend": "overlay",
-        "x": 18.5,
-        "y": 116.5,
-        "width": 242.0,
-        "height": 242.0
+        "src": "assets/pixel/win-points-frame97-glow.svg",
+        "kind": "light"
       },
       {
         "id": "631:5526",
-        "src": "assets/pixel/winPoints-glow-2.svg",
-        "kind": "light",
+        "x": 106.558837890625,
+        "y": 169.558837890625,
+        "width": 95,
+        "height": 94,
         "blend": "soft-light",
-        "x": 69.5726089477539,
-        "y": 166.5000991821289,
-        "width": 142.0,
-        "height": 142.0
+        "src": "assets/pixel/win-points-frame97-front.svg",
+        "kind": "light",
+        "front": true
       }
     ]
   },
@@ -871,5 +873,13 @@
       "pixelHeight": 102,
       "rgbaSha256": "5dfa61744a79b40435de675bb00d779fc1a4d00f546bd816d691eb0e752a992b"
     }
+  },
+  "winLightingValidation": {
+    "frame97": [
+      "631:5253",
+      "631:5434",
+      "631:5483"
+    ],
+    "source": "Current native SVG lights only; no animated transform or opacity on their common ancestor."
   }
 }

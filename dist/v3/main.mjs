@@ -1,9 +1,9 @@
-import { CatchGame, ITEM_SIZES } from './game-core.mjs?v=v3-nov13-3';
-import { PrizeLedger, PRIZES, SPIN_MS, STORAGE_KEY } from './prizes.mjs?v=v3-nov13-3';
-import { REEL_ART } from './roulette-art.mjs?v=v3-nov13-3';
-import { reelMotion } from './roulette-motion.mjs?v=v3-nov13-3';
-import { CONFETTI } from './confetti.mjs?v=v3-nov13-3';
-import { initUI, refreshUI, setCounter, prizeGeometry, paintReward, paintResult, paintWin, paintPrizeCard, paintEmpty } from './ui.mjs?v=v3-nov13-3';
+import { CatchGame, ITEM_SIZES } from './game-core.mjs?v=v3-nov13-4';
+import { PrizeLedger, PRIZES, SPIN_MS, STORAGE_KEY } from './prizes.mjs?v=v3-nov13-4';
+import { REEL_ART } from './roulette-art.mjs?v=v3-nov13-4';
+import { reelMotion } from './roulette-motion.mjs?v=v3-nov13-4';
+import { CONFETTI } from './confetti.mjs?v=v3-nov13-4';
+import { initUI, refreshUI, prepareRoulette, setCounter, prizeGeometry, paintReward, paintResult, paintWin, paintPrizeCard, paintEmpty } from './ui.mjs?v=v3-nov13-4';
 
 const $ = id => document.getElementById(id);
 const scene = $('scene'), phone = $('phone'), field = $('falling-field');
@@ -16,6 +16,7 @@ let soundOn = false, audio = null, modal = null, modalFocus = null;
 let rewardBusy = false, smile = false, cabinetReturn = false, finishing = false;
 let rewardTimers = [], rewardQueue = [], toastTimer, reel = null;
 let adminBusy = false;
+let rouletteVisit = 0;
 const DEMO_CLOCK_KEY = `${STORAGE_KEY}-demo-clock`;
 function readDemoDays() {
   try {
@@ -57,6 +58,7 @@ function sizeScene() {
 new ResizeObserver(sizeScene).observe(phone);
 
 function showScreen(name) {
+  rouletteVisit++;
   screenName = name;
   clearTimeout(toastTimer); $('copy-toast').hidden = true;
   for (const key of screenNames) $(key + '-screen').hidden = key !== name;
@@ -495,19 +497,28 @@ function layoutReel(gap) {
   const center = 310 + (gap - 175) * 24 / 55;
   for (const item of reel.items) item.node.style.top = `${center + item.index * gap - 85}px`;
 }
-function showRoulette() {
+async function showRoulette() {
   if (ledger.state.lastWin) { showWin(); return; }
   if (!ledger.state.pending.length) { renderCabinet(); showScreen('cabinet'); return; }
+  const visit = ++rouletteVisit;
+  // Keep the current result visible until the complete destination is decoded.
+  if (!await prepareRoulette() || visit !== rouletteVisit) return;
+  if (ledger.state.lastWin || !ledger.state.pending.length) { restoreDraw(); return; }
   const day = ledger.state.pending[0].day;
   const received = ledger.state.prizes.filter(p => p.day === day);
   const remaining = ledger.state.pending.filter(p => p.day === day).length;
   const total = received.length + remaining;
-  setModal(null); buildReel(received.at(-1)?.prizeId); showScreen('roulette');
+  buildReel(received.at(-1)?.prizeId);
   setCounter('spin-count', `${received.length + 1}/${total}`, 'bold16', 19);
   $('spin-counter').setAttribute('aria-label', `Приз ${received.length + 1} из ${total}`);
   $('spin-button').disabled = Boolean(ledger.state.spin);
   $('roulette-screen').classList.toggle('spinning', Boolean(ledger.state.spin));
   if (ledger.state.spin) configureSpin();
+  const images = [...$('roulette-screen').querySelectorAll('img')];
+  const decoded = await Promise.all(images.map(img => img.decode().then(() => true).catch(() => false)));
+  if (visit !== rouletteVisit || !decoded.every(Boolean)) return;
+  if (ledger.state.lastWin || !ledger.state.pending.length) { restoreDraw(); return; }
+  setModal(null); showScreen('roulette');
 }
 function restoreDraw() {
   if (ledger.state.lastWin) showWin(); else showRoulette();

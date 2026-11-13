@@ -73,7 +73,6 @@
 .win-screen:before{background:rgba(0,0,0,.5)}
 .gift-lid,.gift-box,.win-glow,.win-confetti{display:none}
 .win-art{width:299.8px;height:413.99994px}
-.win-native-art{pointer-events:none}
 .won-prize{object-fit:fill}
 .win-description{display:contents}
 .win-description .button{position:absolute;left:16px;top:571px;margin:0}
@@ -148,7 +147,6 @@
 /* Updated prize illustrations use the authored 175/230 px reel spacing. */
 .reel-window{top:0}
 .win-prize-glow{position:absolute;z-index:2;pointer-events:none}
-.win-native-art{position:absolute;inset:0}
 .coupon-hero{height:188px;overflow:visible}
 .coupon-ticket{height:202px;mask-image:radial-gradient(circle 7px at 0 98px,transparent 99%,#000 100%),radial-gradient(circle 7px at 100% 98px,transparent 99%,#000 100%)}
 

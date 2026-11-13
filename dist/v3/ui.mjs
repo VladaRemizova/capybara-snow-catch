@@ -1,8 +1,8 @@
-import { PROMO_ART, WIN_LIGHTS, COUPON_LIGHTS } from './promo-art.mjs?v=v3-nov13-3';
-import { REEL_ART } from './roulette-art.mjs?v=v3-nov13-3';
-import { UPDATED_ART } from './ui-updates.mjs?v=v3-nov13-3';
-import { UI_ART as ORIGINAL_ART, UI_BOXES } from './ui-art.mjs?v=v3-nov13-3';
-import { GLYPHS } from './ui-glyphs.mjs?v=v3-nov13-3';
+import { PROMO_ART, WIN_LIGHTS, COUPON_LIGHTS } from './promo-art.mjs?v=v3-nov13-4';
+import { REEL_ART } from './roulette-art.mjs?v=v3-nov13-4';
+import { UPDATED_ART } from './ui-updates.mjs?v=v3-nov13-4';
+import { UI_ART as ORIGINAL_ART, UI_BOXES } from './ui-art.mjs?v=v3-nov13-4';
+import { GLYPHS } from './ui-glyphs.mjs?v=v3-nov13-4';
 
 const sharedWinParts = new Set(['win-box-layer','win-lid-layer','win-decor-layer']);
 const sharedArt = Object.fromEntries(Object.entries({ ...ORIGINAL_ART, ...UPDATED_ART }).filter(([key]) => !key.startsWith('win-') || sharedWinParts.has(key)));
@@ -19,7 +19,7 @@ const zeroBox = { x: 0, y: 0 };
 function decode(src) {
   if (!ready.has(src)) {
     const img = new Image(); img.src = src;
-    ready.set(src, img.decode().then(() => true).catch(() => false));
+    ready.set(src, img.decode().then(() => true).catch(() => { ready.delete(src); return false; }));
   }
   return ready.get(src);
 }
@@ -167,13 +167,12 @@ export function paintWin(prizeId) {
   text($('win-saved-note'), 'win-saved-note', null, {x:16,y:635,width:343,height:13});
   text(document.querySelector('.win-description>p'), 'text-565-3055', null, {x:150,y:prizeId==='points'?468:492,width:75,height:15});
   text($('won-title'), 'win-title-'+prizeId, UI_ART['win-title-'+prizeId].rootId);
-  composeGift(document.querySelector('.win-native-art'), prizeId);
   revealGift(prizeId); refreshUI();
 }
 
 function addNativeLight(parent, light, cls = '') {
   const img = document.createElement('img'); img.alt = ''; img.src = light.src; img.className = cls;
-  geometry(img, light); img.style.mixBlendMode = light.blend; parent.append(img); return img;
+  geometry(img, light); img.style.mixBlendMode = light.blend; img.dataset.nodeId = light.id; parent.append(img); return img;
 }
 function composeGift(parent, prizeId) {
   parent.replaceChildren();
@@ -181,12 +180,12 @@ function composeGift(parent, prizeId) {
   for (const [key,cls] of [['win-box-layer','win-box-layer'],['win-lid-layer','win-lid-layer'],['win-decor-layer','win-decor-layer']]) {
     const img=document.createElement('img');img.alt='';img.className=cls;image(img,key,null,canvas);parent.append(img);
   }
-  const lights=WIN_LIGHTS[prizeId], front=prizeId==='hotdog'?null:lights.at(-1);
-  for(const light of lights)if(light!==front)addNativeLight(parent,light,'win-prize-glow');
+  const lights=WIN_LIGHTS[prizeId];
+  for(const light of lights)if(!light.front)addNativeLight(parent,light,'win-prize-glow');
   const floating=document.createElement('div');floating.className='win-prize-float';
   const prize=document.createElement('img');prize.alt='';prize.className='win-prize-layer';
   image(prize,'win-'+prizeId+'-art',null,canvas);floating.append(prize);parent.append(floating);
-  if(front)addNativeLight(parent,front,'win-prize-glow');
+  for(const light of lights)if(light.front)addNativeLight(parent,light,'win-prize-glow');
 }
 let giftSequence=0;
 function revealGift(prizeId) {
@@ -222,7 +221,7 @@ export function paintPrizeCard(card, prizeId) {
 }
 
 export function initUI() {
-  for (const layer of Object.values(REEL_ART).flat()) decode(layer.src);
+  prepareRoulette();
   // Pre-decode small UI graphics so entering a popup never reveals an empty label.
   for (const a of Object.values(UI_ART)) if (a.kind === 'text' || a.kind === 'button' || (a.kind === 'art' && a.bytes < 30000)) decode(a.src);
   for (const [selector, key] of [['.entry-logo','entry-logo'],['.entry-heading','entry-heading'],['.entry-bag','entry-bag'],['.entry-left-detail','entry-left-detail'],['.entry-snow-left','entry-snow-left'],['.entry-snow-right','entry-snow-right'],['.entry-corner','entry-corner']]) image(document.querySelector(selector), key);
@@ -258,12 +257,17 @@ export function initUI() {
   $('roulette-snow').replaceChildren();
   $('roulette-screen').style.backgroundImage = `url(${UI_ART['roulette-bg'].src})`;
   for (const key of sharedWinParts) decode(UI_ART[key].src);
-  const giftArt=document.createElement('div');giftArt.className='win-native-art';geometry(giftArt,{x:0,y:0,width:299.8,height:414});$('win-art').append(giftArt);
   for(const a of Object.values(PROMO_ART))decode(a.src);
   text(document.querySelector('.cabinet-screen h1'), 'text-565-2702', '565:2696');
   graphic($('owned-count'), 'hud-count-bg');
   text(document.querySelector('.spin-actions>p'), 'text-565-3018', null, {x:24,y:64,width:316,height:13});
   initCoupon(); refreshUI();
+}
+
+export function prepareRoulette() {
+  const sources = [UI_ART['roulette-bg'].src, UI_ART['button-spin'].src, UI_ART['text-565-3018'].src,
+    ...Object.values(REEL_ART).flat().map(layer => layer.src)];
+  return Promise.all(sources.map(decode)).then(loaded => loaded.every(Boolean));
 }
 
 function initCoupon() {

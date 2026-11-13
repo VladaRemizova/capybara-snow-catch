@@ -5,7 +5,7 @@ import { PrizeLedger, STORAGE_KEY, PRIZES } from '../dist/v3/prizes.mjs';
 import { PrizeLedger as OldLedger, STORAGE_KEY as OLD_KEY } from '../dist/v2/prizes.mjs';
 import { ITEM_CONTACTS } from '../dist/v3/collision-shapes.mjs';
 import { BAG_OPENING } from '../dist/v3/game-core.mjs';
-import { REEL_ART, PROMO_ART } from '../dist/v3/promo-art.mjs';
+import { REEL_ART, PROMO_ART, WIN_LIGHTS } from '../dist/v3/promo-art.mjs';
 
 const now=Date.parse('2026-11-13T12:00:00Z');
 const seed=new PrizeLedger(null,now,()=>.25);seed.commitRound('new-qa',30,now);
@@ -59,6 +59,10 @@ try{
   await page.waitForFunction(()=>document.querySelector('#win-art').classList.contains('layers-ready'));await loaded();await animations('#win-art');await animations('.win-description');
   assert.equal(await page.locator('#win-art').evaluate(n=>getComputedStyle(n).transform),'none');
   assert.equal(await page.locator('.win-overlay-art').count(),0);
+  assert.equal(await page.locator('.win-native-art').count(),0);
+  const winLights=await page.locator('.win-prize-glow').evaluateAll(imgs=>imgs.map(n=>({id:n.dataset.nodeId,src:n.getAttribute('src'),x:parseFloat(n.style.left),y:parseFloat(n.style.top),width:parseFloat(n.style.width),height:parseFloat(n.style.height),blend:getComputedStyle(n).mixBlendMode,loaded:n.complete&&n.naturalWidth>0})));
+  assert.equal(winLights.length,WIN_LIGHTS[id].length);
+  for(let i=0;i<winLights.length;i++){const actual=winLights[i],expected=WIN_LIGHTS[id][i];for(const key of ['id','src','blend'])assert.equal(actual[key],expected[key]);for(const key of ['x','y','width','height'])assert.ok(Math.abs(actual[key]-expected[key])<.001);assert.equal(actual.loaded,true);}
   assert.equal(await page.locator('#won-title').textContent(),PRIZES[id].title);
   assert.match(await page.locator('.win-prize-layer').last().getAttribute('src'),new RegExp(`win-${id}-art.webp$`));
   assert.equal(await page.locator('#win-saved-note').isVisible(),n<2);

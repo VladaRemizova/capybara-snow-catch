@@ -22,16 +22,22 @@ test('v3 every item reaches the actual sack opening before being collected once'
   assert.equal(g.objects.length, 0); assert.equal(g.advanceTo(.2).some(e => e.type === 'catch'), false);
  }
 });
-test('v3 both inner edges catch and a tip just outside either edge misses', () => {
+test('v3 visible item edges touching either edge of the opening are caught', () => {
  for (const kind of Object.keys(ITEM_CONTACTS)) {
-  for (const direction of [-1, 1]) {
-   const tip = ITEM_CONTACTS[kind];
-   for (const [offset, expected] of [[BAG_OPENING.halfWidth - .1, true], [BAG_OPENING.halfWidth + .1, false]]) {
-    const hit = bagEntry(kind, x + BAG_OPENING.x - tip.x + direction * offset, rim - tip.y - 1, rim - tip.y + 1, x, x, y);
-    assert.equal(hit !== null, expected, `${kind}, side ${direction}, offset ${offset}`);
-   }
+  const item = ITEM_CONTACTS[kind], bottom = item.bands.at(-1);
+  for (const [side, edge, tipEdge] of [['left', BAG_OPENING.x - BAG_OPENING.halfWidth, bottom[2]], ['right', BAG_OPENING.x + BAG_OPENING.halfWidth, bottom[0]]]) {
+   const itemX = x + edge - tipEdge;
+   const hit = bagEntry(kind, itemX, rim - item.y - 1, rim - item.y + 1, x, x, y);
+   assert.notEqual(hit, null, `${kind}: ${side} edge touch`);
+  }
+  for (const itemX of [x + BAG_OPENING.x - BAG_OPENING.halfWidth - item.bounds[2] - 1, x + BAG_OPENING.x + BAG_OPENING.halfWidth - item.bounds[0] + 1]) {
+   assert.equal(bagEntry(kind, itemX, rim - 80, rim + 80, x, x, y), null, `${kind}: clear space beside the opening`);
   }
  }
+});
+test('v3 a wider part of the silhouette can graze the rim after its lower tip misses', () => {
+ assert.notEqual(bagEntry('coffee', x + 69, rim - 60, rim + 50, x, x, y), null);
+ assert.equal(bagEntry('coffee', x + 71, rim - 60, rim + 50, x, x, y), null);
 });
 test('v3 head, body, and sideways contacts below the hole do not award coins', () => {
  for (const [dx, dy] of [[0, 10], [-90, 150], [90, 150], [0, 170]]) {
@@ -42,13 +48,15 @@ test('v3 head, body, and sideways contacts below the hole do not award coins', (
 });
 test('v3 a missed item keeps falling and cannot be recovered from below the opening', () => {
  for (const direction of [-1, 1]) {
-  const g = setup(); const item = atOpening(g, 'coffee', direction * (BAG_OPENING.halfWidth + 1));
+  const g = setup(); const item = atOpening(g, 'coffee', direction * 100);
   g.objects = [item]; const before = item.y;
   g.advanceTo(.016); assert.equal(g.coins, 0); assert.ok(item.y > before);
-  g.beginDrag(1, x, y + 60); g.drag(1, x + direction * 35);
-  assert.equal(g.advanceTo(.032).some(e => e.type === 'catch'), false);
+  for (const t of [.4, .8, 1.2, 1.6]) g.advanceTo(t);
+  assert.ok(item.y + ITEM_CONTACTS.coffee.bounds[1] > g.catchY);
+  g.beginDrag(1, x, y + 60); g.drag(1, x + direction * 100);
+  assert.equal(g.advanceTo(1.616).some(e => e.type === 'catch'), false);
   assert.equal(g.coins, 0); assert.equal(g.objects[0].x, item.x);
-  for (let t = .5; t < 6; t += .5) g.advanceTo(t);
+  for (let t = 2; t < 6; t += .5) g.advanceTo(t);
   assert.equal(g.objects.length, 0); assert.equal(g.coins, 0);
  }
 });
@@ -60,8 +68,8 @@ test('v3 catches use the moving sack position at the instant of downward entry',
   x: x + BAG_OPENING.x - tip.x, y: g.catchY - tip.y - g.speed * .008 }];
  g.drag(1, 309); assert.equal(g.advanceTo(.016).some(e => e.type === 'catch'), true);
  assert.equal(g.coins, 1);
- // Arriving under the item after it has already crossed the hole is too late.
- assert.equal(bagEntry('coffee', x + BAG_OPENING.x - tip.x, rim - tip.y - 1, rim - tip.y + 1, 66, x, y), null);
+ // Arriving after the entire visible sprite passed below the hole is too late.
+ assert.equal(bagEntry('coffee', x + BAG_OPENING.x - tip.x, rim + 44, rim + 46, 66, x, y), null);
 });
 test('v3 the sack catches in both moving poses, including two-point red tokens and reward thresholds', () => {
  for (const direction of [-1, 1]) {
