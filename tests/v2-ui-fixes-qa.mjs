@@ -62,7 +62,7 @@ await page.locator('.reel-item').evaluateAll(imgs => Promise.all(imgs.map(img =>
 assert.equal(await page.locator('.reel-item').evaluateAll(imgs => imgs.every(img => img.naturalWidth > 0)), true);
 for (const id of ['hoff','rossko5','rossko10']) assert.equal((await page.request.get(new URL(`assets/prize-${id}.png`, page.url()).href)).status(), 200);
 await shot('roulette-restored');
-const trackY = () => page.locator('#reel-track').evaluate(n => Number(n.style.transform.match(/translateY\(([-.\d]+)/)?.[1] || 0));
+const trackY = () => page.locator('#reel-track').evaluate(n => parseFloat(n.style.top) || 0);
 await page.click('#spin-button'); await page.waitForFunction(() => JSON.parse(localStorage.getItem('capybara-snow-catch-v2')).spin);
 await tick(100); assert.ok(await trackY() < 0);
 await tick(500); assert.ok(await trackY() > 0);

@@ -50,3 +50,13 @@
   .overlay:before,.modal-layer:not([hidden]) .help-card,.modal-layer:not([hidden]) .result-card,.reward-composition,.all-prizes-actions,.win-art.gift-revealing,.gift-revealing .win-box-layer,.gift-revealing .win-lid-layer,.gift-revealing .win-prize-layer,.gift-revealing .win-decor-layer,.win-screen:not([hidden]) .win-description>*{animation:none!important;opacity:1;transform:none;translate:none}
   .gift-revealing .win-prize-float{animation:none!important}
 }
+
+.reward-confetti img{animation:reward-confetti-fall 1.28s linear both}
+@keyframes reward-confetti-fall{
+  0%{opacity:0;transform:translate(var(--from-x),var(--from-y)) rotate(var(--spin)) scale(.2);animation-timing-function:cubic-bezier(.14,.75,.25,1)}
+  38%{opacity:1;transform:translate(var(--apex-x),var(--apex-y)) rotate(var(--apex-spin)) scale(1);animation-timing-function:cubic-bezier(.45,0,.85,.55)}
+  82%{opacity:1;transform:translate(var(--drop-x),var(--drop-y)) rotate(var(--fall-spin)) scale(1);animation-timing-function:ease-out}
+  100%{opacity:1;transform:translate(0,0) rotate(0) scale(1)}
+}
+.reward-layer.dismissed{animation:fade-out .2s ease-in both}
+.reward-layer.dismissed .reward-composition,.reward-layer.dismissed .all-prizes-actions{animation:reward-exit .2s ease-in both}

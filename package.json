@@ -10,10 +10,11 @@
   "scripts": {
     "dev": "node scripts/serve.mjs",
     "test": "node --test --test-isolation=none tests/game-core.test.mjs tests/v2-core.test.mjs",
-    "check": "node --check dist/main.mjs && node --check dist/game-core.mjs && node --check dist/prize-art.mjs && node --check dist/v2/main.mjs && node --check dist/v2/game-core.mjs && node --check dist/v2/prizes.mjs && node --check dist/v2/confetti.mjs && node --check dist/v2/ui.mjs && node --check dist/v2/ui-art.mjs && node --check dist/v2/ui-glyphs.mjs && node --check dist/v2/ui-updates.mjs && node --check dist/v2/roulette-motion.mjs",
+    "check": "node --check dist/main.mjs && node --check dist/game-core.mjs && node --check dist/prize-art.mjs && node --check dist/v2/main.mjs && node --check dist/v2/game-core.mjs && node --check dist/v2/prizes.mjs && node --check dist/v2/confetti.mjs && node --check dist/v2/ui.mjs && node --check dist/v2/ui-art.mjs && node --check dist/v2/ui-glyphs.mjs && node --check dist/v2/ui-updates.mjs && node --check dist/v2/roulette-motion.mjs && node --check dist/v2/roulette-art.mjs",
     "test:browser": "node tests/browser-qa.mjs && node tests/movement-qa.mjs",
     "test:v2:browser": "node tests/v2-browser-qa.mjs",
-    "test:v2:ui": "node tests/v2-ui-fixes-qa.mjs"
+    "test:v2:ui": "node tests/v2-ui-fixes-qa.mjs",
+    "test:v2:roulette": "node tests/v2-roulette-qa.mjs"
   },
   "devDependencies": {
     "playwright": "1.57.0"

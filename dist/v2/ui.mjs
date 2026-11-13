@@ -1,6 +1,7 @@
-import { UPDATED_ART } from './ui-updates.mjs?v=nov13-3';
-import { UI_ART as ORIGINAL_ART, UI_BOXES } from './ui-art.mjs?v=nov13-3';
-import { GLYPHS } from './ui-glyphs.mjs?v=nov13-3';
+import { REEL_ART } from './roulette-art.mjs?v=nov13-4';
+import { UPDATED_ART } from './ui-updates.mjs?v=nov13-4';
+import { UI_ART as ORIGINAL_ART, UI_BOXES } from './ui-art.mjs?v=nov13-4';
+import { GLYPHS } from './ui-glyphs.mjs?v=nov13-4';
 
 const UI_ART = { ...ORIGINAL_ART, ...UPDATED_ART };
 const $ = id => document.getElementById(id);
@@ -206,7 +207,7 @@ export function paintPrizeCard(card, prizeId) {
 }
 
 export function initUI() {
-  for (const id of ['hoff','rossko5','rossko10']) decode(prizeGeometry(id).src);
+  for (const layer of Object.values(REEL_ART).flat()) decode(layer.src);
   // Pre-decode small UI graphics so entering a popup never reveals an empty label.
   for (const a of Object.values(UI_ART)) if (a.kind === 'text' || a.kind === 'button' || (a.kind === 'art' && a.bytes < 30000)) decode(a.src);
   for (const [selector, key] of [['.entry-logo','entry-logo'],['.entry-heading','entry-heading'],['.entry-bag','entry-bag'],['.entry-left-detail','entry-left-detail'],['.entry-snow-left','entry-snow-left'],['.entry-snow-right','entry-snow-right'],['.entry-corner','entry-corner']]) image(document.querySelector(selector), key);

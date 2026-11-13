@@ -1,8 +1,9 @@
-import { CatchGame, ITEM_SIZES } from './game-core.mjs?v=nov13-3';
-import { PrizeLedger, PRIZES, SPIN_MS, STORAGE_KEY } from './prizes.mjs?v=nov13-3';
-import { reelMotion } from './roulette-motion.mjs?v=nov13-3';
-import { CONFETTI } from './confetti.mjs?v=nov13-3';
-import { initUI, refreshUI, setCounter, prizeGeometry, paintReward, paintResult, paintWin, paintPrizeCard, paintEmpty } from './ui.mjs?v=nov13-3';
+import { CatchGame, ITEM_SIZES } from './game-core.mjs?v=nov13-4';
+import { PrizeLedger, PRIZES, SPIN_MS, STORAGE_KEY } from './prizes.mjs?v=nov13-4';
+import { REEL_ART } from './roulette-art.mjs?v=nov13-4';
+import { reelMotion } from './roulette-motion.mjs?v=nov13-4';
+import { CONFETTI } from './confetti.mjs?v=nov13-4';
+import { initUI, refreshUI, setCounter, prizeGeometry, paintReward, paintResult, paintWin, paintPrizeCard, paintEmpty } from './ui.mjs?v=nov13-4';
 
 const $ = id => document.getElementById(id);
 const scene = $('scene'), phone = $('phone'), field = $('falling-field');
@@ -72,8 +73,8 @@ function setModal(name) {
   }
   if (name) {
     const layer = $(name + '-layer');
-    layer.classList.remove('leaving');
-    const focus = layer.querySelector('button:not(:disabled)') || layer;
+    layer.classList.remove('leaving', 'dismissed');
+    const focus = [...layer.querySelectorAll('button:not(:disabled)')].find(button => !button.closest('[hidden]')) || layer;
     if (!focus.hasAttribute('tabindex') && focus === layer) focus.tabIndex = -1;
     focus.focus({ preventScroll: true });
   } else if (modalFocus?.isConnected && !modalFocus.closest('[hidden]')) modalFocus.focus({ preventScroll: true });
@@ -339,17 +340,24 @@ function catchEffect(object) {
   pop($('coin-stat')); beep();
 }
 
-function confetti(target, win = false) {
+function confetti(target) {
   target.replaceChildren();
+  const originX = 187.5, originY = game.height / 2 + 12;
   for (const [index, art] of CONFETTI.entries()) {
     if (index === 0) continue;
     const piece = document.createElement('img'); piece.src = `assets/${art.name}.svg`; piece.alt = '';
-    const x = win ? (art.x - 87) * 1.4 : art.x;
-    const y = win ? (art.y - 155) * .9 : art.y + (game.height - 672) / 2;
+    const x = art.x, y = art.y + (game.height - 672) / 2;
+    const apexY = Math.min(y - 36 - index % 4 * 6, originY - 45 - index % 3 * 12);
     piece.style.left = `${x}px`; piece.style.top = `${y}px`;
-    piece.style.setProperty('--from-x', `${(win ? 150 : 187.5) - x}px`);
-    piece.style.setProperty('--from-y', `${(win ? 270 : game.height / 2 + 12) - y}px`);
+    piece.style.setProperty('--from-x', `${originX - x}px`);
+    piece.style.setProperty('--from-y', `${originY - y}px`);
+    piece.style.setProperty('--apex-x', `${(originX - x) * .14}px`);
+    piece.style.setProperty('--apex-y', `${apexY - y}px`);
+    piece.style.setProperty('--drop-x', `${(originX - x) * .05}px`);
+    piece.style.setProperty('--drop-y', `${(apexY - y) * .28}px`);
     piece.style.setProperty('--spin', `${(index % 2 ? 1 : -1) * index * 27}deg`);
+    piece.style.setProperty('--apex-spin', `${(index % 2 ? 1 : -1) * (90 + index * 19)}deg`);
+    piece.style.setProperty('--fall-spin', `${(index % 2 ? 1 : -1) * 15}deg`);
     piece.style.animationDelay = `${index % 5 * 24}ms`;
     target.append(piece);
   }
@@ -380,6 +388,12 @@ function showReward(count) {
     rewardTimers.push(setTimeout(() => $('reward-layer').classList.add('leaving'), 2650));
     rewardTimers.push(setTimeout(closeReward, 3000));
   }
+}
+function dismissReward() {
+  const layer = $('reward-layer');
+  if (modal !== 'reward' || layer.classList.contains('leaving') || layer.classList.contains('dismissed')) return;
+  clearRewardTimers(); layer.classList.add('dismissed');
+  rewardTimers.push(setTimeout(closeReward, reducedMotion ? 0 : 200));
 }
 function closeReward() {
   clearRewardTimers(); smile = false; rewardBusy = false; setModal(null);
@@ -441,18 +455,28 @@ scene.addEventListener('click', event => {
 });
 
 const reelOrder = ['hoff', 'rossko5', 'rossko10'];
-const reelId = index => reelOrder[((index % 3) + 3) % 3];
-function buildReel() {
-  const track = $('reel-track'); track.replaceChildren();
-  const items = [];
+const reelId = (index, startIndex = 0) => reelOrder[(((index + startIndex) % 3) + 3) % 3];
+function buildReel(centerPrize = 'hoff') {
+  const track = $('reel-track');
+  track.replaceChildren();
+  // Discard travel from the previous spin before showing the rebuilt reel.
+  track.style.transform = 'none'; track.style.top = '0px';
+  const items = [], startIndex = Math.max(0, reelOrder.indexOf(centerPrize));
   for (let index = -36; index <= 2; index++) {
-    const id = reelId(index), prize = PRIZES[id], img = document.createElement('img');
-    const g = prizeGeometry(id), { width: w, height: h } = g;
-    img.className = 'reel-item' + (index < -1 || index > 1 ? ' extra' : ''); img.src = g.src; img.alt = prize.title;
-    img.style.width = `${w}px`; img.style.height = `${h}px`; img.style.left = `${33 + g.left}px`;
-    track.append(img); items.push({ index, img, top: g.top });
+    const id = reelId(index, startIndex), node = document.createElement('div');
+    node.className = 'reel-prize' + (index < -1 || index > 1 ? ' extra' : '');
+    node.dataset.prize = id; node.dataset.index = index;
+    node.setAttribute('role', 'img'); node.setAttribute('aria-label', PRIZES[id].title);
+    for (const layer of REEL_ART[id]) {
+      const img = document.createElement('img'); img.src = layer.src; img.alt = '';
+      img.className = layer.kind === 'light' ? 'reel-light' : 'reel-item';
+      Object.assign(img.style, { left: `${layer.x}px`, top: `${layer.y}px`, width: `${layer.width}px`, height: `${layer.height}px` });
+      if (layer.kind === 'light') img.style.mixBlendMode = 'overlay';
+      node.append(img);
+    }
+    track.append(node); items.push({ index, node, id });
   }
-  reel = { items, gap: 176, offset: 0, targetIndex: -30 };
+  reel = { items, gap: 176, offset: 0, targetIndex: -30, startIndex };
   layoutReel(176);
 }
 function layoutReel(gap) {
@@ -460,16 +484,18 @@ function layoutReel(gap) {
   reel.gap = gap;
   // The Figma pointers align with the discount label, below the illustration centre.
   const center = 271 + gap - 176;
-  for (const item of reel.items) item.img.style.top = `${center + item.index * gap - 85 + item.top}px`;
+  for (const item of reel.items) item.node.style.top = `${center + item.index * gap - 85}px`;
 }
 function showRoulette() {
   if (ledger.state.lastWin) { showWin(); return; }
   if (!ledger.state.pending.length) { renderCabinet(); showScreen('cabinet'); return; }
-  setModal(null); buildReel(); showScreen('roulette');
   const day = ledger.state.pending[0].day;
-  const received = ledger.state.prizes.filter(p => p.day === day).length;
-  const total = received + ledger.state.pending.filter(p => p.day === day).length;
-  setCounter('spin-count', `${received + 1}/${total}`, 'bold16', 19);
+  const received = ledger.state.prizes.filter(p => p.day === day);
+  const remaining = ledger.state.pending.filter(p => p.day === day).length;
+  const total = received.length + remaining;
+  setModal(null); buildReel(received.at(-1)?.prizeId); showScreen('roulette');
+  setCounter('spin-count', `${received.length + 1}/${total}`, 'bold16', 19);
+  $('spin-counter').setAttribute('aria-label', `Приз ${received.length + 1} из ${total}`);
   $('spin-button').disabled = Boolean(ledger.state.spin);
   $('roulette-screen').classList.toggle('spinning', Boolean(ledger.state.spin));
   if (ledger.state.spin) configureSpin();
@@ -482,7 +508,7 @@ function configureSpin() {
   if (!spin || !reel) return;
   const token = ledger.state.pending.find(p => p.id === spin.pendingId);
   if (!token) return;
-  for (let index = -30; index >= -32; index--) if (reelId(index) === token.prizeId) reel.targetIndex = index;
+  for (let index = -30; index >= -32; index--) if (reelId(index, reel.startIndex) === token.prizeId) reel.targetIndex = index;
   $('spin-button').disabled = true;
   $('roulette-screen').classList.add('spinning');
 }
@@ -499,7 +525,10 @@ function animateReel() {
   const t = Math.max(0, Math.min(1, (Date.now() - spin.startedAt) / SPIN_MS));
   const motion = reelMotion(t * SPIN_MS, -reel.targetIndex * 211);
   layoutReel(motion.gap);
-  $('reel-track').style.transform = `translateY(${motion.offset}px)`;
+  reel.offset = motion.offset;
+  // A transform would isolate Overlay lights from the red backdrop. Moving the
+  // positioned track preserves Figma blending for every moving prize.
+  $('reel-track').style.top = `${motion.offset}px`;
   if (t === 1 && !settlingSpin) {
     settlingSpin = true;
     transaction(l => l.finishSpin()).then(() => {
@@ -533,6 +562,10 @@ $('sound-button').addEventListener('click', () => {
   soundOn = !soundOn; $('sound-button').setAttribute('aria-pressed', String(soundOn));
   $('sound-button').setAttribute('aria-label', soundOn ? 'Выключить звук' : 'Включить звук');
   document.querySelector('#sound-button img').src = soundOn ? 'assets/pixel/sound-on.webp' : 'assets/sound-off.webp'; beep();
+});
+$('reward-layer').addEventListener('click', event => { if (!event.target.closest('button')) dismissReward(); });
+$('reward-layer').addEventListener('keydown', event => {
+  if (event.target === $('reward-layer') && ['Enter', ' ', 'Escape'].includes(event.key)) { event.preventDefault(); dismissReward(); }
 });
 $('reward-continue').addEventListener('click', closeReward);
 $('reward-claim').addEventListener('click', finishRound);

@@ -60,7 +60,7 @@
 #result-rating-copy{display:contents}
 #result-rating-actions{position:absolute;left:24px;top:314px;width:259px;display:flex;flex-direction:column;gap:4px}
 .roulette-screen{background-size:375px 672px;background-repeat:no-repeat}
-.reel-window{mask-image:none;transition:bottom .35s}
+.reel-window{mask:none;-webkit-mask:none;filter:none;backdrop-filter:none;transition:bottom .35s}
 .reel-item{object-fit:fill}
 .spin-counter{width:61px;padding:0;gap:4px;border-radius:9px;background:#ffdae1;box-shadow:none}
 .spin-counter:before{display:none}
@@ -135,3 +135,8 @@
 .world-light{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;background:linear-gradient(181.191233981417deg,rgba(255,255,255,0) 79.592%,rgba(255,255,255,.3) 87.809%,rgba(255,255,255,.3) 94.746%,rgba(255,255,255,0) 97.958%)}
 
 .button.art-button:disabled{opacity:1}
+
+/* No group transform: overlay light must sample the actual roulette backdrop. */
+.reel-track{transform:none;will-change:auto}
+.reel-prize{position:absolute;left:33px;width:170px;height:170px;pointer-events:none}
+.reel-item,.reel-light{position:absolute;object-fit:fill;will-change:auto;pointer-events:none}

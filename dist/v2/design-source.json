@@ -1955,6 +1955,223 @@
       "bytes": 65834,
       "scale": 2,
       "rgbaSha256": "8fdf7b37b646b278ba7534e47de40f5dc91f635260ea81979ede9d7ae0379d26"
+    },
+    {
+      "name": "reel-hoff-0",
+      "file": "pixel/reel-hoff-0.webp",
+      "ids": [
+        "565:2965"
+      ],
+      "width": 472,
+      "height": 472,
+      "scale": 2,
+      "bytes": 56496,
+      "rgbaSha256": "61373f7cb5a2089070dc9a96b972a857906d5da3cade300fa8c65bdf8c6dcd0b",
+      "blendMode": "OVERLAY"
+    },
+    {
+      "name": "reel-hoff-1",
+      "file": "pixel/reel-hoff-1.webp",
+      "ids": [
+        "565:2967",
+        "565:2968",
+        "565:2969",
+        "565:2970",
+        "565:2971"
+      ],
+      "width": 472,
+      "height": 472,
+      "scale": 2,
+      "bytes": 48922,
+      "rgbaSha256": "74e75923e0372471f4ec5e027d0c76968d5eeee1e2b2269f6f56db98c1b3026a",
+      "blendMode": "NORMAL"
+    },
+    {
+      "name": "reel-hoff-2",
+      "file": "pixel/reel-hoff-2.webp",
+      "ids": [
+        "565:2972"
+      ],
+      "width": 472,
+      "height": 472,
+      "scale": 2,
+      "bytes": 20062,
+      "rgbaSha256": "cf7837e59d0d87120c7ccf0d46a9cdc2833c4cd10f08ad012064f9b352c35661",
+      "blendMode": "OVERLAY"
+    },
+    {
+      "name": "reel-hoff-3",
+      "file": "pixel/reel-hoff-3.webp",
+      "ids": [
+        "565:2973"
+      ],
+      "width": 472,
+      "height": 472,
+      "scale": 2,
+      "bytes": 14758,
+      "rgbaSha256": "6d3eb59b5ade6cf1f0e0db773df6a430e7c603785259c18b090f76977c0fea42",
+      "blendMode": "OVERLAY"
+    },
+    {
+      "name": "reel-hoff-4",
+      "file": "pixel/reel-hoff-4.webp",
+      "ids": [
+        "565:2974"
+      ],
+      "width": 472,
+      "height": 472,
+      "scale": 2,
+      "bytes": 24356,
+      "rgbaSha256": "5bf4e595725022c3faac2dafbb5cee2aaa40c751dcc1d0e153cea7b2ce5f81cf",
+      "blendMode": "OVERLAY"
+    },
+    {
+      "name": "reel-rossko10-0",
+      "file": "pixel/reel-rossko10-0.webp",
+      "ids": [
+        "565:2977"
+      ],
+      "width": 472,
+      "height": 472,
+      "scale": 2,
+      "bytes": 72520,
+      "rgbaSha256": "680caa9ecb8a3d8933630861d8371ae059847fc0e5cf18ce0bec1a29d8ad4b2a",
+      "blendMode": "OVERLAY"
+    },
+    {
+      "name": "reel-rossko10-1",
+      "file": "pixel/reel-rossko10-1.webp",
+      "ids": [
+        "565:2978",
+        "565:2979",
+        "565:2980"
+      ],
+      "width": 472,
+      "height": 472,
+      "scale": 2,
+      "bytes": 63850,
+      "rgbaSha256": "a6eef89dfe242d97bc682b825999c3235bdf6e6b45bbc27e3b61b07a6fdd4019",
+      "blendMode": "NORMAL"
+    },
+    {
+      "name": "reel-rossko10-2",
+      "file": "pixel/reel-rossko10-2.webp",
+      "ids": [
+        "565:2981"
+      ],
+      "width": 472,
+      "height": 472,
+      "scale": 2,
+      "bytes": 16132,
+      "rgbaSha256": "9461103b7c9f0fba64d957ba364a7d0434842bdf83c028e7d32841b604eb4438",
+      "blendMode": "OVERLAY"
+    },
+    {
+      "name": "reel-rossko10-3",
+      "file": "pixel/reel-rossko10-3.webp",
+      "ids": [
+        "565:2982"
+      ],
+      "width": 472,
+      "height": 472,
+      "scale": 2,
+      "bytes": 1668,
+      "rgbaSha256": "808dca4f2c5832800d26fd02d86193f6e5cdb202854ec9962c0f3b0386a1440d",
+      "blendMode": "NORMAL"
+    },
+    {
+      "name": "reel-rossko10-4",
+      "file": "pixel/reel-rossko10-4.webp",
+      "ids": [
+        "565:2983"
+      ],
+      "width": 472,
+      "height": 472,
+      "scale": 2,
+      "bytes": 20124,
+      "rgbaSha256": "c1d7bb4c3574ed93e07a58d8c81dedaba1da3f1f57f25f73635900bd65a9c81c",
+      "blendMode": "OVERLAY"
+    },
+    {
+      "name": "reel-rossko5-0",
+      "file": "pixel/reel-rossko5-0.webp",
+      "ids": [
+        "565:2986"
+      ],
+      "width": 472,
+      "height": 472,
+      "scale": 2,
+      "bytes": 72520,
+      "rgbaSha256": "680caa9ecb8a3d8933630861d8371ae059847fc0e5cf18ce0bec1a29d8ad4b2a",
+      "blendMode": "OVERLAY"
+    },
+    {
+      "name": "reel-rossko5-1",
+      "file": "pixel/reel-rossko5-1.webp",
+      "ids": [
+        "565:2987",
+        "565:2988",
+        "565:2989",
+        "565:2990"
+      ],
+      "width": 472,
+      "height": 472,
+      "scale": 2,
+      "bytes": 72564,
+      "rgbaSha256": "b5f981783d222723f619851bde1098dbdfcb1e44e546fe8b496ed797ceae46ad",
+      "blendMode": "NORMAL"
+    },
+    {
+      "name": "reel-rossko5-2",
+      "file": "pixel/reel-rossko5-2.webp",
+      "ids": [
+        "565:2991"
+      ],
+      "width": 472,
+      "height": 472,
+      "scale": 2,
+      "bytes": 10578,
+      "rgbaSha256": "ce4133d3356ec0f1522fcec875113a68e136792902584f7d373f69554dce3413",
+      "blendMode": "OVERLAY"
+    },
+    {
+      "name": "reel-rossko5-3",
+      "file": "pixel/reel-rossko5-3.webp",
+      "ids": [
+        "565:2992"
+      ],
+      "width": 472,
+      "height": 472,
+      "scale": 2,
+      "bytes": 6886,
+      "rgbaSha256": "1fb0b6f9aeed2fb311b90c22c5f0456e5a61a29ac7a5db06fce3e6a99ff3dde8",
+      "blendMode": "OVERLAY"
+    },
+    {
+      "name": "reel-rossko5-4",
+      "file": "pixel/reel-rossko5-4.webp",
+      "ids": [
+        "565:2993"
+      ],
+      "width": 472,
+      "height": 472,
+      "scale": 2,
+      "bytes": 6962,
+      "rgbaSha256": "f9a962983ad42fbd38ebe7d60386573082dfffb8934d8abea03d6ab6f7c4b94f",
+      "blendMode": "OVERLAY"
+    },
+    {
+      "name": "reel-rossko5-5",
+      "file": "pixel/reel-rossko5-5.webp",
+      "ids": [
+        "565:2994"
+      ],
+      "width": 472,
+      "height": 472,
+      "scale": 2,
+      "bytes": 3776,
+      "rgbaSha256": "edb011f9611eb4336550be96c77df407921d5ca63e81ad7c1a31f99a1bd420d9",
+      "blendMode": "OVERLAY"
     }
   ],
   "vectors": [
