@@ -1,9 +1,9 @@
-import { CatchGame, ITEM_SIZES } from './game-core.mjs?v=nov13-7';
-import { PrizeLedger, PRIZES, SPIN_MS, STORAGE_KEY } from './prizes.mjs?v=nov13-7';
-import { REEL_ART } from './roulette-art.mjs?v=nov13-7';
-import { reelMotion } from './roulette-motion.mjs?v=nov13-7';
-import { CONFETTI } from './confetti.mjs?v=nov13-7';
-import { initUI, refreshUI, setCounter, prizeGeometry, paintReward, paintResult, paintWin, paintPrizeCard, paintEmpty } from './ui.mjs?v=nov13-7';
+import { CatchGame, ITEM_SIZES } from './game-core.mjs?v=nov13-8';
+import { PrizeLedger, PRIZES, SPIN_MS, STORAGE_KEY } from './prizes.mjs?v=nov13-8';
+import { REEL_ART } from './roulette-art.mjs?v=nov13-8';
+import { reelMotion } from './roulette-motion.mjs?v=nov13-8';
+import { CONFETTI } from './confetti.mjs?v=nov13-8';
+import { initUI, refreshUI, setCounter, prizeGeometry, paintReward, paintResult, paintWin, paintPrizeCard, paintEmpty } from './ui.mjs?v=nov13-8';
 
 const $ = id => document.getElementById(id);
 const scene = $('scene'), phone = $('phone'), field = $('falling-field');
@@ -553,6 +553,7 @@ function showWin() {
   $('won-prize').src = prizeGeometry(result.prizeId).src; $('won-prize').alt = prize.title;
   $('won-title').textContent = prize.title;
   $('win-next').textContent = ledger.state.pending.length ? 'Получить еще призы' : 'Перейти в Мои призы';
+  $('win-saved-note').hidden = ledger.state.pending.length === 0;
   showScreen('win'); paintWin(result.prizeId); beep(true);
 }
 $('play-button').addEventListener('click', startRound);

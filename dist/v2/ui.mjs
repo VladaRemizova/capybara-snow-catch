@@ -1,12 +1,13 @@
-import { REEL_ART } from './roulette-art.mjs?v=nov13-7';
-import { UPDATED_ART } from './ui-updates.mjs?v=nov13-7';
-import { UI_ART as ORIGINAL_ART, UI_BOXES } from './ui-art.mjs?v=nov13-7';
-import { GLYPHS } from './ui-glyphs.mjs?v=nov13-7';
+import { REEL_ART } from './roulette-art.mjs?v=nov13-8';
+import { UPDATED_ART } from './ui-updates.mjs?v=nov13-8';
+import { UI_ART as ORIGINAL_ART, UI_BOXES } from './ui-art.mjs?v=nov13-8';
+import { GLYPHS } from './ui-glyphs.mjs?v=nov13-8';
 
 const UI_ART = { ...ORIGINAL_ART, ...UPDATED_ART };
 for (const [key, file] of [['button-result-replay', 'button-result-retry'], ['button-rating-play', 'button-rating-retry']]) {
   UI_ART[key] = { ...UI_ART[key], src: `assets/pixel/${file}.webp` };
 }
+UI_ART['win-saved-note'] = {src:'assets/pixel/win-saved-note.webp',box:{x:0,y:0,width:343,height:13},clip:{x:0,y:0,width:343,height:13},pixelWidth:686,pixelHeight:26,scale:2,kind:'text'};
 const $ = id => document.getElementById(id);
 const ready = new Map();
 const glyphReady = new Set();
@@ -161,6 +162,7 @@ export function paintResult(mode, replayAllowed = mode !== 'rating') {
 }
 
 export function paintWin(prizeId) {
+  text($('win-saved-note'), 'win-saved-note', null, {x:16,y:635,width:343,height:13});
   text(document.querySelector('.win-description>p'), 'text-565-3055', '565:3019');
   text($('won-title'), { hoff: 'text-565-3056', rossko5: 'text-566-3385', rossko10: 'text-565-3099' }[prizeId], { hoff: '565:3019', rossko5: '566:3348', rossko10: '565:3064' }[prizeId]);
   const origin = {hoff:'565:3021',rossko5:'566:3350',rossko10:'565:3066'}[prizeId];
